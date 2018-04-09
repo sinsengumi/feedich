@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.sinsengumi.feedich.repository.FeedRepository">
+
+  <sql id="columns">
+    ${tableName}.id            as feed_id
+    , ${tableName}.title       as feed_title
+    , ${tableName}.description as feed_description
+    , ${tableName}.url         as feed_url
+    , ${tableName}.feed_url    as feed_feed_url
+    , ${tableName}.feed_type   as feed_type
+    , ${tableName}.created_at  as feed_created_at
+    , ${tableName}.updated_at  as feed_updated_at
+  </sql>
+
+  <resultMap id="map" type="Feed">
+    <id     property="id"          column="feed_id" />
+    <result property="title"       column="feed_title" />
+    <result property="description" column="feed_description" />
+    <result property="url"         column="feed_url" />
+    <result property="feedUrl"     column="feed_feed_url" />
+    <result property="feedType"    column="feed_type" />
+    <result property="createdAt"   column="feed_created_at" />
+    <result property="updatedAt"   column="feed_updated_at" />
+  </resultMap>
+
+  <insert id="create" parameterType="Feed">
+    insert into feeds (
+      title
+      , description
+      , url
+      , feed_url
+      , feed_type
+      , created_at
+    ) values (
+      #{title}
+      , #{description}
+      , #{url}
+      , #{feedUrl}
+      , #{feedType}
+      , now()
+    )
+    <selectKey resultType="_int" order="AFTER" keyProperty="id">
+      select last_insert_id()
+    </selectKey>
+  </insert>
+
+  <select id="findAll" resultMap="map">
+    select
+      <include refid="columns"><property name="tableName" value="f" /></include>
+    from
+      feeds f
+  </select>
+
+  <select id="findByFeedUrl" resultMap="map">
+    select
+      <include refid="columns"><property name="tableName" value="f" /></include>
+    from
+      feeds f
+    where
+      f.feed_url = #{feedUrl}
+  </select>
+
+  <select id="findByFeedIds" resultMap="map">
+    select
+      <include refid="columns"><property name="tableName" value="f" /></include>
+    from
+      feeds f
+    where
+      f.id in <foreach item="id" collection="feedIds" open="(" separator="," close=")">#{id}</foreach>
+  </select>
+</mapper>

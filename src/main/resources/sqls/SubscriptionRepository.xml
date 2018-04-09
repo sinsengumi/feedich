@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.sinsengumi.feedich.repository.SubscriptionRepository">
+
+  <sql id="columns">
+    ${tableName}.id           as subscription_id
+    , ${tableName}.user_id    as subscription_user_id
+    , ${tableName}.feed_id    as subscription_feed_id
+    , ${tableName}.created_at as subscription_created_at
+    , ${tableName}.updated_at as subscription_updated_at
+  </sql>
+
+  <resultMap id="map" type="Subscription">
+    <id     property="id"        column="subscription_id" />
+    <result property="userId"    column="subscription_user_id" />
+    <result property="feedId"    column="subscription_feed_id" />
+    <result property="createdAt" column="subscription_created_at" />
+    <result property="updatedAt" column="subscription_updated_at" />
+
+    <association property="feed" resultMap="net.sinsengumi.feedich.repository.FeedRepository.map"/>
+  </resultMap>
+
+  <insert id="create" parameterType="Subscription">
+    insert into subscriptions (
+      user_id
+      , feed_id
+      , created_at
+    ) values (
+      #{userId}
+      , #{feedId}
+      , now()
+    )
+    <selectKey resultType="_int" order="AFTER" keyProperty="id">
+      select last_insert_id()
+    </selectKey>
+  </insert>
+
+  <select id="findByUserId" resultMap="map">
+    select
+      <include refid="columns"><property name="tableName" value="s" /></include>,
+      <include refid="net.sinsengumi.feedich.repository.FeedRepository.columns"><property name="tableName" value="f" /></include>
+    from
+      subscriptions s
+      left join feeds f on (f.id = s.feed_id)
+    where
+      s.user_id = #{userId}
+  </select>
+
+  <select id="findByUserIdAndFeedId" resultMap="map">
+    select
+      <include refid="columns"><property name="tableName" value="s" /></include>,
+      <include refid="net.sinsengumi.feedich.repository.FeedRepository.columns"><property name="tableName" value="f" /></include>
+    from
+      subscriptions s
+    where
+      s.user_id = #{userId}
+      and s.feed_id = #{feedId}
+  </select>
+</mapper>

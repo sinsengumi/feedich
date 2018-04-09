@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.sinsengumi.feedich.repository.ItemRepository">
+
+  <sql id="columns">
+    ${tableName}.id             as item_id
+    , ${tableName}.feed_id      as item_feed_id
+    , ${tableName}.title        as item_title
+    , ${tableName}.description  as item_description
+    , ${tableName}.url          as item_url
+    , ${tableName}.author       as item_author
+    , ${tableName}.published_at as item_published_at
+    , ${tableName}.created_at   as item_created_at
+    , ${tableName}.updated_at   as item_updated_at
+  </sql>
+
+  <resultMap id="map" type="Item">
+    <id     property="id"          column="item_id" />
+    <result property="feedId"      column="item_feed_id" />
+    <result property="title"       column="item_title" />
+    <result property="description" column="item_description" />
+    <result property="url"         column="item_url" />
+    <result property="author"      column="item_author" />
+    <result property="publishedAt" column="item_published_at" />
+    <result property="createdAt"   column="item_createdAt" />
+    <result property="updatedAt"   column="item_updatedAt" />
+  </resultMap>
+
+  <insert id="create" parameterType="Item">
+    insert into items (
+      feed_id
+      , title
+      , description
+      , url
+      , author
+      , published_at
+      , created_at
+    ) values (
+      #{feedId}
+      , #{title}
+      , #{description}
+      , #{url}
+      , #{author}
+      , #{publishedAt}
+      , now()
+    )
+    <selectKey resultType="_int" order="AFTER" keyProperty="id">
+      select last_insert_id()
+    </selectKey>
+  </insert>
+
+  <select id="findByUrl" resultMap="map">
+    select
+      <include refid="columns"><property name="tableName" value="i" /></include>
+    from
+      items f
+    where
+      f.url = #{url}
+  </select>
+
+</mapper>
