@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.sinsengumi.feedich.repository.UserItemRepository">
+
+  <sql id="columns">
+    ${tableName}.user_id   as user_item_user_id
+    , ${tableName}.item_id as user_item_item_id
+    , ${tableName}.unread  as user_item_unread
+  </sql>
+
+  <resultMap id="map" type="UserItem">
+    <result property="user_id" column="user_item_user_id" />
+    <result property="item_id" column="user_item_item_id" />
+    <result property="unread"  column="user_item_unread" />
+  </resultMap>
+
+  <insert id="create" parameterType="UserItem">
+    insert into user_item (user_id, item_id, unread) values
+    <foreach item="ui" collection="userItems" separator=",">(#{ui.userId}, #{ui.itemId}, #{ui.unread})</foreach>
+  </insert>
+
+  <update id="read">
+    update
+      user_item
+    set
+      unread = 0
+    where
+      user_id = #{userId}
+      and item_id = #{itemId}
+  </update>
+
+  <update id="unread">
+    update
+      user_item
+    set
+      unread = 1
+    where
+      user_id = #{userId}
+      and item_id = #{itemId}
+  </update>
+</mapper>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.sinsengumi.feedich.repository.PinRepository">
+
+  <sql id="columns">
+    ${tableName}.id            as pin_id
+    , ${tableName}.user_id     as pin_user_id
+    , ${tableName}.title       as pin_title
+    , ${tableName}.url         as pin_url
+    , ${tableName}.created_at  as pin_created_at
+    , ${tableName}.updated_at  as pin_updated_at
+  </sql>
+
+  <resultMap id="map" type="Pin">
+    <id     property="id"        column="pin_id" />
+    <result property="userId"    column="pin_user_id" />
+    <result property="title"     column="pin_title" />
+    <result property="url"       column="pin_url" />
+    <result property="createdAt" column="pin_created_at" />
+    <result property="updatedAt" column="pin_updated_at" />
+  </resultMap>
+
+  <insert id="create" parameterType="Pin">
+    insert into Pin (
+      user_id
+      , title
+      , url
+      , created_at
+    ) values (
+      #{userId}
+      , #{title}
+      , #{url}
+      , now()
+    )
+    <selectKey resultType="_int" order="AFTER" keyProperty="id">
+      select last_insert_id()
+    </selectKey>
+  </insert>
+
+  <select id="findByUserId" resultMap="map">
+    select
+      <include refid="columns"><property name="tableName" value="p" /></include>
+    from
+      pin p
+    where
+      p.user_id = #{userId}
+    order by
+      p.created_at desc
+  </select>
+
+  <delete id="delete">
+    delete from pin where id = #{id}
+  </delete>
+
+  <delete id="clear">
+    delete from pin where user_id = #{userId}
+  </delete>
+</mapper>

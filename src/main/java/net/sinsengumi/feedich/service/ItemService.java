@@ -1,5 +1,8 @@
 package net.sinsengumi.feedich.service;
 
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
@@ -15,10 +18,26 @@ public class ItemService {
     private final ItemRepository itemRepository;
 
     public int create(Item item) {
-        return itemRepository.create(item);
+        return itemRepository.createOne(item);
     }
 
-    public Item findByUrl(String url) {
-        return itemRepository.findByUrl(url);
+    public int create(List<Item> items) {
+        return itemRepository.create(items);
+    }
+
+    public Item findById(int id) {
+        return itemRepository.findById(id);
+    }
+
+    public Item findByUrl(int feedId, String url) {
+        return itemRepository.findByUrl(feedId, url);
+    }
+
+    public List<Item> findByFeedId(int feedId, Date createdAt) {
+        return itemRepository.findByFeedId(feedId, createdAt);
+    }
+
+    public List<Item> getUnreadItem(int userId, int feedId) {
+        return itemRepository.getUnreadItem(userId, feedId);
     }
 }

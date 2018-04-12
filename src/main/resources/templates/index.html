@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Index</title>
+<meta charset="UTF-8" />
+</head>
+<body>
+
+<h1>Index</h1>
+
+<p>
+  <strong>current userId : <span th:text="${userId}"></span></strong>
+  <form method="get" action="/user/switch"><input type="text" name="userId" /> <input type="submit" value="switch" /></form>
+</p>
+
+<ul>
+  <li><form method="get"  action="/api/discover"><input type="text" name="url" /> <input type="submit" value="discovery" /></form></li>
+  <li><form method="post" action="/subscribe"><input type="text" name="feedUrl" /> <input type="submit" value="subscribe" /></form></li>
+  <li><a href="/crawl">crawl</a></li>
+</ul>
+
+<h3>登録済フィードの一覧</h3>
+<table border="1">
+  <tr>
+    <th>SubscriptionId</th>
+    <th>Title</th>
+    <th>Description</th>
+    <th>FeedUrl</th>
+    <th>FeedType</th>
+  </tr>
+  <tr th:each="s : ${subscriptions}">
+    <td th:text="${s.id}"></td>
+    <td><img alt="N" th:src="${s.feed.favicon}" width="16" height="16" /> <a th:href="${s.feed.url}" th:text="${s.feed.title}"></a></td>
+    <td th:text="${s.feed.description}"></td>
+    <td><a th:href="${s.feed.feedUrl}" th:text="${s.feed.feedUrl}"></a></td>
+    <td th:text="${s.feed.feedType}"></td>
+  </tr>
+</table>
+
+<h3>未読ありフィードの一覧</h3>
+<table border="1">
+  <tr th:each="uf : ${unreadFeeds}">
+    <td><a th:href="@{/feeds/{feedId}/items(feedId=${uf.feedId})}" th:text="|${uf.feed.title} (${uf.unreadCount})|"></a></td>
+  </tr>
+</table>
+
+<h3>ピン一覧</h3>
+<p><a href="/clearPin">クリア</a></p>
+<table border="1">
+  <tr th:each="p : ${pins}">
+    <td><a th:href="${p.url}" th:text="${p.title}"></a></td>
+    <td><a th:href="@{/deletePin(pinId=${p.id})}">ピンを外す</a></td>
+  </tr>
+</table>
+
+</body>
+</html>

@@ -22,12 +22,12 @@
     <result property="url"         column="item_url" />
     <result property="author"      column="item_author" />
     <result property="publishedAt" column="item_published_at" />
-    <result property="createdAt"   column="item_createdAt" />
-    <result property="updatedAt"   column="item_updatedAt" />
+    <result property="createdAt"   column="item_created_at" />
+    <result property="updatedAt"   column="item_updated_at" />
   </resultMap>
 
-  <insert id="create" parameterType="Item">
-    insert into items (
+  <insert id="createOne" parameterType="Item">
+    insert into item (
       feed_id
       , title
       , description
@@ -42,20 +42,76 @@
       , #{url}
       , #{author}
       , #{publishedAt}
-      , now()
+      , #{createdAt}
     )
     <selectKey resultType="_int" order="AFTER" keyProperty="id">
       select last_insert_id()
     </selectKey>
   </insert>
 
+  <insert id="create" parameterType="Item">
+    insert into item (
+      feed_id
+      , title
+      , description
+      , url
+      , author
+      , published_at
+      , created_at
+    ) values
+      <foreach item="i" collection="items" separator=",">
+      (
+        #{i.feedId}
+        , #{i.title}
+        , #{i.description}
+        , #{i.url}
+        , #{i.author}
+        , #{i.publishedAt}
+        , #{i.createdAt}
+      )
+      </foreach>
+  </insert>
+
+  <select id="findById" resultMap="map">
+    select
+      <include refid="columns"><property name="tableName" value="i" /></include>
+    from
+      item i
+    where
+      i.id = #{id}
+  </select>
+
   <select id="findByUrl" resultMap="map">
     select
       <include refid="columns"><property name="tableName" value="i" /></include>
     from
-      items f
+      item i
     where
-      f.url = #{url}
+      i.feed_id = #{feedId}
+      and i.url = #{url}
   </select>
 
+  <select id="findByFeedId" resultMap="map">
+    select
+      <include refid="columns"><property name="tableName" value="i" /></include>
+    from
+      item i
+    where
+      i.feed_id = #{feedId}
+      and i.created_at >= #{createdAt}
+  </select>
+
+  <select id="getUnreadItem" resultMap="map">
+    select
+      <include refid="columns"><property name="tableName" value="i" /></include>
+    from
+      user_item ui
+      join item i on (i.id = ui.item_id)
+    where
+      ui.user_id = #{userId}
+      and ui.unread = 1
+      and i.feed_id = #{feedId}
+    order by
+      i.published_at desc
+  </select>
 </mapper>

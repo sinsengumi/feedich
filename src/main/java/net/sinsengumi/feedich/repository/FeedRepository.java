@@ -2,10 +2,10 @@ package net.sinsengumi.feedich.repository;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import net.sinsengumi.feedich.model.Feed;
+import net.sinsengumi.feedich.model.UnreadFeed;
 
 @Repository
 public interface FeedRepository {
@@ -16,5 +16,5 @@ public interface FeedRepository {
 
     Feed findByFeedUrl(String feedUrl);
 
-    List<Feed> findByFeedIds(@Param("feedIds") List<Integer> feedIds);
+    List<UnreadFeed> getUnreadFeeds(int userId);
 }

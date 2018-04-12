@@ -1,6 +1,7 @@
-package net.sinsengumi.feedich.controller.feeds;
+package net.sinsengumi.feedich.controller.api;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,14 +13,14 @@ import net.sinsengumi.feedich.model.Feed;
 import net.sinsengumi.feedich.service.FeedDiscoverer;
 
 @RestController
-@RequestMapping("feeds")
+@RequestMapping("api")
 @RequiredArgsConstructor
-public class DiscoveryController {
+public class DiscoverController {
 
     private final FeedDiscoverer feedDiscoverer;
 
-    @GetMapping("discovery")
+    @GetMapping("discover")
     public List<Feed> discovery(@RequestParam String url) {
-        return feedDiscoverer.discover(url);
+        return feedDiscoverer.discover(url).stream().map(s -> Feed.build("dummy", s)).collect(Collectors.toList());
     }
 }

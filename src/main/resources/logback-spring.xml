@@ -26,5 +26,5 @@
     <appender-ref ref="FILE" />
   </root>
   
-  <logger name="net.sinsengumi.feedich.repository" level="DEBUG" />
+  <!-- <logger name="net.sinsengumi.feedich.repository" level="DEBUG" /> -->
 </configuration>

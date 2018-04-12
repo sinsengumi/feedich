@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.sinsengumi.feedich.model.Feed;
+import net.sinsengumi.feedich.model.UnreadFeed;
 import net.sinsengumi.feedich.repository.FeedRepository;
 
 @Slf4j
@@ -28,7 +29,7 @@ public class FeedService {
         return feedRepository.findByFeedUrl(feedUrl);
     }
 
-    public List<Feed> findByFeedIds(List<Integer> feedIds) {
-        return feedRepository.findByFeedIds(feedIds);
+    public List<UnreadFeed> getUnreadFeeds(int userId) {
+        return feedRepository.getUnreadFeeds(userId);
     }
 }

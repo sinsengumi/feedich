@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Article</title>
+<meta charset="UTF-8" />
+</head>
+<body>
+
+<h1>Article</h1>
+
+<h3>未読の記事一覧</h3>
+<table border="1">
+  <tr>
+    <th>ItemId</th>
+    <th>Title</th>
+    <th>Author</th>
+    <th>PublishedAt</th>
+    <th>Operation</th>
+  </tr>
+  <tr th:each="i : ${unreadItems}">
+    <td th:text="${i.id}"></td>
+    <td><a th:href="${i.url}" th:text="${i.title}"></a></td>
+    <td><span th:text="${i.author}"></span></td>
+    <td><span th:text="${#dates.format(i.publishedAt, 'yyyy/MM/dd HH:mm:ss')}"></span></td>
+    <td><a th:href="@{/read(itemId=${i.id})}">既読にする</a> | <a th:href="@{/pin(itemId=${i.id})}">ピン</a></td>
+  </tr>
+</table>
+
+</body>
+</html>

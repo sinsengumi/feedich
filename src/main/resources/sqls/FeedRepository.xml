@@ -9,6 +9,9 @@
     , ${tableName}.url         as feed_url
     , ${tableName}.feed_url    as feed_feed_url
     , ${tableName}.feed_type   as feed_type
+    , ${tableName}.icon        as feed_icon
+    , ${tableName}.image       as feed_image
+    , ${tableName}.favicon     as feed_favicon
     , ${tableName}.created_at  as feed_created_at
     , ${tableName}.updated_at  as feed_updated_at
   </sql>
@@ -20,17 +23,23 @@
     <result property="url"         column="feed_url" />
     <result property="feedUrl"     column="feed_feed_url" />
     <result property="feedType"    column="feed_type" />
+    <result property="icon"        column="feed_icon" />
+    <result property="image"       column="feed_image" />
+    <result property="favicon"     column="feed_favicon" />
     <result property="createdAt"   column="feed_created_at" />
     <result property="updatedAt"   column="feed_updated_at" />
   </resultMap>
 
   <insert id="create" parameterType="Feed">
-    insert into feeds (
+    insert into feed (
       title
       , description
       , url
       , feed_url
       , feed_type
+      , icon
+      , image
+      , favicon
       , created_at
     ) values (
       #{title}
@@ -38,6 +47,9 @@
       , #{url}
       , #{feedUrl}
       , #{feedType}
+      , #{icon}
+      , #{image}
+      , #{favicon}
       , now()
     )
     <selectKey resultType="_int" order="AFTER" keyProperty="id">
@@ -49,24 +61,42 @@
     select
       <include refid="columns"><property name="tableName" value="f" /></include>
     from
-      feeds f
+      feed f
+    order by
+      f.id
   </select>
 
   <select id="findByFeedUrl" resultMap="map">
     select
       <include refid="columns"><property name="tableName" value="f" /></include>
     from
-      feeds f
+      feed f
     where
       f.feed_url = #{feedUrl}
   </select>
 
-  <select id="findByFeedIds" resultMap="map">
+  <resultMap id="unreadFeedMap" type="UnreadFeed">
+    <result property="feedId"      column="unread_feed_feed_id" />
+    <result property="unreadCount" column="unread_feed_unread_count" />
+    <association property="feed" resultMap="map" />
+  </resultMap>
+
+  <select id="getUnreadFeeds" resultMap="unreadFeedMap">
     select
-      <include refid="columns"><property name="tableName" value="f" /></include>
+      f.id       as unread_feed_feed_id
+      , count(1) as unread_feed_unread_count
+      , <include refid="columns"><property name="tableName" value="f" /></include>
     from
-      feeds f
+      user_item ui
+      join item i on (i.id = ui.item_id)
+      join feed f on (f.id = i.feed_id)
     where
-      f.id in <foreach item="id" collection="feedIds" open="(" separator="," close=")">#{id}</foreach>
+      ui.user_id = #{userId}
+      and ui.unread = 1
+    group by
+      f.id
+    order by
+      count(1) desc
   </select>
+
 </mapper>

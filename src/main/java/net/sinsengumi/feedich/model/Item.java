@@ -27,14 +27,25 @@ public class Item {
 
     private Date updatedAt;
 
-    public static Item build(int feedId, SyndEntry entry) {
+    public static Item build(int feedId, Date createdAt, SyndEntry entry) {
         Item item = new Item();
         item.setFeedId(feedId);
         item.setTitle(entry.getTitle());
-        item.setDescription(entry.getDescription().getValue());
+        if (entry.getDescription() != null) {
+            item.setDescription(entry.getDescription().getValue());
+        }
         item.setUrl(entry.getLink());
         item.setAuthor(entry.getAuthor());
         item.setPublishedAt(entry.getPublishedDate());
+        item.setCreatedAt(createdAt);
         return item;
+    }
+
+    public Pin toPin(int userId) {
+        Pin pin = new Pin();
+        pin.setUserId(userId);
+        pin.setTitle(title);
+        pin.setUrl(url);
+        return pin;
     }
 }

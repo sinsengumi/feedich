@@ -21,7 +21,7 @@
   </resultMap>
 
   <insert id="create" parameterType="Subscription">
-    insert into subscriptions (
+    insert into subscription (
       user_id
       , feed_id
       , created_at
@@ -40,10 +40,12 @@
       <include refid="columns"><property name="tableName" value="s" /></include>,
       <include refid="net.sinsengumi.feedich.repository.FeedRepository.columns"><property name="tableName" value="f" /></include>
     from
-      subscriptions s
-      left join feeds f on (f.id = s.feed_id)
+      subscription s
+      left join feed f on (f.id = s.feed_id)
     where
       s.user_id = #{userId}
+    order by
+      s.created_at desc
   </select>
 
   <select id="findByUserIdAndFeedId" resultMap="map">
@@ -51,9 +53,21 @@
       <include refid="columns"><property name="tableName" value="s" /></include>,
       <include refid="net.sinsengumi.feedich.repository.FeedRepository.columns"><property name="tableName" value="f" /></include>
     from
-      subscriptions s
+      subscription s
+      left join feed f on (f.id = s.feed_id)
     where
       s.user_id = #{userId}
       and s.feed_id = #{feedId}
+  </select>
+
+  <select id="getSubscribeUsers" resultType="java.lang.Integer">
+    select
+      s.user_id
+    from
+      subscription s
+    where
+      s.feed_id = #{feedId}
+    order by
+      s.user_id
   </select>
 </mapper>

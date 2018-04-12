@@ -15,4 +15,6 @@ public interface SubscriptionRepository {
     List<Subscription> findByUserId(int userId);
 
     Subscription findByUserIdAndFeedId(@Param("userId") int userId, @Param("feedId") int feedId);
+
+    List<Integer> getSubscribeUsers(int feedId);
 }
