@@ -3,6 +3,7 @@ package net.sinsengumi.feedich.model;
 import java.util.Date;
 
 import lombok.Data;
+import net.sinsengumi.feedich.model.http.SubscriptionResponse;
 
 @Data
 public class Subscription {
@@ -18,4 +19,13 @@ public class Subscription {
     private Date createdAt;
 
     private Date updatedAt;
+
+    public SubscriptionResponse toResponse() {
+        SubscriptionResponse response = new SubscriptionResponse();
+        response.setId(id);
+        response.setFeed(feed.toResponse());
+        response.setCreatedAt(createdAt);
+        response.setUpdatedAt(updatedAt);
+        return response;
+    }
 }

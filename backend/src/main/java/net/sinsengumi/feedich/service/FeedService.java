@@ -21,6 +21,10 @@ public class FeedService {
         return feedRepository.create(feed);
     }
 
+    public Feed findById(int id) {
+        return feedRepository.findById(id);
+    }
+
     public List<Feed> findByAll() {
         return feedRepository.findAll();
     }

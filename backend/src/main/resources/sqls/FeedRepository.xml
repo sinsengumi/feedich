@@ -57,6 +57,15 @@
     </selectKey>
   </insert>
 
+  <select id="findById" resultMap="map">
+    select
+      <include refid="columns"><property name="tableName" value="f" /></include>
+    from
+      feed f
+    where
+      f.id = #{id}
+  </select>
+
   <select id="findAll" resultMap="map">
     select
       <include refid="columns"><property name="tableName" value="f" /></include>

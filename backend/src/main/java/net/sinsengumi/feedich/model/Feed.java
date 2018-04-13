@@ -6,6 +6,7 @@ import com.rometools.rome.feed.synd.SyndFeed;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import net.sinsengumi.feedich.model.http.FeedResponse;
 import net.sinsengumi.feedich.util.HttpUtil;
 
 @Slf4j
@@ -39,5 +40,21 @@ public class Feed {
         }
         feed.setFavicon(HttpUtil.extractFavicon(feed.getUrl()));
         return feed;
+    }
+
+    public FeedResponse toResponse() {
+        FeedResponse response = new FeedResponse();
+        response.setId(id);
+        response.setTitle(title);
+        response.setDescription(description);
+        response.setUrl(url);
+        response.setFeedUrl(feedUrl);
+        response.setFeedType(feedType);
+        response.setIcon(icon);
+        response.setImage(image);
+        response.setFavicon(favicon);
+        response.setCreatedAt(createdAt);
+        response.setUpdatedAt(updatedAt);
+        return response;
     }
 }

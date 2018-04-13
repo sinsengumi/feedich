@@ -12,6 +12,8 @@ public interface FeedRepository {
 
     int create(Feed feed);
 
+    Feed findById(int id);
+
     List<Feed> findAll();
 
     Feed findByFeedUrl(String feedUrl);
