@@ -6,10 +6,8 @@ axios.defaults.withCredentials = true
 const API_BASE_URL = process.env.API_BASE_URL
 
 export default class ApiClient {
-  getSubscriptions (onSuccess, onFailure) {
+  getSubscriptions () {
     return axios.get(`${API_BASE_URL}/api/subscriptions`)
-      .then(onSuccess)
-      .catch(onFailure)
   }
 
   getFeed (feedId) {

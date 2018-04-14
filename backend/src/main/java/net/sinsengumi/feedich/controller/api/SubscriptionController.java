@@ -24,6 +24,13 @@ public class SubscriptionController {
 
     @GetMapping
     public List<SubscriptionResponse> subscriptions() {
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
         return subscriptionService.findByUserId(UserController.USER_ID).stream()
                 .map(Subscription::toResponse)
                 .collect(Collectors.toList());
