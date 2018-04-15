@@ -42,6 +42,7 @@ CREATE INDEX idx_item_feed_id ON item (feed_id);
 CREATE TABLE user_item (
   user_id   INT     NOT NULL
   , item_id INT     NOT NULL
+  , feed_id INT     NOT NULL
   , unread  BOOLEAN NOT NULL
 );
 CREATE INDEX idx_user_item_user_id ON user_item (user_id);

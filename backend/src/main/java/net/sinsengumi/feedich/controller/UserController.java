@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserController extends AbstractController {
 
-    public static int USER_ID = 1;
+    public static int USER_ID = 2;
 
     @GetMapping("/user/switch")
     public String userSwitch(@RequestParam(defaultValue = "1", required = false) int userId) {

@@ -25,6 +25,25 @@ public class Feed {
     private Date createdAt;
     private Date updatedAt;
 
+    public String getReadableFeedType() {
+        return getReadableFeedType(feedType);
+    }
+
+    public static String getReadableFeedType(String feedType) {
+        String[] split = feedType.split("_");
+        if (split.length == 2) {
+            String type = split[0];
+            String version = split[1];
+            if (type.equalsIgnoreCase("atom")) {
+                return "Atom " + version;
+            } else {
+                return type.toUpperCase() + " " + version;
+            }
+        } else {
+            return feedType;
+        }
+    }
+
     public static Feed build(String feedUrl, SyndFeed syndFeed) {
         Feed feed = new Feed();
         feed.setTitle(syndFeed.getTitle());

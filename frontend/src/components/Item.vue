@@ -51,12 +51,12 @@
 
       <v-expansion-panel focusable>
         <v-expansion-panel-content v-for="(i, index) in items" :key="'itemId_' + i.id">
-          <div slot="header" :class="{title: i.active}" @click="expandItem(index, i.id, $event)">{{ i.title }}</div>
+          <div slot="header" :class="{title: i == activeItem}" @click="readItem(i, $event)">{{ i.title }}</div>
 
           <v-container grid-list-md>
                 <v-layout row wrap>
                   <v-flex xs9>
-                    <p>Author: {{ i.author }} | {{ i.publishedAt }} |  ピン | 記事詳細 | 未読にする | 共有</p>
+                    <p>Author: {{ i.author }} | {{ i.publishedAt }} |  ピン | 記事詳細 | <v-btn flat small @click="unreadItem(i, $event)">未読にする</v-btn> | 共有</p>
                   </v-flex>
                   <v-flex xs3  text-xs-right>
                     <v-chip class="grey" text-color="white" style="font-size:12px; height: 24px">
@@ -65,7 +65,6 @@
                   </v-flex>
                 </v-layout>
               </v-container>
-          
           <v-card>
             <v-card-text><div class="caption" v-html="i.description"></div></v-card-text>
           </v-card>
@@ -86,11 +85,16 @@ export default {
       loading: false,
       error: null,
       items: null,
+      activeItem: null,
       feed: null
     }
   },
   created () {
     this.fetchData()
+
+    this.$eventHub.$on('keyup13', () => {
+      console.log('enter in item')
+    })
   },
   watch: {
     '$route': 'fetchData'
@@ -116,15 +120,28 @@ export default {
         this.error = 'データの取得に失敗しました'
       })
     },
-    expandItem (index, itemId, event) {
-      console.log(itemId)
-      console.log(event.target)
-      console.log(this)
-      console.log(index)
-      this.items.forEach(function (value, index, array) {
-        value.active = false
-      })
-      this.items[index].active = true
+    readItem (item, event) {
+      this.activeItem = item
+      const api = new ApiClient()
+      api.readItem(item.id)
+        .then((response) => {
+          console.log('read')
+          this.$eventHub.$emit('readItem', item.feedId)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    unreadItem (item, event) {
+      const api = new ApiClient()
+      api.unreadItem(item.id)
+        .then((response) => {
+          console.log('unread')
+          this.$eventHub.$emit('unreadItem', item.feedId)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     }
   }
 }

@@ -25,7 +25,7 @@ public class SubscriptionController {
     @GetMapping
     public List<SubscriptionResponse> subscriptions() {
         try {
-            Thread.sleep(3000);
+            Thread.sleep(3);
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

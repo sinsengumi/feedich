@@ -11,11 +11,12 @@
   </sql>
 
   <resultMap id="map" type="Subscription">
-    <id     property="id"        column="subscription_id" />
-    <result property="userId"    column="subscription_user_id" />
-    <result property="feedId"    column="subscription_feed_id" />
-    <result property="createdAt" column="subscription_created_at" />
-    <result property="updatedAt" column="subscription_updated_at" />
+    <id     property="id"          column="subscription_id" />
+    <result property="userId"      column="subscription_user_id" />
+    <result property="feedId"      column="subscription_feed_id" />
+    <result property="createdAt"   column="subscription_created_at" />
+    <result property="updatedAt"   column="subscription_updated_at" />
+    <result property="unreadCount" column="subscription_unread_count" />
 
     <association property="feed" resultMap="net.sinsengumi.feedich.repository.FeedRepository.map"/>
   </resultMap>
@@ -38,10 +39,11 @@
   <select id="findByUserId" resultMap="map">
     select
       <include refid="columns"><property name="tableName" value="s" /></include>,
-      <include refid="net.sinsengumi.feedich.repository.FeedRepository.columns"><property name="tableName" value="f" /></include>
+      <include refid="net.sinsengumi.feedich.repository.FeedRepository.columns"><property name="tableName" value="f" /></include>,
+      (select count(1) from user_item ui where ui.user_id = #{userId} and ui.feed_id = f.id and ui.unread = 1) as subscription_unread_count
     from
       subscription s
-      left join feed f on (f.id = s.feed_id)
+      join feed f on (f.id = s.feed_id)
     where
       s.user_id = #{userId}
     order by
@@ -51,10 +53,11 @@
   <select id="findByUserIdAndFeedId" resultMap="map">
     select
       <include refid="columns"><property name="tableName" value="s" /></include>,
-      <include refid="net.sinsengumi.feedich.repository.FeedRepository.columns"><property name="tableName" value="f" /></include>
+      <include refid="net.sinsengumi.feedich.repository.FeedRepository.columns"><property name="tableName" value="f" /></include>,
+      (select count(1) from user_item ui where ui.user_id = #{userId} and ui.feed_id = f.id and ui.unread = 1) as subscription_unread_count
     from
       subscription s
-      left join feed f on (f.id = s.feed_id)
+      join feed f on (f.id = s.feed_id)
     where
       s.user_id = #{userId}
       and s.feed_id = #{feedId}

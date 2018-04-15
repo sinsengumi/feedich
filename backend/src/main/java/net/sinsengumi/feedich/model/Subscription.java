@@ -9,16 +9,12 @@ import net.sinsengumi.feedich.model.http.SubscriptionResponse;
 public class Subscription {
 
     private int id;
-
     private int userId;
-
     private int feedId;
-
     private Feed feed;
-
     private Date createdAt;
-
     private Date updatedAt;
+    private int unreadCount;
 
     public SubscriptionResponse toResponse() {
         SubscriptionResponse response = new SubscriptionResponse();
@@ -26,6 +22,7 @@ public class Subscription {
         response.setFeed(feed.toResponse());
         response.setCreatedAt(createdAt);
         response.setUpdatedAt(updatedAt);
+        response.setUnreadCount(unreadCount);
         return response;
     }
 }

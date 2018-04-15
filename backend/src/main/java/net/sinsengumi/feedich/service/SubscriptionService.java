@@ -53,6 +53,7 @@ public class SubscriptionService {
             firstCrawl(userId, feed);
         }
 
+        subscription.setFeed(feed);
         return subscription;
     }
 

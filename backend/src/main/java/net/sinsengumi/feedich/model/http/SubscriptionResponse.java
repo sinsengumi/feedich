@@ -10,4 +10,5 @@ public class SubscriptionResponse {
     private FeedResponse feed;
     private Date createdAt;
     private Date updatedAt;
+    private int unreadCount;
 }

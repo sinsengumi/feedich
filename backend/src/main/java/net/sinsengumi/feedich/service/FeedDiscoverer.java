@@ -81,6 +81,9 @@ public class FeedDiscoverer {
             throw new ApplicationException(e);
         }
 
+        if (syndFeed != null) {
+            syndFeed.setUri(feedUrl);
+        }
         return syndFeed;
     }
 
