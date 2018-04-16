@@ -10,22 +10,28 @@ export default class ApiClient {
     return axios.get(`${API_BASE_URL}/api/feeds/discover?url=${url}`)
   }
 
-  subscribeFeed (feedUrl) {
+  subscribe (feedUrl) {
     const params = new URLSearchParams()
     params.append('feedUrl', feedUrl)
-    return axios.post(`${API_BASE_URL}/api/feeds/subscribe`, params)
+    return axios.put(`${API_BASE_URL}/api/subscriptions`, params)
+  }
+
+  unsubscribe (subscriptionId) {
+    const params = new URLSearchParams()
+    params.append('subscriptionId', subscriptionId)
+    return axios.delete(`${API_BASE_URL}/api/subscriptions/${subscriptionId}`, params)
   }
 
   getSubscriptions () {
     return axios.get(`${API_BASE_URL}/api/subscriptions`)
   }
 
-  getFeed (feedId) {
-    return axios.get(`${API_BASE_URL}/api/feeds/${feedId}`)
+  getSubscription (subscriptionId) {
+    return axios.get(`${API_BASE_URL}/api/subscriptions/${subscriptionId}`)
   }
 
-  getItems (feedId) {
-    return axios.get(`${API_BASE_URL}/api/feeds/${feedId}/items`)
+  getItems (subscriptionId) {
+    return axios.get(`${API_BASE_URL}/api/subscriptions/${subscriptionId}/items`)
   }
 
   readItem (itemId) {

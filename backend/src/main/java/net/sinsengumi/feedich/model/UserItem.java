@@ -3,14 +3,11 @@ package net.sinsengumi.feedich.model;
 import lombok.Data;
 
 @Data
-public class UserItem {
+public class UserItem implements Authorizable {
 
     private int userId;
-
     private int itemId;
-
     private int feedId;
-
     private boolean unread;
 
     public static UserItem build(int userId, Item item) {
@@ -20,5 +17,10 @@ public class UserItem {
         userItem.setFeedId(item.getFeedId());
         userItem.setUnread(true);
         return userItem;
+    }
+
+    @Override
+    public int getOwner() {
+        return userId;
     }
 }

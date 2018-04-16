@@ -4,12 +4,34 @@
 
     <v-layout>
       <v-flex xs12>
-        <v-card class="elevation-1">
+        <v-card class="elevation-0">
           <v-btn flat small @click="fetchSubscriptions" class="ml-1 mr-0">
             <v-icon small class="mr-1">autorenew</v-icon>Refresh
           </v-btn>
 
-          <v-dialog v-model="addFeedDialog" persistent max-width="500px">
+          <v-menu offset-y>
+            <v-btn flat small slot="activator" class="ml-0 mr-0">
+              <v-icon small class="mr-1">filter_list</v-icon>Filter
+            </v-btn>
+          </v-menu>
+
+          <v-menu offset-y>
+            <v-btn flat small slot="activator" class="ml-0 mr-0">
+              <v-icon small class="mr-1">sort</v-icon>Sort
+            </v-btn>
+            <v-list>
+              <v-list-tile @click="sortAlphabeticallyAsc">
+                <v-list-tile-title>Alphabetically asc</v-list-tile-title>
+              </v-list-tile>
+              <v-list-tile @click="sortAlphabeticallyDesc">
+                <v-list-tile-title>Alphabetically desc</v-list-tile-title>
+              </v-list-tile>
+            </v-list>
+          </v-menu>
+        </v-card>
+
+        <v-card class="elevation-1">
+          <v-dialog v-model="addFeedDialog" max-width="500px">
             <v-btn flat small class="ml-0 mr-0" slot="activator">
               <v-icon small class="mr-1">add_circle_outline</v-icon>Add Feed
             </v-btn>
@@ -39,13 +61,13 @@
 
               <v-list two-line class="pl-3 pr-3">
                 <template v-for="(feed, index) in discoveredFeeds">
-                  <v-list-tile @click="subscribeFeed(feed)" :key="feed.title">
+                  <v-list-tile @click="subscribe(feed)" :key="feed.title">
                     <v-list-tile-content>
                       <v-list-tile-title><img :src="feed.favicon" width="16" height="16" /> {{ feed.title }} ({{ feed.feedType }})</v-list-tile-title>
                       <v-list-tile-sub-title>{{ feed.description }}</v-list-tile-sub-title>
                     </v-list-tile-content>
                     <v-list-tile-action>
-                      <v-list-tile-action-text><v-icon small>group</v-icon>&nbsp; 1023</v-list-tile-action-text>
+                      <v-list-tile-action-text><span v-if="feed.subscribed">登録済</span></v-list-tile-action-text>
                     </v-list-tile-action>
                   </v-list-tile>
                   <v-divider :key="index"></v-divider>
@@ -58,19 +80,9 @@
             </v-card>
           </v-dialog>
 
-          <v-menu offset-y>
-            <v-btn flat small slot="activator" class="ml-0 mr-0">
-              <v-icon small class="mr-1">sort</v-icon>Sort
-            </v-btn>
-            <v-list>
-              <v-list-tile @click="sortAlphabeticallyAsc">
-                <v-list-tile-title>Alphabetically asc</v-list-tile-title>
-              </v-list-tile>
-              <v-list-tile @click="sortAlphabeticallyDesc">
-                <v-list-tile-title>Alphabetically desc</v-list-tile-title>
-              </v-list-tile>
-            </v-list>
-          </v-menu>
+          <v-btn flat small @click="toSubscriptions" class="ml-1 mr-0">
+            <v-icon small class="mr-1">library_books</v-icon>Subscriptions
+          </v-btn>
         </v-card>
       </v-flex>
     </v-layout>
@@ -86,7 +98,7 @@
         </v-subheader>
 
         <template v-for="(s, index) in filteredSubscriptions">
-          <v-list-tile ripple @click="fetchFeed(s)" :key="'subId_' + s.id" :class="{'light-blue lighten-5': s === activeSubscription}">
+          <v-list-tile ripple @click="fetchFeed(s)" :key="s.feed.title" :class="{'light-blue lighten-5': s === activeSubscription}">
             <v-list-tile-action style="min-width: 25px;">
               <img :src="s.feed.favicon" width="16" height="16" />
             </v-list-tile-action>
@@ -128,6 +140,7 @@ export default {
 
     this.$eventHub.$on('readItem', this.readItem)
     this.$eventHub.$on('unreadItem', this.unreadItem)
+    this.$eventHub.$on('unsubscribe', this.unsubscribe)
   },
   computed: {
     filteredSubscriptions () {
@@ -164,8 +177,8 @@ export default {
     },
     fetchFeed (subscription, event) {
       this.activeSubscription = subscription
-      const feedId = subscription.feed.id
-      this.$router.push({name: 'Item', params: { feedId }})
+      const subscriptionId = subscription.id
+      this.$router.push({name: 'Item', params: { subscriptionId }})
     },
     sortAlphabeticallyAsc () {
       const tmp = this.subscriptions
@@ -196,12 +209,12 @@ export default {
           console.log(error)
         })
     },
-    subscribeFeed (feed) {
+    subscribe (feed) {
       this.discoveredFeeds = null
       this.discoverLoading = true
 
       const api = new ApiClient()
-      api.subscribeFeed(feed.feedUrl)
+      api.subscribe(feed.feedUrl)
         .then((response) => {
           this.closeAddFeedDialog()
           this.fetchSubscriptions()
@@ -217,21 +230,27 @@ export default {
       this.discoverLoading = false
       this.discoverError = false
     },
-    readItem (feedId) {
+    readItem (feedId, unreadItemCount) {
       console.log('read in nav')
       this.subscriptions.forEach((s) => {
         if (s.feed.id === feedId) {
-          s.unreadCount = s.unreadCount - 1
+          s.unreadCount = unreadItemCount
         }
-      });
+      })
     },
-    unreadItem (feedId) {
+    unreadItem (feedId, unreadItemCount) {
       console.log('unread in nav')
       this.subscriptions.forEach((s) => {
         if (s.feed.id === feedId) {
-          s.unreadCount = s.unreadCount + 1
+          s.unreadCount = unreadItemCount
         }
-      });
+      })
+    },
+    unsubscribe () {
+      this.fetchSubscriptions()
+    },
+    toSubscriptions () {
+      this.$router.push({name: 'Subscriptions'})
     }
   }
 }

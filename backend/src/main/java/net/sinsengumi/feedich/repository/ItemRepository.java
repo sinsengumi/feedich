@@ -15,8 +15,6 @@ public interface ItemRepository {
 
     int create(@Param("items") List<Item> items);
 
-    Item findById(int id);
-
     Item findByUrl(@Param("feedId") int feedId, @Param("url") String url);
 
     List<Item> findByFeedId(@Param("feedId") int feedId, @Param("createdAt") Date createdAt);

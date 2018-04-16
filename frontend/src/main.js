@@ -21,8 +21,8 @@ new Vue({
   template: '<App/>',
   created () {
     window.addEventListener('keyup', (event) => {
-      if (event.keyCode == 13) {
-          this.$eventHub.$emit('keyup13')
+      if (event.keyCode === 13) {
+        this.$eventHub.$emit('shortcutEnter')
       }
     })
   }

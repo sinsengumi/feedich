@@ -29,8 +29,16 @@ public class SubscriptionService {
     private final ItemService itemService;
     private final UserItemService userItemService;
 
+    public Subscription findById(int id) {
+        return subscriptionRepository.findById(id);
+    }
+
     public List<Subscription> findByUserId(int userId) {
         return subscriptionRepository.findByUserId(userId);
+    }
+
+    public Subscription findByUserIdAndFeedId(int userId, int feedId) {
+        return subscriptionRepository.findByUserIdAndFeedId(userId, feedId);
     }
 
     public Subscription subscribe(int userId, String feedUrl) {
@@ -42,7 +50,7 @@ public class SubscriptionService {
             feedService.create(feed);
         }
 
-        Subscription subscription = subscriptionRepository.findByUserIdAndFeedId(userId, feed.getId());
+        Subscription subscription = findByUserIdAndFeedId(userId, feed.getId());
         if (subscription == null) {
             subscription = new Subscription();
             subscription.setUserId(userId);
@@ -55,6 +63,12 @@ public class SubscriptionService {
 
         subscription.setFeed(feed);
         return subscription;
+    }
+
+    public int unsubscribe(int id, int userId, int feedId) {
+        int result = subscriptionRepository.delete(id);
+        userItemService.deleteByfeedId(userId, feedId);
+        return result;
     }
 
     private void firstCrawl(int userId, Feed feed) {
@@ -90,5 +104,9 @@ public class SubscriptionService {
 
     public List<Integer> getSubscribeUsers(int feedId) {
         return subscriptionRepository.getSubscribeUsers(feedId);
+    }
+
+    public boolean subscribed(int userId, String feedUrl) {
+        return subscriptionRepository.subscribed(userId, feedUrl);
     }
 }

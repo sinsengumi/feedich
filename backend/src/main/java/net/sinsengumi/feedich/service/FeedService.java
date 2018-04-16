@@ -5,12 +5,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import net.sinsengumi.feedich.model.Feed;
-import net.sinsengumi.feedich.model.UnreadFeed;
 import net.sinsengumi.feedich.repository.FeedRepository;
 
-@Slf4j
 @Service
 @AllArgsConstructor
 public class FeedService {
@@ -21,19 +18,11 @@ public class FeedService {
         return feedRepository.create(feed);
     }
 
-    public Feed findById(int id) {
-        return feedRepository.findById(id);
-    }
-
     public List<Feed> findByAll() {
         return feedRepository.findAll();
     }
 
     public Feed findByFeedUrl(String feedUrl) {
         return feedRepository.findByFeedUrl(feedUrl);
-    }
-
-    public List<UnreadFeed> getUnreadFeeds(int userId) {
-        return feedRepository.getUnreadFeeds(userId);
     }
 }

@@ -16,8 +16,9 @@ public class DiscoverResponse {
     private String icon;
     private String image;
     private String favicon;
+    private boolean subscribed;
 
-    public static DiscoverResponse buildSyndFeed(SyndFeed syndFeed) {
+    public static DiscoverResponse buildSyndFeed(SyndFeed syndFeed, boolean subscribed) {
         DiscoverResponse response = new DiscoverResponse();
         response.setTitle(syndFeed.getTitle());
         response.setDescription(syndFeed.getDescription());
@@ -31,6 +32,7 @@ public class DiscoverResponse {
             response.setImage(syndFeed.getImage().getUrl());
         }
         response.setFavicon(HttpUtil.extractFavicon(response.getUrl()));
+        response.setSubscribed(subscribed);
         return response;
     }
 }

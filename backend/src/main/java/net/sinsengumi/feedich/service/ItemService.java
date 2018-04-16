@@ -25,10 +25,6 @@ public class ItemService {
         return itemRepository.create(items);
     }
 
-    public Item findById(int id) {
-        return itemRepository.findById(id);
-    }
-
     public Item findByUrl(int feedId, String url) {
         return itemRepository.findByUrl(feedId, url);
     }

@@ -72,15 +72,6 @@
       </foreach>
   </insert>
 
-  <select id="findById" resultMap="map">
-    select
-      <include refid="columns"><property name="tableName" value="i" /></include>
-    from
-      item i
-    where
-      i.id = #{id}
-  </select>
-
   <select id="findByUrl" resultMap="map">
     select
       <include refid="columns"><property name="tableName" value="i" /></include>

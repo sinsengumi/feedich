@@ -12,7 +12,11 @@ public interface UserItemRepository {
 
     int create(@Param("userItems") List<UserItem> userItems);
 
+    UserItem findByUserIdAndItemId(@Param("userId") int userId, @Param("itemId") int itemId);
+
     int read(@Param("userId") int userId, @Param("itemId") int itemId);
 
     int unread(@Param("userId") int userId, @Param("itemId") int itemId);
+
+    int deleteByfeedId(@Param("userId") int userId, @Param("feedId") int feedId);
 }

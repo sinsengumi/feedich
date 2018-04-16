@@ -36,6 +36,22 @@
     </selectKey>
   </insert>
 
+  <delete id="delete">
+    delete from subscription where id = #{id}
+  </delete>
+
+  <select id="findById" resultMap="map">
+    select
+      <include refid="columns"><property name="tableName" value="s" /></include>,
+      <include refid="net.sinsengumi.feedich.repository.FeedRepository.columns"><property name="tableName" value="f" /></include>,
+      (select count(1) from user_item ui where ui.user_id = #{userId} and ui.feed_id = f.id and ui.unread = 1) as subscription_unread_count
+    from
+      subscription s
+      join feed f on (f.id = s.feed_id)
+    where
+      s.id = #{id}
+  </select>
+
   <select id="findByUserId" resultMap="map">
     select
       <include refid="columns"><property name="tableName" value="s" /></include>,
@@ -72,5 +88,16 @@
       s.feed_id = #{feedId}
     order by
       s.user_id
+  </select>
+
+  <select id="subscribed" resultType="_boolean">
+    select
+      count(1)
+    from
+      subscription s
+      join feed f on (f.id = s.feed_id)
+    where
+      s.user_id = #{userId}
+      and f.feed_url = #{feedUrl}
   </select>
 </mapper>

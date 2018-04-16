@@ -53,6 +53,7 @@ public class Item {
         response.setPublishedAt(publishedAt);
         response.setCreatedAt(createdAt);
         response.setUpdatedAt(updatedAt);
+        response.setUnread(true); // TODO
         return response;
     }
 }

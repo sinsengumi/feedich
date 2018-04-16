@@ -15,6 +15,7 @@ public class FeedResponse {
     private String icon;
     private String image;
     private String favicon;
+    private Date publishedAt;
     private Date createdAt;
     private Date updatedAt;
 }

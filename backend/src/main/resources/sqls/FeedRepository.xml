@@ -3,17 +3,18 @@
 <mapper namespace="net.sinsengumi.feedich.repository.FeedRepository">
 
   <sql id="columns">
-    ${tableName}.id            as feed_id
-    , ${tableName}.title       as feed_title
-    , ${tableName}.description as feed_description
-    , ${tableName}.url         as feed_url
-    , ${tableName}.feed_url    as feed_feed_url
-    , ${tableName}.feed_type   as feed_type
-    , ${tableName}.icon        as feed_icon
-    , ${tableName}.image       as feed_image
-    , ${tableName}.favicon     as feed_favicon
-    , ${tableName}.created_at  as feed_created_at
-    , ${tableName}.updated_at  as feed_updated_at
+    ${tableName}.id             as feed_id
+    , ${tableName}.title        as feed_title
+    , ${tableName}.description  as feed_description
+    , ${tableName}.url          as feed_url
+    , ${tableName}.feed_url     as feed_feed_url
+    , ${tableName}.feed_type    as feed_type
+    , ${tableName}.icon         as feed_icon
+    , ${tableName}.image        as feed_image
+    , ${tableName}.favicon      as feed_favicon
+    , ${tableName}.published_at as feed_published_at
+    , ${tableName}.created_at   as feed_created_at
+    , ${tableName}.updated_at   as feed_updated_at
   </sql>
 
   <resultMap id="map" type="Feed">
@@ -26,6 +27,7 @@
     <result property="icon"        column="feed_icon" />
     <result property="image"       column="feed_image" />
     <result property="favicon"     column="feed_favicon" />
+    <result property="publishedAt" column="feed_published_at" />
     <result property="createdAt"   column="feed_created_at" />
     <result property="updatedAt"   column="feed_updated_at" />
   </resultMap>
@@ -40,6 +42,7 @@
       , icon
       , image
       , favicon
+      , published_at
       , created_at
     ) values (
       #{title}
@@ -50,21 +53,13 @@
       , #{icon}
       , #{image}
       , #{favicon}
+      , #{publishedAt}
       , now()
     )
     <selectKey resultType="_int" order="AFTER" keyProperty="id">
       select last_insert_id()
     </selectKey>
   </insert>
-
-  <select id="findById" resultMap="map">
-    select
-      <include refid="columns"><property name="tableName" value="f" /></include>
-    from
-      feed f
-    where
-      f.id = #{id}
-  </select>
 
   <select id="findAll" resultMap="map">
     select
@@ -82,30 +77,6 @@
       feed f
     where
       f.feed_url = #{feedUrl}
-  </select>
-
-  <resultMap id="unreadFeedMap" type="UnreadFeed">
-    <result property="feedId"      column="unread_feed_feed_id" />
-    <result property="unreadCount" column="unread_feed_unread_count" />
-    <association property="feed" resultMap="map" />
-  </resultMap>
-
-  <select id="getUnreadFeeds" resultMap="unreadFeedMap">
-    select
-      f.id       as unread_feed_feed_id
-      , count(1) as unread_feed_unread_count
-      , <include refid="columns"><property name="tableName" value="f" /></include>
-    from
-      user_item ui
-      join item i on (i.id = ui.item_id)
-      join feed f on (f.id = i.feed_id)
-    where
-      ui.user_id = #{userId}
-      and ui.unread = 1
-    group by
-      f.id
-    order by
-      count(1) desc
   </select>
 
 </mapper>

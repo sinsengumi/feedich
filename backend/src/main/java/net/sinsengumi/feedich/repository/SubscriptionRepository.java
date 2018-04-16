@@ -12,9 +12,15 @@ public interface SubscriptionRepository {
 
     int create(Subscription subscription);
 
+    int delete(int id);
+
+    Subscription findById(int id);
+
     List<Subscription> findByUserId(int userId);
 
     Subscription findByUserIdAndFeedId(@Param("userId") int userId, @Param("feedId") int feedId);
 
     List<Integer> getSubscribeUsers(int feedId);
+
+    boolean subscribed(@Param("userId") int userId, @Param("feedUrl") String feedUrl);
 }

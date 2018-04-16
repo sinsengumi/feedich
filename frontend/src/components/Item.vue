@@ -10,53 +10,38 @@
     </v-alert>
 
     <div v-if="items">
-      <v-layout>
-        <v-flex>
-          <v-card class="light-blue lighten-5">
-            <v-card-title primary-title class="pt-3">
-              <div>
-                <h3 class="headline mb-0"><a :href="feed.url" target="_blank"><img v-bind:src="feed.favicon" width="16" height="16" /> {{ feed.title }}</a></h3>
-                <div class="mt-1">{{ feed.description }}</div>
-              </div>
-            </v-card-title>
-            <v-divider />
+      <v-btn flat small  class="ml-0 mr-0 mt-0 pt-0 ">
+            <v-icon small class="mr-1">room</v-icon>123
+          </v-btn>
+          <v-btn flat small  class="ml-0 mr-0 mt-0 pt-0 ">
+            All Pins
+          </v-btn>
+      <!-- <v-btn-toggle>
 
-            <v-card-actions class="pt-0 pb-0">
-              <v-container grid-list-md>
-                <v-layout row wrap>
-                  <v-flex xs9>
-                    <v-chip disabled text-color="white" class="light-blue lighten-1" style="font-size:12px; height: 24px">
-                      <v-icon small>description</v-icon>&nbsp;<strong>{{ items.length }} unread items</strong>
-                    </v-chip>
-                    <v-chip disabled text-color="white" class="light-blue lighten-1" style="font-size:12px; height: 24px">
-                      <v-icon small>group</v-icon>&nbsp;<strong>1034 Subscribers</strong>
-                    </v-chip>
-                    <v-chip text-color="white" class="light-blue lighten-1" style="font-size:12px; height: 24px">
-                      <v-icon small>info</v-icon>&nbsp;<strong>Feed Information</strong>
-                    </v-chip>
-                  </v-flex>
-                  <v-flex xs3  text-xs-right>
-                    <v-chip class="grey" text-color="white" style="font-size:12px; height: 24px">
-                      <v-icon small>clear</v-icon>&nbsp;<strong>Unsubscribe</strong>
-                    </v-chip>
-                  </v-flex>
-                </v-layout>
-              </v-container>
-            </v-card-actions>
-          </v-card>
-        </v-flex>
-      </v-layout>
+        <v-btn>
+          <v-icon color="red">star</v-icon>
+        </v-btn>
+        <v-btn>
+          <span>Open pins</span>
+        </v-btn>
+      </v-btn-toggle> -->
+
+      <component-feed :subscription-id="$route.params.subscriptionId" :unread-item-count="unreadItemCount"></component-feed>
 
       <br />
 
       <v-expansion-panel focusable>
-        <v-expansion-panel-content v-for="(i, index) in items" :key="'itemId_' + i.id">
-          <div slot="header" :class="{title: i == activeItem}" @click="readItem(i, $event)">{{ i.title }}</div>
+        <v-expansion-panel-content v-for="i in items" :key="'itemId_' + i.id">
+          <div slot="header" :class="{title: i == activeItem}" @click="readItem(i, $event)" :ref="'itemRef_' + i.id">{{ i.title }}</div>
 
           <v-container grid-list-md>
                 <v-layout row wrap>
                   <v-flex xs9>
-                    <p>Author: {{ i.author }} | {{ i.publishedAt }} |  ピン | 記事詳細 | <v-btn flat small @click="unreadItem(i, $event)">未読にする</v-btn> | 共有</p>
+                    <p>
+                      Author: {{ i.author }} | {{ i.publishedAt }} |  ピン | 記事詳細 |
+                      <v-btn v-if="! i.unread" flat small @click="unreadItem(i, $event)">未読にする</v-btn>
+                      <v-btn v-if="i.unread" flat small @click="readItem(i, $event)">既読にする</v-btn>
+                      | 共有</p>
                   </v-flex>
                   <v-flex xs3  text-xs-right>
                     <v-chip class="grey" text-color="white" style="font-size:12px; height: 24px">
@@ -77,27 +62,35 @@
 
 <script>
 import ApiClient from '../ApiClient'
+import Feed from './Feed.vue'
 
 export default {
   name: 'Item',
+  components: {
+    'component-feed': Feed
+  },
   data () {
     return {
       loading: false,
       error: null,
       items: null,
-      activeItem: null,
-      feed: null
+      activeItem: null
     }
   },
   created () {
     this.fetchData()
 
-    this.$eventHub.$on('keyup13', () => {
-      console.log('enter in item')
-    })
+    this.$eventHub.$on('shortcutEnter', this.shortcutEnter)
   },
   watch: {
     '$route': 'fetchData'
+  },
+  computed: {
+    unreadItemCount () {
+      return this.items.filter((item) => {
+        return item.unread
+      }).length
+    }
   },
   methods: {
     fetchData () {
@@ -106,42 +99,73 @@ export default {
       this.loading = true
 
       const api = new ApiClient()
-      const feedId = this.$route.params.feedId
+      const subscriptionId = this.$route.params.subscriptionId
 
-      Promise.all([
-        api.getFeed(feedId),
-        api.getItems(feedId)
-      ]).then(([feedResult, itemsResult]) => {
-        this.feed = feedResult.data
-        this.items = itemsResult.data
-        this.loading = false
-      }).catch(() => {
-        this.loading = false
-        this.error = 'データの取得に失敗しました'
-      })
+      api.getItems(subscriptionId)
+        .then((response) => {
+          this.items = response.data
+          this.loading = false
+        })
+        .catch((error) => {
+          this.loading = false
+          console.log(error)
+          this.error = 'データの取得に失敗しました'
+        })
     },
     readItem (item, event) {
       this.activeItem = item
-      const api = new ApiClient()
-      api.readItem(item.id)
-        .then((response) => {
-          console.log('read')
-          this.$eventHub.$emit('readItem', item.feedId)
-        })
-        .catch((error) => {
-          console.log(error)
-        })
+
+      if (this.activeItem.unread) {
+        const api = new ApiClient()
+        api.readItem(item.id)
+          .then((response) => {
+            console.log('read')
+            this.activeItem.unread = false
+            item.unread = false
+
+            this.$eventHub.$emit('readItem', item.feedId, this.unreadItemCount)
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      }
     },
     unreadItem (item, event) {
-      const api = new ApiClient()
-      api.unreadItem(item.id)
-        .then((response) => {
-          console.log('unread')
-          this.$eventHub.$emit('unreadItem', item.feedId)
+      if (!this.activeItem.unread) {
+        const api = new ApiClient()
+        api.unreadItem(item.id)
+          .then((response) => {
+            console.log('unread')
+            this.activeItem.unread = true
+            item.unread = true
+
+            this.$eventHub.$emit('unreadItem', item.feedId, this.unreadItemCount)
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      }
+    },
+    shortcutEnter () {
+      // activeItem の次の要素を見つける
+      let targetItemId = null
+      if (this.activeItem == null) {
+        if (this.items.length > 0) {
+          targetItemId = this.items[0].id
+        }
+      } else {
+        this.items.forEach((item, index, items) => {
+          if (item.id === this.activeItem.id) {
+            targetItemId = items[index + 1].id
+          }
         })
-        .catch((error) => {
-          console.log(error)
-        })
+      }
+
+      if (targetItemId != null) {
+        const key = 'itemRef_' + targetItemId
+        const targetElement = this.$refs[key]
+        targetElement[0].click()
+      }
     }
   }
 }

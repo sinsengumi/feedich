@@ -33,6 +33,16 @@
       </foreach>
   </insert>
 
+  <select id="findByUserIdAndItemId" resultMap="map">
+    select
+      <include refid="columns"><property name="tableName" value="ui" /></include>
+    from
+      user_item ui
+    where
+      ui.user_id = #{userId}
+      and ui.item_id = #{itemId}
+  </select>
+
   <update id="read">
     update
       user_item
@@ -52,4 +62,8 @@
       user_id = #{userId}
       and item_id = #{itemId}
   </update>
+
+  <delete id="deleteByfeedId">
+    delete from user_item where user_id = #{userId} and feed_id = #{feedId}
+  </delete>
 </mapper>

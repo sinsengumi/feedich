@@ -22,12 +22,9 @@ public class Feed {
     private String icon;
     private String image;
     private String favicon;
+    private Date publishedAt;
     private Date createdAt;
     private Date updatedAt;
-
-    public String getReadableFeedType() {
-        return getReadableFeedType(feedType);
-    }
 
     public static String getReadableFeedType(String feedType) {
         String[] split = feedType.split("_");
@@ -50,7 +47,7 @@ public class Feed {
         feed.setDescription(syndFeed.getDescription());
         feed.setUrl(syndFeed.getLink());
         feed.setFeedUrl(feedUrl);
-        feed.setFeedType(syndFeed.getFeedType());
+        feed.setFeedType(getReadableFeedType(syndFeed.getFeedType()));
         if (syndFeed.getIcon() != null) {
             feed.setIcon(syndFeed.getIcon().getUrl());
         }
@@ -58,6 +55,7 @@ public class Feed {
             feed.setImage(syndFeed.getImage().getUrl());
         }
         feed.setFavicon(HttpUtil.extractFavicon(feed.getUrl()));
+        feed.setPublishedAt(syndFeed.getPublishedDate());
         return feed;
     }
 
@@ -74,6 +72,7 @@ public class Feed {
         response.setFavicon(favicon);
         response.setCreatedAt(createdAt);
         response.setUpdatedAt(updatedAt);
+        response.setPublishedAt(publishedAt);
         return response;
     }
 }

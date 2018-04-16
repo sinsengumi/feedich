@@ -1,15 +1,16 @@
 CREATE TABLE feed (
-  id            INT            AUTO_INCREMENT NOT NULL PRIMARY KEY
-  , title       VARCHAR(5000)  NOT NULL
-  , description TEXT
-  , url         VARCHAR(1000)  NOT NULL
-  , feed_url    VARCHAR(255)   NOT NULL
-  , feed_type   VARCHAR(50)    NOT NULL
-  , icon        VARCHAR(1000)
-  , image       VARCHAR(1000)
-  , favicon     VARCHAR(1000)
-  , created_at  DATETIME       DEFAULT NULL
-  , updated_at  DATETIME       DEFAULT NULL
+  id              INT            AUTO_INCREMENT NOT NULL PRIMARY KEY
+  , title         VARCHAR(5000)  NOT NULL
+  , description   TEXT
+  , url           VARCHAR(1000)  NOT NULL
+  , feed_url      VARCHAR(255)   NOT NULL
+  , feed_type     VARCHAR(50)    NOT NULL
+  , icon          VARCHAR(1000)
+  , image         VARCHAR(1000)
+  , favicon       VARCHAR(1000)
+  , published_at DATETIME       DEFAULT NULL
+  , created_at   DATETIME       DEFAULT NULL
+  , updated_at   DATETIME       DEFAULT NULL
 );
 
 

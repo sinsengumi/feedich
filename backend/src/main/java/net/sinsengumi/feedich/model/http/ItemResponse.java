@@ -15,5 +15,5 @@ public class ItemResponse {
     private Date publishedAt;
     private Date createdAt;
     private Date updatedAt;
-    private boolean active;
+    private boolean unread;
 }

@@ -4,7 +4,7 @@
       class="elevation-1">
 
     <v-toolbar-title>
-      <v-toolbar-side-icon>
+      <v-toolbar-side-icon @click="toIndex">
         <v-icon>rss_feed</v-icon>
       </v-toolbar-side-icon>
       <span>Feedich</span>
@@ -19,6 +19,13 @@
 </template>
 
 <script>
+export default {
+  methods: {
+    toIndex () {
+      this.$router.push({name: 'Index'})
+    }
+  }
+}
 </script>
 
 <style scoped>
