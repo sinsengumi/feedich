@@ -82,7 +82,6 @@ public class SubscriptionService {
             for (SyndEntry e : entries) {
                 final Item item = itemService.findByUrl(feedId, e.getLink());
                 if (item == null) {
-                    // log.info("New Item");
                     // item が登録されていない場合
                     // item を登録して、他の購読者の未読に追加する
                     Item newItem = Item.build(feedId, new Date(), e);
@@ -94,7 +93,6 @@ public class SubscriptionService {
                             .collect(Collectors.toList());
                     userItemService.create(userItems);
                 } else {
-                    log.info("Already registered Item");
                     // すでに item が登録されている場合
                     userItemService.create(Arrays.asList(UserItem.build(userId, item)));
                 }
