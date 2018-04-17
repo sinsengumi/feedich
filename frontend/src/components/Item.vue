@@ -11,7 +11,7 @@
 
     <div v-if="items">
       <v-btn flat small  class="ml-0 mr-0 mt-0 pt-0 ">
-            <v-icon small class="mr-1">room</v-icon>123
+            <v-icon small class="mr-1" color="light-blue" data-fa-transform="rotate-45">fas fa-thumbtack</v-icon>123
           </v-btn>
           <v-btn flat small  class="ml-0 mr-0 mt-0 pt-0 ">
             All Pins

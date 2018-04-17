@@ -6,12 +6,19 @@ import App from './App'
 import router from './router'
 import 'vuetify/dist/vuetify.min.css'
 import '@/assets/css/common.css'
+import DatetimeUtil from './DatetimeUtil'
 
 Vue.config.productionTip = false
 
 Vue.use(Vuetify)
 
 Vue.prototype.$eventHub = new Vue()
+
+const datetimeUtil = new DatetimeUtil()
+Vue.filter('fromNow', function (value) {
+  if (!value) return '-'
+  return datetimeUtil.fromNow(value)
+})
 
 /* eslint-disable no-new */
 new Vue({
