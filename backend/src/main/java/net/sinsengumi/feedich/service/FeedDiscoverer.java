@@ -56,14 +56,15 @@ public class FeedDiscoverer {
     }
 
     public SyndFeed parseFeed(String feedUrl) {
+        log.info("Parse Feed.   url = {}", feedUrl);
         SyndFeedInput input = new SyndFeedInput();
         SyndFeed syndFeed = null;
         try {
             syndFeed = input.build(new XmlReader(new URL(feedUrl)));
         } catch (FeedException e) {
             // リダイレクトを疑う
-            log.info("Try redirect url... {}", feedUrl);
             feedUrl = HttpUtil.getFinalUrl(feedUrl);
+            log.info("Try redirect. url = {}", feedUrl);
             try {
                 syndFeed = input.build(new XmlReader(new URL(feedUrl)));
             } catch (FeedException e1) {
@@ -71,7 +72,9 @@ public class FeedDiscoverer {
                 log.info("Try Unicode in CDATA... {}", feedUrl);
                 try {
                     syndFeed = input.build(getTrimmedUnicodeXML(feedUrl));
+                    log.info("Success Unicode in CDATA... {}", feedUrl);
                 } catch (IllegalArgumentException | FeedException | IOException e2) {
+                    log.info("Failed Unicode in CDATA... {}", feedUrl);
                     throw new ApplicationException(e2);
                 }
             } catch (IllegalArgumentException | IOException e1) {
@@ -84,7 +87,32 @@ public class FeedDiscoverer {
         if (syndFeed != null) {
             syndFeed.setUri(feedUrl);
         }
+
+        patchAtom03(syndFeed);
+
+        toReadableFeedType(syndFeed);
+
         return syndFeed;
+    }
+
+    private void toReadableFeedType(SyndFeed syndFeed) {
+        String[] split = syndFeed.getFeedType().split("_");
+        if (split.length == 2) {
+            String type = split[0];
+            String version = split[1];
+            if (type.equalsIgnoreCase("atom")) {
+                syndFeed.setFeedType("Atom " + version);
+            } else {
+                syndFeed.setFeedType(type.toUpperCase() + " " + version);
+            }
+        }
+    }
+
+    private void patchAtom03(SyndFeed syndFeed) {
+        if (syndFeed.getFeedType().equals("atom_0.3") && syndFeed.getDescription().contains("<![CDATA[")) {
+            String escapedDescription = syndFeed.getDescription().replaceAll("<!\\[CDATA\\[(.*?)]]>", "$1");
+            syndFeed.setDescription(escapedDescription);
+        }
     }
 
     private StringReader getTrimmedUnicodeXML(String rss) throws IOException {
@@ -103,7 +131,7 @@ public class FeedDiscoverer {
         }
         reader.close();
         urlconn.disconnect();
-        xml = xml.replaceAll("[\\00-\\x08\\x0a-\\x1f\\x7f]", "");
+        xml = xml.replaceAll("[\\00-\\x08\\x0a-\\x1f\\x7f]", ""); // 制御コード
         StringReader sreader = new StringReader(xml);
         return sreader;
     }

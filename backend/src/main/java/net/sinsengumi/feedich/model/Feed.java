@@ -26,28 +26,13 @@ public class Feed {
     private Date createdAt;
     private Date updatedAt;
 
-    public static String getReadableFeedType(String feedType) {
-        String[] split = feedType.split("_");
-        if (split.length == 2) {
-            String type = split[0];
-            String version = split[1];
-            if (type.equalsIgnoreCase("atom")) {
-                return "Atom " + version;
-            } else {
-                return type.toUpperCase() + " " + version;
-            }
-        } else {
-            return feedType;
-        }
-    }
-
-    public static Feed build(String feedUrl, SyndFeed syndFeed) {
+    public static Feed build(SyndFeed syndFeed) {
         Feed feed = new Feed();
         feed.setTitle(syndFeed.getTitle());
         feed.setDescription(syndFeed.getDescription());
         feed.setUrl(syndFeed.getLink());
-        feed.setFeedUrl(feedUrl);
-        feed.setFeedType(getReadableFeedType(syndFeed.getFeedType()));
+        feed.setFeedUrl(syndFeed.getUri());
+        feed.setFeedType(syndFeed.getFeedType());
         if (syndFeed.getIcon() != null) {
             feed.setIcon(syndFeed.getIcon().getUrl());
         }

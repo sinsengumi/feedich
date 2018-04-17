@@ -44,10 +44,13 @@ public class SubscriptionService {
     public Subscription subscribe(int userId, String feedUrl) {
         // feed に存在しなかったら登録しておく。
         Feed feed = feedService.findByFeedUrl(feedUrl);
+        SyndFeed syndFeed = null;
         if (feed == null) {
-            SyndFeed syndFeed = feedDiscoverer.parseFeed(feedUrl);
-            feed = Feed.build(feedUrl, syndFeed);
+            syndFeed = feedDiscoverer.parseFeed(feedUrl);
+            feed = Feed.build(syndFeed);
             feedService.create(feed);
+        } else {
+            syndFeed = feedDiscoverer.parseFeed(feedUrl);
         }
 
         Subscription subscription = findByUserIdAndFeedId(userId, feed.getId());
@@ -58,7 +61,7 @@ public class SubscriptionService {
             subscriptionRepository.create(subscription);
 
             // 初回クロール
-            firstCrawl(userId, feed);
+            firstCrawl(userId, feed, syndFeed);
         }
 
         subscription.setFeed(feed);
@@ -71,11 +74,8 @@ public class SubscriptionService {
         return result;
     }
 
-    private void firstCrawl(int userId, Feed feed) {
+    private void firstCrawl(int userId, Feed feed, SyndFeed syndFeed) {
         int feedId = feed.getId();
-        String feedUrl = feed.getFeedUrl();
-
-        SyndFeed syndFeed = feedDiscoverer.parseFeed(feedUrl);
         List<SyndEntry> entries = syndFeed.getEntries();
 
         if (!entries.isEmpty()) {

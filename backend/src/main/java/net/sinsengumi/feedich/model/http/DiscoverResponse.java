@@ -3,7 +3,6 @@ package net.sinsengumi.feedich.model.http;
 import com.rometools.rome.feed.synd.SyndFeed;
 
 import lombok.Data;
-import net.sinsengumi.feedich.model.Feed;
 import net.sinsengumi.feedich.util.HttpUtil;
 
 @Data
@@ -24,7 +23,7 @@ public class DiscoverResponse {
         response.setDescription(syndFeed.getDescription());
         response.setUrl(syndFeed.getLink());
         response.setFeedUrl(syndFeed.getUri());
-        response.setFeedType(Feed.getReadableFeedType(syndFeed.getFeedType()));
+        response.setFeedType(syndFeed.getFeedType());
         if (syndFeed.getIcon() != null) {
             response.setIcon(syndFeed.getIcon().getUrl());
         }
