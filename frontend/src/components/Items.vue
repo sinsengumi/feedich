@@ -38,7 +38,7 @@
                 <v-layout row wrap>
                   <v-flex xs9>
                     <p>
-                      Author: {{ i.author }} | {{ i.publishedAt }} |  ピン | 記事詳細 |
+                      Author: {{ i.author }} | {{ i.publishedAt | fromNow }} |  ピン | 記事詳細 |
                       <v-btn v-if="! i.unread" flat small @click="unreadItem(i, $event)">未読にする</v-btn>
                       <v-btn v-if="i.unread" flat small @click="readItem(i, $event)">既読にする</v-btn>
                       | 共有</p>

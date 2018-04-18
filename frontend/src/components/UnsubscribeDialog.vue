@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="intDialogVisible" max-width="500px" v-if="subscription != null">
+  <v-dialog v-model="innerDialogVisible" max-width="500px" v-if="subscription != null">
     <v-card>
       <v-card-title class="headline">Unsubscribe ?</v-card-title>
       <v-card-text class="pt-0">
@@ -7,8 +7,8 @@
         <span class="caption">{{ subscription.feed.description }}</span></v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="green" flat @click.native="intDialogVisible = false">No</v-btn>
-        <v-btn color="green" flat @click.native="unsubscribe(subscription)">Yes</v-btn>
+        <v-btn color="blue" flat @click.native="innerDialogVisible = false">No</v-btn>
+        <v-btn color="blue" flat @click.native="unsubscribe(subscription)">Yes</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -23,7 +23,7 @@ export default {
     'subscription'
   ],
   computed: {
-    intDialogVisible: {
+    innerDialogVisible: {
       get: function () {
         return this.dialogVisible
       },
@@ -39,13 +39,13 @@ export default {
       const api = new ApiClient()
       api.unsubscribe(subscription.id)
         .then((response) => {
-          this.intDialogVisible = false
+          this.innerDialogVisible = false
           this.$emit('close', subscription)
           this.$eventHub.$emit('unsubscribe')
         })
         .catch((error) => {
           console.log(error)
-          this.intDialogVisible = false
+          this.innerDialogVisible = false
         })
     }
   }

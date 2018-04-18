@@ -8,6 +8,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.jsoup.Jsoup;
@@ -27,6 +29,8 @@ import net.sinsengumi.feedich.util.HttpUtil;
 @Slf4j
 @Service
 public class FeedDiscoverer {
+
+    private final static Pattern CDATA_PATTERN = Pattern.compile("<!\\[CDATA\\[(.*?)]]>", Pattern.DOTALL);
 
     public List<SyndFeed> discover(String url) {
         // 直接 feedUrl が指定された場合
@@ -109,9 +113,12 @@ public class FeedDiscoverer {
     }
 
     private void patchAtom03(SyndFeed syndFeed) {
-        if (syndFeed.getFeedType().equals("atom_0.3") && syndFeed.getDescription().contains("<![CDATA[")) {
-            String escapedDescription = syndFeed.getDescription().replaceAll("<!\\[CDATA\\[(.*?)]]>", "$1");
-            syndFeed.setDescription(escapedDescription);
+        if (syndFeed.getFeedType().equals("atom_0.3")) {
+            Matcher matcher = CDATA_PATTERN.matcher(syndFeed.getDescription());
+            if (matcher.matches()) {
+                String escapedDescription = matcher.replaceAll("$1");
+                syndFeed.setDescription(escapedDescription);
+            }
         }
     }
 

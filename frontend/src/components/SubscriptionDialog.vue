@@ -34,7 +34,7 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="green" flat @click.native="innerDialogVisible = false">Close</v-btn>
+        <v-btn color="blue" flat @click.native="innerDialogVisible = false">Close</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
