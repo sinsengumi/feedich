@@ -26,7 +26,7 @@
         </v-btn>
       </v-btn-toggle> -->
 
-      <component-feed :subscription-id="$route.params.subscriptionId" :unread-item-count="unreadItemCount"></component-feed>
+      <component-subscription :subscription-id="$route.params.subscriptionId" :unread-item-count="unreadItemCount"></component-subscription>
 
       <br />
 
@@ -62,12 +62,12 @@
 
 <script>
 import ApiClient from '../ApiClient'
-import Feed from './Feed.vue'
+import Subscription from './Subscription'
 
 export default {
   name: 'Item',
   components: {
-    'component-feed': Feed
+    'component-subscription': Subscription
   },
   data () {
     return {
