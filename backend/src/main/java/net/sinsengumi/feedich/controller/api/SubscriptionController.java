@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import net.sinsengumi.feedich.controller.AbstractController;
 import net.sinsengumi.feedich.controller.UserController;
-import net.sinsengumi.feedich.model.Item;
 import net.sinsengumi.feedich.model.Subscription;
-import net.sinsengumi.feedich.model.http.ItemResponse;
+import net.sinsengumi.feedich.model.UserItem;
 import net.sinsengumi.feedich.model.http.SubscriptionResponse;
-import net.sinsengumi.feedich.service.ItemService;
+import net.sinsengumi.feedich.model.http.UserItemResponse;
 import net.sinsengumi.feedich.service.SubscriptionService;
+import net.sinsengumi.feedich.service.UserItemService;
 
 @RestController
 @RequestMapping("api/subscriptions")
@@ -27,7 +27,7 @@ import net.sinsengumi.feedich.service.SubscriptionService;
 public class SubscriptionController extends AbstractController {
 
     private final SubscriptionService subscriptionService;
-    private final ItemService itemService;
+    private final UserItemService userItemService;
 
     @GetMapping
     public List<SubscriptionResponse> subscriptions() {
@@ -44,12 +44,12 @@ public class SubscriptionController extends AbstractController {
     }
 
     @GetMapping("{subscriptionId}/items")
-    public List<ItemResponse> items(@PathVariable int subscriptionId) {
+    public List<UserItemResponse> items(@PathVariable int subscriptionId) {
         Subscription subscription = subscriptionService.findById(subscriptionId);
         authorizeResource(subscription, UserController.USER_ID);
 
-        return itemService.getUnreadItem(UserController.USER_ID, subscription.getFeedId()).stream()
-                .map(Item::toResponse)
+        return userItemService.findByUserIdAndFeedId(UserController.USER_ID, subscription.getFeedId()).stream()
+                .map(UserItem::toResponse)
                 .collect(Collectors.toList());
     }
 

@@ -5,14 +5,10 @@ import java.util.Date;
 import lombok.Data;
 
 @Data
-public class ItemResponse {
+public class PinResponse {
     private int id;
-    private int feedId;
     private String title;
-    private String description;
     private String url;
-    private String author;
-    private Date publishedAt;
     private Date createdAt;
     private Date updatedAt;
 }

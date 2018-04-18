@@ -37,6 +37,15 @@
     </selectKey>
   </insert>
 
+  <select id="findById" resultMap="map">
+    select
+      <include refid="columns"><property name="tableName" value="p" /></include>
+    from
+      pin p
+    where
+      p.id = #{id}
+  </select>
+
   <select id="findByUserId" resultMap="map">
     select
       <include refid="columns"><property name="tableName" value="p" /></include>

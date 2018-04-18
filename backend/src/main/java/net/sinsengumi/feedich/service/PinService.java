@@ -15,7 +15,12 @@ public class PinService {
     private final PinRepository pinRepository;
 
     public int create(Pin pin) {
+        // TODO: 重複チェック
         return pinRepository.create(pin);
+    }
+
+    public Pin findById(int id) {
+        return pinRepository.findById(id);
     }
 
     public List<Pin> findByUserId(int userId) {

@@ -6,11 +6,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import net.sinsengumi.feedich.model.Item;
 import net.sinsengumi.feedich.repository.ItemRepository;
 
-@Slf4j
 @Service
 @AllArgsConstructor
 public class ItemService {
@@ -31,9 +29,5 @@ public class ItemService {
 
     public List<Item> findByFeedId(int feedId, Date createdAt) {
         return itemRepository.findByFeedId(feedId, createdAt);
-    }
-
-    public List<Item> getUnreadItem(int userId, int feedId) {
-        return itemRepository.getUnreadItem(userId, feedId);
     }
 }

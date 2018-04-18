@@ -45,4 +45,17 @@ export default class ApiClient {
     params.append('itemId', itemId)
     return axios.post(`${API_BASE_URL}/api/items/unread`, params)
   }
+
+  addPin (title, url) {
+    const params = new URLSearchParams()
+    params.append('title', title)
+    params.append('url', url)
+    return axios.put(`${API_BASE_URL}/api/pins`, params)
+  }
+
+  removePin (pinId) {
+    const params = new URLSearchParams()
+    params.append('pinId', pinId)
+    return axios.delete(`${API_BASE_URL}/api/pins/${pinId}`, params)
+  }
 }

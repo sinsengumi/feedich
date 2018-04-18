@@ -18,6 +18,10 @@ public class UserItemService {
         return userItemRepository.create(userItems);
     }
 
+    public List<UserItem> findByUserIdAndFeedId(int userId, int feedId) {
+        return userItemRepository.findByUserIdAndFeedId(userId, feedId);
+    }
+
     public UserItem findByUserIdAndItemId(int userId, int itemId) {
         return userItemRepository.findByUserIdAndItemId(userId, itemId);
     }

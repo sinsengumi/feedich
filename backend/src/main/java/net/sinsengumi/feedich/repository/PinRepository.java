@@ -11,6 +11,8 @@ public interface PinRepository {
 
     int create(Pin pin);
 
+    Pin findById(int id);
+
     List<Pin> findByUserId(int userId);
 
     int delete(int id);

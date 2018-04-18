@@ -18,7 +18,7 @@
     <result property="updatedAt"   column="subscription_updated_at" />
     <result property="unreadCount" column="subscription_unread_count" />
 
-    <association property="feed" resultMap="net.sinsengumi.feedich.repository.FeedRepository.map"/>
+    <association property="feed" resultMap="net.sinsengumi.feedich.repository.FeedRepository.map" />
   </resultMap>
 
   <insert id="create" parameterType="Subscription">

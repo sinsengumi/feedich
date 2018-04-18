@@ -14,6 +14,9 @@
     <result property="itemId" column="user_item_item_id" />
     <result property="feedId" column="user_item_feed_id" />
     <result property="unread"  column="user_item_unread" />
+
+    <association property="item" resultMap="net.sinsengumi.feedich.repository.ItemRepository.map" />
+    <association property="pin" resultMap="net.sinsengumi.feedich.repository.PinRepository.map" />
   </resultMap>
 
   <insert id="create" parameterType="UserItem">
@@ -33,11 +36,29 @@
       </foreach>
   </insert>
 
+  <select id="findByUserIdAndFeedId" resultMap="map">
+    select
+      <include refid="columns"><property name="tableName" value="ui" /></include>
+      , <include refid="net.sinsengumi.feedich.repository.ItemRepository.columns"><property name="tableName" value="i" /></include>
+      , <include refid="net.sinsengumi.feedich.repository.PinRepository.columns"><property name="tableName" value="p" /></include>
+    from
+      user_item ui
+      left join item i on (i.id = ui.item_id)
+      left join pin p on (p.url = i.url and p.user_id = ui.user_id)
+    where
+      ui.user_id = #{userId}
+      and ui.feed_id = #{feedId}
+  </select>
+
   <select id="findByUserIdAndItemId" resultMap="map">
     select
       <include refid="columns"><property name="tableName" value="ui" /></include>
+      , <include refid="net.sinsengumi.feedich.repository.ItemRepository.columns"><property name="tableName" value="i" /></include>
+      , <include refid="net.sinsengumi.feedich.repository.PinRepository.columns"><property name="tableName" value="p" /></include>
     from
       user_item ui
+      left join item i on (i.id = ui.item_id)
+      left join pin p on (p.url = i.url and p.user_id = ui.user_id)
     where
       ui.user_id = #{userId}
       and ui.item_id = #{itemId}
