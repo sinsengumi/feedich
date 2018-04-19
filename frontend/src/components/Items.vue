@@ -11,7 +11,7 @@
     <div v-if="userItems">
       <pin-toolbar></pin-toolbar>
 
-      <component-subscription :subscription-id="$route.params.subscriptionId" :unread-item-count="unreadItemCount"></component-subscription>
+      <component-subscription :subscription="activeSubscription" :unread-item-count="unreadItemCount"></component-subscription>
 
       <br />
 
@@ -57,6 +57,8 @@ import ApiClient from '../ApiClient'
 import Subscription from './Subscription'
 import PinToolbar from './PinToolbar'
 
+const api = new ApiClient()
+
 export default {
   name: 'Item',
   components: {
@@ -80,6 +82,12 @@ export default {
     '$route': 'fetchData'
   },
   computed: {
+    activeSubscriptionId () {
+      return Number(this.$route.params.subscriptionId)
+    },
+    activeSubscription () {
+      return this.$store.getters.getSubscriptionById(this.activeSubscriptionId)
+    },
     unreadItemCount () {
       return this.userItems.filter((userItem) => {
         return userItem.unread
@@ -92,17 +100,13 @@ export default {
       this.error = null
       this.loading = true
 
-      const api = new ApiClient()
-      const subscriptionId = this.$route.params.subscriptionId
-
-      api.getItems(subscriptionId)
+      api.getItems(this.activeSubscriptionId)
         .then((response) => {
           this.userItems = response.data
           this.loading = false
         })
         .catch((error) => {
           this.loading = false
-          console.log(error)
           this.error = 'データの取得に失敗しました'
         })
     },
@@ -110,31 +114,24 @@ export default {
       this.activeItem = userItem
 
       if (this.activeItem.unread) {
-        const api = new ApiClient()
         api.readItem(userItem.itemId)
           .then((response) => {
             this.activeItem.unread = false
-            userItem.unread = false
 
-            this.$eventHub.$emit('readItem', userItem.feedId, this.unreadItemCount)
-          })
-          .catch((error) => {
-            console.log(error)
+            this.$store.commit('READ_ITEM', {subscriptionId: this.activeSubscriptionId, unreadItemCount: this.unreadItemCount})
           })
       }
     },
     unreadItem (userItem, event) {
+      this.activeItem = userItem
+
       if (!this.activeItem.unread) {
-        const api = new ApiClient()
         api.unreadItem(userItem.itemId)
           .then((response) => {
             this.activeItem.unread = true
             userItem.unread = true
 
-            this.$eventHub.$emit('unreadItem', userItem.feedId, this.unreadItemCount)
-          })
-          .catch((error) => {
-            console.log(error)
+            this.$store.commit('READ_ITEM', {subscriptionId: this.activeSubscriptionId, unreadItemCount: this.unreadItemCount})
           })
       }
     },
@@ -143,17 +140,11 @@ export default {
         .then((addedPin) => {
           userItem.pin = addedPin
         })
-        .catch((error) => {
-          console.log(error)
-        })
     },
     removePin (userItem) {
       this.$store.dispatch('REMOVE_PIN', {pin: userItem.pin})
         .then((removedPin) => {
           userItem.pin = null
-        })
-        .catch((error) => {
-          console.log(error)
         })
     },
     shortcutEnter () {

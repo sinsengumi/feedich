@@ -89,7 +89,6 @@ export default {
         .catch((error) => {
           this.loading = false
           this.error = true
-          console.log(error)
         })
     },
     subscribe (feed) {

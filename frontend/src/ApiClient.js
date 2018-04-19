@@ -1,9 +1,22 @@
-'use strict'
-
+import Vue from 'vue'
 import axios from 'axios'
-axios.defaults.withCredentials = true
 
 const API_BASE_URL = process.env.API_BASE_URL
+
+axios.defaults.withCredentials = true
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response) {
+      Vue.toasted.global.error({message: error.response.data.message})
+    } else if (error.request) {
+      Vue.toasted.global.error({message: 'Network Error'})
+    } else {
+      Vue.toasted.global.error()
+    }
+    return Promise.reject(error)
+  }
+)
 
 export default class ApiClient {
   discoverFeeds (url) {

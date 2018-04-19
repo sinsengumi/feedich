@@ -7,3 +7,12 @@ a {
 .btn {
   text-transform: none;
 }
+
+.toasted-container.top-right {
+    top: 2%!important;
+    right: 2%!important;
+}
+
+div.toasted > svg {
+  margin-right: 12px;
+}

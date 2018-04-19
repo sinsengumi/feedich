@@ -39,6 +39,7 @@ export default {
     unsubscribe (subscription) {
       this.$store.dispatch('UNSUBSCRIBE', {subscription: subscription})
       this.innerDialogVisible = false
+      this.$emit('close', subscription)
     }
   }
 }

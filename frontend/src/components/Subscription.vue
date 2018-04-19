@@ -1,14 +1,5 @@
 <template>
   <div>
-
-    <v-container fill-height v-if="loading">
-      <v-progress-circular class="mx-auto" indeterminate :size="70" :width="7" color="blue"></v-progress-circular>
-    </v-container>
-
-    <v-alert v-if="error" type="error" :value="true">
-      {{ error }}
-    </v-alert>
-
     <v-card class="light-blue lighten-5" v-if="!loading && subscription != null">
       <v-card-title primary-title class="pt-3">
         <div>
@@ -50,46 +41,22 @@
 </template>
 
 <script>
-import ApiClient from '../ApiClient'
 import SubscriptionDialog from './SubscriptionDialog'
 import UnsubscribeDialog from './UnsubscribeDialog'
 
 export default {
-  props: ['subscriptionId', 'unreadItemCount'],
+  props: ['subscription', 'unreadItemCount'],
   components: {
     'subscription-dialog': SubscriptionDialog,
     'unsubscribe-dialog': UnsubscribeDialog
   },
   data () {
     return {
-      loading: false,
-      error: null,
-      subscription: null,
       subscriptionDialog: false,
       unsubscribeDialog: false
     }
   },
-  created () {
-    this.fetchFeed()
-  },
   methods: {
-    fetchFeed () {
-      this.loading = true
-      this.error = null
-      this.subscription = null
-
-      const api = new ApiClient()
-      api.getSubscription(this.subscriptionId)
-        .then((response) => {
-          this.subscription = response.data
-          this.loading = false
-        })
-        .catch((error) => {
-          this.loading = false
-          this.error = true
-          console.log(error)
-        })
-    },
     closeSubscriptionDialog () {
       this.subscriptionDialog = false
     },

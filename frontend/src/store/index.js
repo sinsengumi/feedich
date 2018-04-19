@@ -14,6 +14,11 @@ export default new Vuex.Store({
     subscriptions: [],
     pins: []
   },
+  getters: {
+    getSubscriptionById: (state) => (id) => {
+      return state.subscriptions.find(s => s.id === id)
+    }
+  },
   mutations: {
     [mutation.SET_SUBSCRIPTIONS] (state, payload) {
       state.subscriptions = payload.subscriptions
@@ -26,6 +31,14 @@ export default new Vuex.Store({
       if (index !== -1) {
         state.subscriptions.splice(index, 1)
       }
+    },
+    [mutation.READ_ITEM] (state, payload) {
+      const subscription = state.subscriptions.find(s => s.id === payload.subscriptionId)
+      subscription.unreadCount = payload.unreadItemCount
+    },
+    [mutation.UNREAD_ITEM] (state, payload) {
+      const subscription = state.subscriptions.find(s => s.id === payload.subscriptionId)
+      subscription.unreadCount = payload.unreadItemCount
     },
 
     [mutation.SET_PINS] (state, payload) {
@@ -48,14 +61,12 @@ export default new Vuex.Store({
           commit(mutation.SET_SUBSCRIPTIONS, {subscriptions: response.data})
           return response.data
         })
-        .catch((error) => {
-          console.log(error)
-        })
     },
     [action.SUBSCRIBE] ({ commit }, payload) {
       return api.subscribe(payload.feedUrl)
         .then((response) => {
           commit(mutation.SUBSCRIBE, {addedSubscription: response.data})
+          Vue.toasted.global.info({message: 'Subscribe "' + response.data.feed.title + '"'})
           return response.data
         })
         .catch((error) => {
@@ -66,6 +77,7 @@ export default new Vuex.Store({
       return api.unsubscribe(payload.subscription.id)
         .then((response) => {
           commit(mutation.UNSUBSCRIBE, {removedSubscription: payload.subscription})
+          Vue.toasted.global.info({message: 'Unsubscribe "' + payload.subscription.feed.title + '"'})
           return payload.subscription
         })
         .catch((error) => {
