@@ -4,6 +4,7 @@ import Vue from 'vue'
 import Vuetify from 'vuetify'
 import App from './App'
 import router from './router'
+import store from './store'
 import 'vuetify/dist/vuetify.min.css'
 import '@/assets/css/common.css'
 import DatetimeUtil from './DatetimeUtil'
@@ -24,6 +25,7 @@ Vue.filter('fromNow', function (value) {
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>',
   created () {

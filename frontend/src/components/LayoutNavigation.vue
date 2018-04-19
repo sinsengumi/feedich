@@ -76,6 +76,7 @@
 <script>
 import ApiClient from '../ApiClient'
 import SubscribeDialog from './SubscribeDialog'
+import { mapState } from 'vuex'
 
 export default {
   components: {

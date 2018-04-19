@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <v-container fill-height v-if="loading">
       <v-progress-circular class="mx-auto" indeterminate :size="70" :width="7" color="blue"></v-progress-circular>
     </v-container>
@@ -10,21 +9,7 @@
     </v-alert>
 
     <div v-if="userItems">
-      <v-btn flat small  class="ml-0 mr-0 mt-0 pt-0 ">
-            <v-icon small class="mr-1" color="light-blue" data-fa-transform="rotate-45">fas fa-thumbtack</v-icon>123
-          </v-btn>
-          <v-btn flat small  class="ml-0 mr-0 mt-0 pt-0 ">
-            All Pins
-          </v-btn>
-      <!-- <v-btn-toggle>
-
-        <v-btn>
-          <v-icon color="red">star</v-icon>
-        </v-btn>
-        <v-btn>
-          <span>Open pins</span>
-        </v-btn>
-      </v-btn-toggle> -->
+      <pin-toolbar></pin-toolbar>
 
       <component-subscription :subscription-id="$route.params.subscriptionId" :unread-item-count="unreadItemCount"></component-subscription>
 
@@ -70,11 +55,15 @@
 <script>
 import ApiClient from '../ApiClient'
 import Subscription from './Subscription'
+import PinToolbar from './PinToolbar'
+import { mapActions } from 'vuex'
+import * as action from '../store/action-types'
 
 export default {
   name: 'Item',
   components: {
-    'component-subscription': Subscription
+    'component-subscription': Subscription,
+    'pin-toolbar': PinToolbar
   },
   data () {
     return {
@@ -100,6 +89,10 @@ export default {
     }
   },
   methods: {
+    ...mapActions([
+      action.ADD_PIN,
+      action.REMOVE_PIN
+    ]),
     fetchData () {
       this.userItems = null
       this.error = null
@@ -153,11 +146,9 @@ export default {
     },
     addPin (userItem) {
       console.log('addPin')
-      const api = new ApiClient()
-      api.addPin(userItem.item.title, userItem.item.url)
-        .then((response) => {
-          console.log(response.data)
-          userItem.pin = response.data
+      this.ADD_PIN({title: userItem.item.title, url: userItem.item.url})
+        .then((addedPin) => {
+          userItem.pin = addedPin
         })
         .catch((error) => {
           console.log(error)
@@ -165,10 +156,8 @@ export default {
     },
     removePin (userItem) {
       console.log('removePin')
-      const api = new ApiClient()
-      api.removePin(userItem.pin.id)
-        .then((response) => {
-          console.log(response.data)
+      this.REMOVE_PIN({pin: userItem.pin})
+        .then((removedPin) => {
           userItem.pin = null
         })
         .catch((error) => {

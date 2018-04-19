@@ -84,7 +84,7 @@ export default {
           sortable: false
         }
       ],
-      rowsPerPageItems: [15, 30, 50, {'text': 'All', 'value': -1}],
+      rowsPerPageItems: [20, 50, 100, {'text': 'All', 'value': -1}],
       subscriptionDialog: false,
       unsubscribeDialog: false,
       targetSubscription: null

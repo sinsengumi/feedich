@@ -1,6 +1,10 @@
 package net.sinsengumi.feedich.controller.api;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +24,13 @@ import net.sinsengumi.feedich.service.PinService;
 public class PinController extends AbstractController {
 
     private final PinService pinService;
+
+    @GetMapping
+    public List<PinResponse> pins() {
+        return pinService.findByUserId(UserController.USER_ID).stream()
+                .map(Pin::toResponse)
+                .collect(Collectors.toList());
+    }
 
     @PutMapping
     public PinResponse addPin(@RequestParam String title, String url) {

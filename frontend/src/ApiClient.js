@@ -46,6 +46,10 @@ export default class ApiClient {
     return axios.post(`${API_BASE_URL}/api/items/unread`, params)
   }
 
+  getPins () {
+    return axios.get(`${API_BASE_URL}/api/pins`)
+  }
+
   addPin (title, url) {
     const params = new URLSearchParams()
     params.append('title', title)
