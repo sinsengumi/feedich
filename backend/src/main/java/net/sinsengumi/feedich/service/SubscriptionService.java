@@ -64,8 +64,7 @@ public class SubscriptionService {
             firstCrawl(userId, feed, syndFeed);
         }
 
-        subscription.setFeed(feed);
-        return subscription;
+        return findById(subscription.getId());
     }
 
     public int unsubscribe(int id, int userId, int feedId) {
@@ -91,7 +90,7 @@ public class SubscriptionService {
                     List<UserItem> userItems = subscribeUsers.stream()
                             .map(uid -> UserItem.build(uid, newItem))
                             .collect(Collectors.toList());
-                    userItemService.create(userItems);
+                    userItemService.create(userItems); // TODO: 非同期にする（対象者以外）
                 } else {
                     // すでに item が登録されている場合
                     userItemService.create(Arrays.asList(UserItem.build(userId, item)));

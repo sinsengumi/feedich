@@ -48,7 +48,7 @@ public class SubscriptionController extends AbstractController {
         Subscription subscription = subscriptionService.findById(subscriptionId);
         authorizeResource(subscription, UserController.USER_ID);
 
-        return userItemService.findByUserIdAndFeedId(UserController.USER_ID, subscription.getFeedId()).stream()
+        return userItemService.findUnreadItems(UserController.USER_ID, subscription.getFeedId()).stream()
                 .map(UserItem::toResponse)
                 .collect(Collectors.toList());
     }

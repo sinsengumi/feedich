@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import ApiClient from '../ApiClient'
+import { mapState } from 'vuex'
 
 export default {
   props: [
@@ -23,6 +23,7 @@ export default {
     'subscription'
   ],
   computed: {
+    ...mapState(['subscriptions']),
     innerDialogVisible: {
       get: function () {
         return this.dialogVisible
@@ -36,17 +37,8 @@ export default {
   },
   methods: {
     unsubscribe (subscription) {
-      const api = new ApiClient()
-      api.unsubscribe(subscription.id)
-        .then((response) => {
-          this.innerDialogVisible = false
-          this.$emit('close', subscription)
-          this.$eventHub.$emit('unsubscribe')
-        })
-        .catch((error) => {
-          console.log(error)
-          this.innerDialogVisible = false
-        })
+      this.$store.dispatch('UNSUBSCRIBE', {subscription: subscription})
+      this.innerDialogVisible = false
     }
   }
 }

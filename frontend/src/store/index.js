@@ -22,8 +22,10 @@ export default new Vuex.Store({
       state.subscriptions.unshift(payload.addedSubscription)
     },
     [mutation.UNSUBSCRIBE] (state, payload) {
-      const index = state.subscriptions.indexOf(payload.removedSubscription)
-      state.subscriptions.splice(index, 1)
+      const index = state.subscriptions.findIndex(s => s.id === payload.removedSubscription.id)
+      if (index !== -1) {
+        state.subscriptions.splice(index, 1)
+      }
     },
 
     [mutation.SET_PINS] (state, payload) {
@@ -33,8 +35,10 @@ export default new Vuex.Store({
       state.pins.unshift(payload.addedPin)
     },
     [mutation.REMOVE_PIN] (state, payload) {
-      const index = state.pins.indexOf(payload.removedPin)
-      state.pins.splice(index, 1)
+      const index = state.pins.findIndex(p => p.id === payload.removedPin.id)
+      if (index !== -1) {
+        state.pins.splice(index, 1)
+      }
     }
   },
   actions: {

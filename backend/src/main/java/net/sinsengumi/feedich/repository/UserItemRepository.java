@@ -12,7 +12,7 @@ public interface UserItemRepository {
 
     int create(@Param("userItems") List<UserItem> userItems);
 
-    List<UserItem> findByUserIdAndFeedId(@Param("userId") int userId, @Param("feedId") int feedId);
+    List<UserItem> findUnreadItems(@Param("userId") int userId, @Param("feedId") int feedId);
 
     UserItem findByUserIdAndItemId(@Param("userId") int userId, @Param("itemId") int itemId);
 

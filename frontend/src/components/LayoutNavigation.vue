@@ -20,10 +20,10 @@
               <v-icon small class="mr-1">sort</v-icon>Sort
             </v-btn>
             <v-list>
-              <v-list-tile @click="sortAlphabeticallyAsc">
+              <v-list-tile @click="">
                 <v-list-tile-title>Alphabetically asc</v-list-tile-title>
               </v-list-tile>
-              <v-list-tile @click="sortAlphabeticallyDesc">
+              <v-list-tile @click="">
                 <v-list-tile-title>Alphabetically desc</v-list-tile-title>
               </v-list-tile>
             </v-list>
@@ -54,7 +54,7 @@
         </v-subheader>
 
         <template v-for="(s, index) in filteredSubscriptions">
-          <v-list-tile ripple @click="fetchFeed(s)" :key="s.feed.title" :class="{'light-blue lighten-5': s === activeSubscription}">
+          <v-list-tile ripple @click="toItems(s)" :key="s.feed.title" :class="{'light-blue lighten-5': s === activeSubscription}">
             <v-list-tile-action style="min-width: 25px;">
               <img :src="s.feed.favicon" width="16" height="16" />
             </v-list-tile-action>
@@ -74,7 +74,6 @@
 </template>
 
 <script>
-import ApiClient from '../ApiClient'
 import SubscribeDialog from './SubscribeDialog'
 import { mapState } from 'vuex'
 
@@ -84,7 +83,6 @@ export default {
   },
   data () {
     return {
-      subscriptions: null,
       loading: false,
       fileterWord: '',
       activeSubscription: null,
@@ -92,14 +90,11 @@ export default {
     }
   },
   created () {
-    this.fetchSubscriptions()
-
     this.$eventHub.$on('readItem', this.readItem)
     this.$eventHub.$on('unreadItem', this.unreadItem)
-    this.$eventHub.$on('subscribe', this.unsubscribe)
-    this.$eventHub.$on('unsubscribe', this.unsubscribe)
   },
   computed: {
+    ...mapState(['subscriptions']),
     filteredSubscriptions () {
       const filteredList = this.subscriptions.filter((s) => {
         const title = s.feed.title.toLowerCase()
@@ -119,12 +114,9 @@ export default {
   methods: {
     fetchSubscriptions () {
       this.loading = true
-      this.subscriptions = null
 
-      const api = new ApiClient()
-      api.getSubscriptions()
+      this.$store.dispatch('GET_SUBSCRIPTIONS')
         .then((response) => {
-          this.subscriptions = response.data
           this.loading = false
         })
         .catch((error) => {
@@ -132,12 +124,14 @@ export default {
           console.log(error)
         })
     },
-    fetchFeed (subscription, event) {
+    toItems (subscription, event) {
       this.activeSubscription = subscription
-      const subscriptionId = subscription.id
-      this.$router.push({name: 'Items', params: { subscriptionId }})
+      this.$router.push({name: 'Items', params: { 'subscriptionId': subscription.id }})
     },
-    sortAlphabeticallyAsc () {
+    toSubscriptions () {
+      this.$router.push({name: 'Subscriptions'})
+    },
+    /* sortAlphabeticallyAsc () {
       const tmp = this.subscriptions
       this.subscriptions = null
       localStorage.setItem('subscriptionSortKey', 'AlphabeticallyAsc')
@@ -148,7 +142,7 @@ export default {
       this.subscriptions = null
       localStorage.setItem('subscriptionSortKey', 'AlphabeticallyDesc')
       this.subscriptions = tmp
-    },
+    }, */
     readItem (feedId, unreadItemCount) {
       this.subscriptions.forEach((s) => {
         if (s.feed.id === feedId) {
@@ -165,15 +159,6 @@ export default {
     },
     closeSubscribeDialog (feed) {
       this.subscribeDialog = false
-    },
-    subscribe () {
-      this.fetchSubscriptions()
-    },
-    unsubscribe () {
-      this.fetchSubscriptions()
-    },
-    toSubscriptions () {
-      this.$router.push({name: 'Subscriptions'})
     }
   }
 }

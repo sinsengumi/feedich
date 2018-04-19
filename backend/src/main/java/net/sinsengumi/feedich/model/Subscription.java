@@ -24,6 +24,7 @@ public class Subscription implements Authorizable {
         response.setUpdatedAt(updatedAt);
         response.setUnreadCount(unreadCount);
         response.setFeed(feed.toResponse());
+        response.setUnreadCount(unreadCount);
         return response;
     }
 

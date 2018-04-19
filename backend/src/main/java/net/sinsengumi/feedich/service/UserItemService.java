@@ -18,8 +18,8 @@ public class UserItemService {
         return userItemRepository.create(userItems);
     }
 
-    public List<UserItem> findByUserIdAndFeedId(int userId, int feedId) {
-        return userItemRepository.findByUserIdAndFeedId(userId, feedId);
+    public List<UserItem> findUnreadItems(int userId, int feedId) {
+        return userItemRepository.findUnreadItems(userId, feedId);
     }
 
     public UserItem findByUserIdAndItemId(int userId, int itemId) {

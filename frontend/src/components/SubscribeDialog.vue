@@ -93,15 +93,8 @@ export default {
         })
     },
     subscribe (feed) {
-      const api = new ApiClient()
-      api.subscribe(feed.feedUrl)
-        .then((response) => {
-          this.$emit('close')
-          this.$eventHub.$emit('subscribe', feed)
-        })
-        .catch((error) => {
-          console.log(error)
-        })
+      this.$store.dispatch('SUBSCRIBE', {feedUrl: feed.feedUrl})
+      this.innerDialogVisible = false
     }
   }
 }

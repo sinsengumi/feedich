@@ -1,7 +1,7 @@
 <template>
   <div>
     <subscription-dialog :dialog-visible="subscriptionDialog" :subscription="targetSubscription" @close="subscriptionDialog = false"></subscription-dialog>
-    <unsubscribe-dialog :dialog-visible="unsubscribeDialog" :subscription="targetSubscription" @close="closeUnsubscribeDialog"></unsubscribe-dialog>
+    <unsubscribe-dialog :dialog-visible="unsubscribeDialog" :subscription="targetSubscription" @close="unsubscribeDialog = false"></unsubscribe-dialog>
 
     <v-card>
       <v-card-title class="pb-0">
@@ -51,9 +51,9 @@
 </template>
 
 <script>
-import ApiClient from '../ApiClient'
 import SubscriptionDialog from './SubscriptionDialog'
 import UnsubscribeDialog from './UnsubscribeDialog'
+import { mapState } from 'vuex'
 
 export default {
   components: {
@@ -63,8 +63,6 @@ export default {
   data () {
     return {
       search: '',
-      subscriptions: null,
-      loading: false,
       headers: [
         {
           text: 'Title',
@@ -91,28 +89,16 @@ export default {
     }
   },
   created () {
-    this.fetchSubscriptions()
+    this.$store.dispatch('GET_SUBSCRIPTIONS')
+  },
+  computed: {
+    ...mapState(['subscriptions'])
   },
   methods: {
-    fetchSubscriptions () {
-      this.loading = true
-      this.subscriptions = null
-
-      const api = new ApiClient()
-      api.getSubscriptions()
-        .then((response) => {
-          this.subscriptions = response.data
-          this.loading = false
-        })
-        .catch((error) => {
-          this.loading = false
-          console.log(error)
-        })
-    },
-    filterTitle (items, search) {
+    filterTitle (subscriptions, search) {
       const fileterWord = search.toLowerCase()
-      return items.filter((item) => {
-        const title = item.feed.title.toLowerCase()
+      return subscriptions.filter((subscription) => {
+        const title = subscription.feed.title.toLowerCase()
         return title.indexOf(fileterWord) > -1
       })
     },
@@ -123,14 +109,6 @@ export default {
     openUnsubscribeDialog (subscription) {
       this.unsubscribeDialog = true
       this.targetSubscription = subscription
-    },
-    closeUnsubscribeDialog (subscription) {
-      if (subscription != null) {
-        const index = this.subscriptions.indexOf(subscription)
-        this.subscriptions.splice(index, 1)
-      }
-
-      this.unsubscribeDialog = false
     }
   }
 }

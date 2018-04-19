@@ -44,7 +44,7 @@
     select
       <include refid="columns"><property name="tableName" value="s" /></include>,
       <include refid="net.sinsengumi.feedich.repository.FeedRepository.columns"><property name="tableName" value="f" /></include>,
-      (select count(1) from user_item ui where ui.user_id = #{userId} and ui.feed_id = f.id and ui.unread = 1) as subscription_unread_count
+      (select count(1) from user_item ui where ui.user_id = s.user_id and ui.feed_id = f.id and ui.unread = 1) as subscription_unread_count
     from
       subscription s
       join feed f on (f.id = s.feed_id)
@@ -56,7 +56,7 @@
     select
       <include refid="columns"><property name="tableName" value="s" /></include>,
       <include refid="net.sinsengumi.feedich.repository.FeedRepository.columns"><property name="tableName" value="f" /></include>,
-      (select count(1) from user_item ui where ui.user_id = #{userId} and ui.feed_id = f.id and ui.unread = 1) as subscription_unread_count
+      (select count(1) from user_item ui where ui.user_id = s.user_id and ui.feed_id = f.id and ui.unread = 1) as subscription_unread_count
     from
       subscription s
       join feed f on (f.id = s.feed_id)
@@ -70,7 +70,7 @@
     select
       <include refid="columns"><property name="tableName" value="s" /></include>,
       <include refid="net.sinsengumi.feedich.repository.FeedRepository.columns"><property name="tableName" value="f" /></include>,
-      (select count(1) from user_item ui where ui.user_id = #{userId} and ui.feed_id = f.id and ui.unread = 1) as subscription_unread_count
+      (select count(1) from user_item ui where ui.user_id = s.user_id and ui.feed_id = f.id and ui.unread = 1) as subscription_unread_count
     from
       subscription s
       join feed f on (f.id = s.feed_id)

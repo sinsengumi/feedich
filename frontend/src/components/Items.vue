@@ -56,8 +56,6 @@
 import ApiClient from '../ApiClient'
 import Subscription from './Subscription'
 import PinToolbar from './PinToolbar'
-import { mapActions } from 'vuex'
-import * as action from '../store/action-types'
 
 export default {
   name: 'Item',
@@ -89,10 +87,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions([
-      action.ADD_PIN,
-      action.REMOVE_PIN
-    ]),
     fetchData () {
       this.userItems = null
       this.error = null
@@ -145,8 +139,7 @@ export default {
       }
     },
     addPin (userItem) {
-      console.log('addPin')
-      this.ADD_PIN({title: userItem.item.title, url: userItem.item.url})
+      this.$store.dispatch('ADD_PIN', {title: userItem.item.title, url: userItem.item.url})
         .then((addedPin) => {
           userItem.pin = addedPin
         })
@@ -155,8 +148,7 @@ export default {
         })
     },
     removePin (userItem) {
-      console.log('removePin')
-      this.REMOVE_PIN({pin: userItem.pin})
+      this.$store.dispatch('REMOVE_PIN', {pin: userItem.pin})
         .then((removedPin) => {
           userItem.pin = null
         })
