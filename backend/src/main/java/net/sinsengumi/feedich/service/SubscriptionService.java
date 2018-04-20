@@ -78,12 +78,17 @@ public class SubscriptionService {
         List<SyndEntry> entries = syndFeed.getEntries();
 
         if (!entries.isEmpty()) {
+            boolean feedUpdate = false;
+            Date now = new Date();
+
             for (SyndEntry e : entries) {
                 final Item item = itemService.findByUrl(feedId, e.getLink());
                 if (item == null) {
+                    feedUpdate = true;
+
                     // item が登録されていない場合
                     // item を登録して、他の購読者の未読に追加する
-                    Item newItem = Item.build(feedId, new Date(), e);
+                    Item newItem = Item.build(feedId, now, e);
                     itemService.create(newItem);
 
                     List<Integer> subscribeUsers = getSubscribeUsers(feedId);
@@ -95,6 +100,10 @@ public class SubscriptionService {
                     // すでに item が登録されている場合
                     userItemService.create(Arrays.asList(UserItem.build(userId, item)));
                 }
+            }
+
+            if (feedUpdate) {
+                feedService.updateUpdatedAt(feedId, now);
             }
         }
     }

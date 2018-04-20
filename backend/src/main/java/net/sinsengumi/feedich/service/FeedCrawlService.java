@@ -35,7 +35,13 @@ public class FeedCrawlService {
     public void crawl() {
         // クラスタリングするときはここを分割する
         List<Feed> feeds = feedService.findByAll();
-        feeds.forEach(feed -> crawl(feed));
+        feeds.forEach(feed -> {
+            try {
+                crawl(feed);
+            } catch (Exception e) {
+                log.error("Failed crawl feed. id = {}, url = {}", feed.getId(), feed.getFeedUrl(), e);
+            }
+        });
     }
 
     public void crawl(Feed feed) {
@@ -70,6 +76,8 @@ public class FeedCrawlService {
                 }).collect(Collectors.toList());
 
                 userItemService.create(userItems);
+
+                feedService.updateUpdatedAt(feedId, now);
             }
         } catch (IllegalArgumentException | FeedException | IOException e) {
             throw new ApplicationException(e);

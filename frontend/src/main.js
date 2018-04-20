@@ -5,10 +5,11 @@ import Vuetify from 'vuetify'
 import App from './App'
 import router from './router'
 import store from './store'
+/* eslint no-unused-vars: 0 */
 import toast from './toast'
 import 'vuetify/dist/vuetify.min.css'
 import '@/assets/css/common.css'
-import DatetimeUtil from './DatetimeUtil'
+import moment from 'moment'
 
 Vue.config.productionTip = false
 
@@ -16,10 +17,16 @@ Vue.use(Vuetify)
 
 Vue.prototype.$eventHub = new Vue()
 
-const datetimeUtil = new DatetimeUtil()
+Vue.filter('format', function (value, format) {
+  if (!value) return '-'
+  if (!format) {
+    format = 'YYYY'
+  }
+  return moment(value).format(format)
+})
 Vue.filter('fromNow', function (value) {
   if (!value) return '-'
-  return datetimeUtil.fromNow(value)
+  return moment(value).fromNow()
 })
 
 /* eslint-disable no-new */

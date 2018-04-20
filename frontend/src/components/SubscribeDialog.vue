@@ -86,7 +86,7 @@ export default {
           this.discoveredFeeds = response.data
           this.loading = false
         })
-        .catch((error) => {
+        .catch(() => {
           this.loading = false
           this.error = true
         })

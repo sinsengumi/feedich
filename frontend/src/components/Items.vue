@@ -105,7 +105,7 @@ export default {
           this.userItems = response.data
           this.loading = false
         })
-        .catch((error) => {
+        .catch(() => {
           this.loading = false
           this.error = 'データの取得に失敗しました'
         })

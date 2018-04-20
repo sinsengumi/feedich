@@ -16,3 +16,11 @@ a {
 div.toasted > svg {
   margin-right: 12px;
 }
+
+div.input-group__input > svg.svg-inline--fa {
+  font-size: 14px;
+}
+
+.input-group.input-group--solo label {
+    top: 2px;
+}

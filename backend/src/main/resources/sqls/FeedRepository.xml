@@ -44,6 +44,7 @@
       , favicon
       , published_at
       , created_at
+      , updated_at
     ) values (
       #{title}
       , #{description}
@@ -55,11 +56,16 @@
       , #{favicon}
       , #{publishedAt}
       , now()
+      , now()
     )
     <selectKey resultType="_int" order="AFTER" keyProperty="id">
       select last_insert_id()
     </selectKey>
   </insert>
+
+  <update id="updateUpdatedAt">
+    update feed set updated_at = #{updatedAt} where id = #{id}
+  </update>
 
   <select id="findAll" resultMap="map">
     select

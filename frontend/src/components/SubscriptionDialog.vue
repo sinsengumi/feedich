@@ -26,8 +26,12 @@
             <td class="pl-2 pb-2">{{ subscription.feed.feedType }}</td>
           </tr>
           <tr>
+            <th class="text-xs-right pb-2">Subscribed</th>
+            <td class="pl-2 pb-2">{{ subscription.feed.createdAt | format('YYYY/MM/DD HH:mm.ss Z') }}</td>
+          </tr>
+          <tr>
             <th class="text-xs-right pb-2">Last Updated</th>
-            <td class="pl-2 pb-2">TODO</td>
+            <td class="pl-2 pb-2">{{ subscription.feed.updatedAt | format('YYYY/MM/DD HH:mm.ss Z') }}</td>
           </tr>
         </table>
       </v-card-text>

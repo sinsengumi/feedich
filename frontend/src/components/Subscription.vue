@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card class="light-blue lighten-5" v-if="!loading && subscription != null">
+    <v-card class="light-blue lighten-5" v-if="subscription != null">
       <v-card-title primary-title class="pt-3">
         <div>
           <h3 class="headline mb-0">
