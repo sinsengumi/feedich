@@ -3,7 +3,7 @@
   <v-navigation-drawer app fixed :clipped="$vuetify.breakpoint.lgAndUp">
     <v-layout>
       <v-flex xs12>
-        <v-card class="elevation-0 pb-0">
+        <v-card class="elevation-1 pb-0">
           <v-btn flat small @click="fetchSubscriptions" class="ml-1 mr-0">
             <v-icon small class="mr-1">autorenew</v-icon>Refresh
           </v-btn>
@@ -45,12 +45,6 @@
           </v-btn>
           <subscribe-dialog :dialog-visible="subscribeDialog" @close="closeSubscribeDialog"></subscribe-dialog>
         </v-card>
-
-        <v-card class="elevation-1">
-          <v-btn flat small @click="toSubscriptions" class="ml-1 mr-0">
-            <v-icon small class="mr-1">library_books</v-icon>Subscriptions
-          </v-btn>
-        </v-card>
       </v-flex>
     </v-layout>
 
@@ -59,13 +53,15 @@
     </v-container>
 
       <v-list dense subheader v-if="subscriptions">
-        <v-subheader class="mt-2 mb-2">
+        <v-subheader><router-link class="subscription-link" to="/subscriptions"><v-icon small class="mr-1">library_books</v-icon>Subscriptions</router-link></v-subheader>
+
+        <v-subheader class="mb-2">
           <v-text-field v-model="fileterWord" flat solo-inverted prepend-icon="fa-search" label="Search" style="min-height:32px; height:32px;"></v-text-field>
         </v-subheader>
 
         <template v-for="s in filteredSubscriptions">
           <v-divider :key="'navi_' + s.feed.title" />
-          <v-list-tile ripple @click="toItems(s)" :key="s.feed.title" :class="{'light-blue lighten-5': s === activeSubscription}">
+          <v-list-tile @click="toItems(s)" :key="s.feed.title" :class="{'light-blue lighten-5': s === activeSubscription}">
             <v-list-tile-action style="min-width: 25px;">
               <img :src="s.feed.favicon" width="16" height="16" />
             </v-list-tile-action>
@@ -100,13 +96,7 @@ export default {
       loading: false,
       fileterWord: '',
       activeSubscription: null,
-      subscribeDialog: false,
-      get getSubscriptionSortKey () {
-        return ls.getSubscriptionSortKey()
-      },
-      set setSubscriptionSortKey (value) {
-        ls.setSubscriptionSortKey(value)
-      }
+      subscribeDialog: false
     }
   },
   created () {
@@ -123,7 +113,7 @@ export default {
       })
 
       const sorter = new SubscriptionSorter()
-      return sorter.sort(filteredList, this.subscriptionSortKey)
+      return sorter.sort(filteredList, ls.getSubscriptionSortKey())
     }
   },
   methods: {
@@ -142,17 +132,14 @@ export default {
       this.activeSubscription = subscription
       this.$router.push({name: 'Items', params: { 'subscriptionId': subscription.id }})
     },
-    toSubscriptions () {
-      this.$router.push({name: 'Subscriptions'})
-    },
     sortSubscriptions (sortKey) {
       const tmp = this.subscriptions
       this.$store.commit('SET_SUBSCRIPTIONS', {subscriptions: null})
-      this.subscriptionSortKey = sortKey
+      ls.setSubscriptionSortKey(sortKey)
       this.$store.commit('SET_SUBSCRIPTIONS', {subscriptions: tmp})
     },
     isActiveSortKey (targetSortKey) {
-      return this.subscriptionSortKey === targetSortKey
+      return ls.getSubscriptionSortKey() === targetSortKey
     },
     closeSubscribeDialog () {
       this.subscribeDialog = false
@@ -162,4 +149,7 @@ export default {
 </script>
 
 <style scoped>
+.subscription-link {
+  color: rgba(0,0,0,.87);
+}
 </style>

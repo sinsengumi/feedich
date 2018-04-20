@@ -24,3 +24,8 @@ div.input-group__input > svg.svg-inline--fa {
 .input-group.input-group--solo label {
     top: 2px;
 }
+
+div.menu__content .list__tile {
+    height: 30px;
+    font-size: 12px;
+}

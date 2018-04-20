@@ -32,6 +32,7 @@ public class SubscriptionController extends AbstractController {
     @GetMapping
     public List<SubscriptionResponse> subscriptions() {
         return subscriptionService.findByUserId(UserController.USER_ID).stream()
+                .filter(s -> s.getUnreadCount() > 0)
                 .map(Subscription::toResponse)
                 .collect(Collectors.toList());
     }
