@@ -1,7 +1,10 @@
 <template>
 
   <v-navigation-drawer app fixed :clipped="$vuetify.breakpoint.lgAndUp">
-    <v-layout>
+    <button style="display: none" v-shortkey="['r']" @shortkey="reloadSubscription"></button>
+    <button style="display: none" v-shortkey="['s']" @shortkey="nextSubscription"></button>
+    <button style="display: none" v-shortkey="['a']" @shortkey="prevSubscription"></button>
+    <v-layout class="sticky-menu">
       <v-flex xs12>
         <v-card class="elevation-1 pb-0">
           <v-btn flat small @click="fetchSubscriptions" class="ml-1 mr-0">
@@ -53,15 +56,19 @@
     </v-container>
 
       <v-list dense subheader v-if="subscriptions">
-        <v-subheader><router-link class="subscription-link" to="/subscriptions"><v-icon small class="mr-1">library_books</v-icon>Subscriptions</router-link></v-subheader>
+        <div class="sticky-search">
+          <v-subheader>
+            <router-link class="subscription-link" to="/subscriptions"><v-icon small class="mr-1">library_books</v-icon>Subscriptions</router-link>
+          </v-subheader>
 
-        <v-subheader class="mb-2">
-          <v-text-field v-model="fileterWord" flat solo-inverted prepend-icon="fa-search" label="Search" style="min-height:32px; height:32px;"></v-text-field>
-        </v-subheader>
+          <v-subheader class="mb-2">
+            <v-text-field v-model="fileterWord" flat solo-inverted prepend-icon="fa-search" label="Search" style="min-height:32px; height:32px;"></v-text-field>
+          </v-subheader>
+        </div>
 
         <template v-for="s in filteredSubscriptions">
           <v-divider :key="'navi_' + s.feed.title" />
-          <v-list-tile @click="toItems(s)" :key="s.feed.title" :class="{'light-blue lighten-5': s === activeSubscription}">
+          <v-list-tile @click="toItems(s)" :key="s.feed.title" :class="{'light-blue lighten-5': s.id === activeSubscriptionId}">
             <v-list-tile-action style="min-width: 25px;">
               <img :src="s.feed.favicon" width="16" height="16" />
             </v-list-tile-action>
@@ -95,15 +102,17 @@ export default {
     return {
       loading: false,
       fileterWord: '',
-      activeSubscription: null,
       subscribeDialog: false
     }
   },
   computed: {
     ...mapState(['subscriptions']),
+    activeSubscriptionId () {
+      return Number(this.$route.params.subscriptionId)
+    },
     filteredSubscriptions () {
       const filteredList = this.subscriptions
-        .filter(s => s.unreadCount > 0)
+        .filter(s => s.unreadCountOriginal > 0)
         .filter(s => {
           const title = s.feed.title.toLowerCase()
           const fileterWord = this.fileterWord.toLowerCase()
@@ -126,8 +135,7 @@ export default {
           this.loading = false
         })
     },
-    toItems (subscription, event) {
-      this.activeSubscription = subscription
+    toItems (subscription) {
       this.$router.push({name: 'Items', params: { 'subscriptionId': subscription.id }})
     },
     sortSubscriptions (sortKey) {
@@ -141,12 +149,70 @@ export default {
     },
     closeSubscribeDialog () {
       this.subscribeDialog = false
+    },
+    reloadSubscription () {
+      this.fetchSubscriptions()
+    },
+    nextSubscription () {
+      let targetSubscription = null
+      if (this.activeSubscriptionId === null) {
+        if (this.subscriptions.length > 0) {
+          targetSubscription = this.filteredSubscriptions[0]
+        }
+      } else {
+        const foundIndex = this.filteredSubscriptions.findIndex(s => s.id === this.activeSubscriptionId)
+        if (foundIndex !== -1) {
+          const targetIndex = foundIndex === this.filteredSubscriptions.length - 1 ? foundIndex : foundIndex + 1
+          targetSubscription = this.filteredSubscriptions[targetIndex]
+        } else {
+          targetSubscription = this.filteredSubscriptions[0]
+        }
+      }
+
+      if (targetSubscription !== null) {
+        this.toItems(targetSubscription)
+      }
+    },
+    prevSubscription () {
+      let targetSubscription = null
+      if (this.activeSubscriptionId === null) {
+        if (this.subscriptions.length > 0) {
+          targetSubscription = this.filteredSubscriptions[0]
+        }
+      } else {
+        const foundIndex = this.filteredSubscriptions.findIndex(s => s.id === this.activeSubscriptionId)
+        if (foundIndex !== -1) {
+          const targetIndex = foundIndex === 0 ? 0 : foundIndex - 1
+          targetSubscription = this.filteredSubscriptions[targetIndex]
+        } else {
+          targetSubscription = this.filteredSubscriptions[0]
+        }
+      }
+
+      if (targetSubscription !== null) {
+        this.toItems(targetSubscription)
+      }
     }
   }
 }
 </script>
 
 <style scoped>
+.sticky-menu {
+  position: -webkit-sticky;
+  position:sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.sticky-search {
+  position: -webkit-sticky;
+  position:sticky;
+  top: 40px;
+  z-index: 90;
+  background-color: white;
+}
+
 .subscription-link {
   color: rgba(0,0,0,.87);
 }

@@ -1,7 +1,7 @@
 <template>
   <v-toolbar app dark fixed color="light-blue darken-2"
       :clipped-left="$vuetify.breakpoint.lgAndUp" height="46"
-      class="elevation-1">
+      class="elevation-1" style="z-index: 120">
 
     <v-toolbar-title>
       <a @click="toIndex" class="index-link">

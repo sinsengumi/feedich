@@ -12,10 +12,12 @@ import '@/assets/css/common.css'
 import moment from 'moment'
 import 'vue-awesome/icons'
 import Icon from 'vue-awesome/components/Icon'
+import VueShortkey from 'vue-shortkey'
 
 Vue.config.productionTip = false
 
 Vue.use(Vuetify)
+Vue.use(VueShortkey, { prevent: ['input', 'textarea'] })
 
 Vue.component('icon', Icon)
 

@@ -46,7 +46,7 @@ export default class SubscriptionSorter {
 
   sortUnreadCount (subscriptions) {
     return subscriptions.sort((a, b) => {
-      const result = a.unreadCount - b.unreadCount
+      const result = a.unreadCountOriginal - b.unreadCountOriginal
       if (result === 0) {
         return a.feed.id > b.feed.id
       }

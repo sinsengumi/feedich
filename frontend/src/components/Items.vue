@@ -9,11 +9,16 @@
     </v-alert>
 
     <div v-if="userItems">
-      <pin-toolbar></pin-toolbar>
+      <button style="display: none" v-shortkey="['enter']" @shortkey="nextItem"></button>
+      <button style="display: none" v-shortkey="['shift', 'enter']" @shortkey="prevItem"></button>
+      <button style="display: none" v-shortkey="['p']" @shortkey="togglePin"></button>
 
-      <component-subscription :subscription="activeSubscription" :unread-item-count="unreadItemCount"></component-subscription>
+      <div class="sticky-header">
+        <pin-toolbar></pin-toolbar>
+        <component-subscription :subscription="activeSubscription" :unread-item-count="unreadItemCount"></component-subscription>
+      </div>
 
-      <div class="item-box" v-for="userItem in userItems" :key="'item_' + userItem.item.id" :class="itemBoxBackgroundColor(userItem)">
+      <div :ref="'item-box-' + index" class="item-box" v-for="(userItem, index) in userItems" :key="'item_' + userItem.item.id" :class="itemBoxBackgroundColor(userItem)">
         <v-layout row wrap>
           <v-flex xs9>
             <h3 class="item-title">{{ userItem.item.title }}</h3>
@@ -50,6 +55,7 @@
           <i class="fab fa-line"></i>
         </div>
       </div>
+      <br v-for="index in 30" />
     </div>
   </div>
 </template>
@@ -72,7 +78,7 @@ export default {
       loading: false,
       error: null,
       userItems: null,
-      activeItem: null
+      activeItemIndex: null
     }
   },
   created () {
@@ -96,6 +102,7 @@ export default {
   },
   methods: {
     fetchData () {
+      this.activeItemIndex = null
       this.userItems = null
       this.error = null
       this.loading = true
@@ -110,25 +117,20 @@ export default {
           this.error = 'データの取得に失敗しました'
         })
     },
-    readItem (userItem, event) {
-      this.activeItem = userItem
-
-      if (this.activeItem.unread) {
+    readItem (userItem) {
+      if (userItem.unread) {
         api.readItem(userItem.itemId)
           .then((response) => {
-            this.activeItem.unread = false
+            userItem.unread = false
 
             this.$store.commit('READ_ITEM', {subscriptionId: this.activeSubscriptionId, unreadItemCount: this.unreadItemCount})
           })
       }
     },
-    unreadItem (userItem, event) {
-      this.activeItem = userItem
-
-      if (!this.activeItem.unread) {
+    unreadItem (userItem) {
+      if (!userItem.unread) {
         api.unreadItem(userItem.itemId)
           .then((response) => {
-            this.activeItem.unread = true
             userItem.unread = true
 
             this.$store.commit('READ_ITEM', {subscriptionId: this.activeSubscriptionId, unreadItemCount: this.unreadItemCount})
@@ -155,12 +157,60 @@ export default {
         return 'item-box-read'
       }
       return ''
+    },
+    nextItem () {
+      if (this.activeItemIndex === null) {
+        this.activeItemIndex = 0
+      } else {
+        this.activeItemIndex = this.activeItemIndex === this.userItems.length - 1 ? this.activeItemIndex : this.activeItemIndex + 1
+      }
+
+      const userItem = this.userItems[this.activeItemIndex]
+      this.readItem(userItem)
+
+      this.scrollToItem(this.activeItemIndex)
+    },
+    prevItem () {
+      if (this.activeItemIndex === null) {
+        this.activeItemIndex = 0
+      } else {
+        this.activeItemIndex = this.activeItemIndex === 0 ? 0 : this.activeItemIndex - 1
+      }
+
+      const userItem = this.userItems[this.activeItemIndex]
+      this.readItem(userItem)
+
+      this.scrollToItem(this.activeItemIndex)
+    },
+    scrollToItem (itemIndex) {
+      const element = this.$refs['item-box-' + itemIndex]
+      window.scrollTo(0, element[0].offsetTop - 246)
+    },
+    togglePin () {
+      if (this.activeItemIndex === null) {
+        return
+      }
+      const userItem = this.userItems[this.activeItemIndex]
+      if (userItem.pin === null) {
+        this.addPin(userItem)
+      } else {
+        this.removePin(userItem)
+      }
     }
   }
 }
 </script>
 
 <style scoped>
+.sticky-header {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 46px;
+  padding-top: 15px;
+  z-index: 100;
+  background-color: #FAFAFA;
+}
+
 .item-box {
   margin-top: 15px;
   margin-bottom: 15px;

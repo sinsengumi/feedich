@@ -11,4 +11,5 @@ public class SubscriptionResponse {
     private Date createdAt;
     private Date updatedAt;
     private int unreadCount;
+    private int unreadCountOriginal;
 }
