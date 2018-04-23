@@ -10,12 +10,14 @@ import toast from './toast'
 import 'vuetify/dist/vuetify.min.css'
 import '@/assets/css/common.css'
 import moment from 'moment'
+import 'vue-awesome/icons'
+import Icon from 'vue-awesome/components/Icon'
 
 Vue.config.productionTip = false
 
 Vue.use(Vuetify)
 
-Vue.prototype.$eventHub = new Vue()
+Vue.component('icon', Icon)
 
 Vue.filter('format', function (value, format) {
   if (!value) return '-'
@@ -35,12 +37,5 @@ new Vue({
   router,
   store,
   components: { App },
-  template: '<App/>',
-  created () {
-    window.addEventListener('keyup', (event) => {
-      if (event.keyCode === 13) {
-        this.$eventHub.$emit('shortcutEnter')
-      }
-    })
-  }
+  template: '<App/>'
 })

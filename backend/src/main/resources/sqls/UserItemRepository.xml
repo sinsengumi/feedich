@@ -49,6 +49,8 @@
       ui.user_id = #{userId}
       and ui.feed_id = #{feedId}
       and ui.unread = 1
+    order by
+      i.published_at desc
   </select>
 
   <select id="findByUserIdAndItemId" resultMap="map">

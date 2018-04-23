@@ -99,18 +99,16 @@ export default {
       subscribeDialog: false
     }
   },
-  created () {
-    this.$eventHub.$on('readItem', this.readItem)
-    this.$eventHub.$on('unreadItem', this.unreadItem)
-  },
   computed: {
     ...mapState(['subscriptions']),
     filteredSubscriptions () {
-      const filteredList = this.subscriptions.filter((s) => {
-        const title = s.feed.title.toLowerCase()
-        const fileterWord = this.fileterWord.toLowerCase()
-        return title.indexOf(fileterWord) > -1
-      })
+      const filteredList = this.subscriptions
+        .filter(s => s.unreadCount > 0)
+        .filter(s => {
+          const title = s.feed.title.toLowerCase()
+          const fileterWord = this.fileterWord.toLowerCase()
+          return title.indexOf(fileterWord) > -1
+        })
 
       const sorter = new SubscriptionSorter()
       return sorter.sort(filteredList, ls.getSubscriptionSortKey())

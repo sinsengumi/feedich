@@ -13,41 +13,43 @@
 
       <component-subscription :subscription="activeSubscription" :unread-item-count="unreadItemCount"></component-subscription>
 
-      <br />
+      <div class="item-box" v-for="userItem in userItems" :key="'item_' + userItem.item.id" :class="itemBoxBackgroundColor(userItem)">
+        <v-layout row wrap>
+          <v-flex xs9>
+            <h3 class="item-title">{{ userItem.item.title }}</h3>
+          </v-flex>
+          <v-flex xs3 class="operation-area">
+            <v-btn flat small class="operation-btn" v-if="userItem.pin === null" @click="addPin(userItem)">
+              <v-icon small data-fa-transform="rotate-45" class="operation-icon">fas fa-thumbtack</v-icon>Add Pin
+            </v-btn>
+            <v-btn flat small class="operation-btn" v-if="userItem.pin !== null" @click="removePin(userItem)">
+              <v-icon small data-fa-transform="rotate-45" class="operation-icon">fas fa-thumbtack</v-icon>Remove Pin
+            </v-btn>
 
-      <v-expansion-panel focusable>
-        <v-expansion-panel-content v-for="userItem in userItems" :key="'itemId_' + userItem.itemId">
-          <div slot="header" :class="{title: userItem == activeItem}" @click="readItem(userItem, $event)" :ref="'itemRef_' + userItem.itemId">{{ userItem.item.title }}</div>
+            <v-btn flat small class="operation-btn" v-if="userItem.unread" @click.native="readItem(userItem)">
+              <icon name="eye" class="operation-icon"></icon> Mark as read
+            </v-btn>
+            <v-btn flat small class="operation-btn" v-if="!userItem.unread" @click.native="unreadItem(userItem)">
+              <icon name="eye-slash" class="operation-icon"></icon> Mark as unread
+            </v-btn>
+          </v-flex>
+        </v-layout>
 
-          <v-container grid-list-md>
-                <v-layout row wrap>
-                  <v-flex xs9>
-                    <p>
-                      Author: {{ userItem.item.author }} | {{ userItem.item.publishedAt | fromNow }} |
-                      <v-btn v-if="userItem.pin === null" flat small @click="addPin(userItem)">ピンを付ける</v-btn>
-                      <v-btn v-if="userItem.pin !== null" flat small @click="removePin(userItem)">ピンを外す</v-btn>
-                      |
-                      <v-btn flat small :href="userItem.item.url" target="_blank">記事詳細</v-btn>
-                      |
-                      <v-btn v-if="!userItem.unread" flat small @click="unreadItem(userItem, $event)">未読にする</v-btn>
-                      <v-btn v-if="userItem.unread"  flat small @click="readItem(userItem, $event)">既読にする</v-btn>
-                      |
-                      共有
-                    </p>
-                  </v-flex>
-                  <v-flex xs3  text-xs-right>
-                    <v-chip class="grey" text-color="white" style="font-size:12px; height: 24px">
-                      <v-icon small>clear</v-icon>&nbsp;<strong>Unsubscribe</strong>
-                    </v-chip>
-                  </v-flex>
-                </v-layout>
-              </v-container>
-          <v-card>
-            <v-card-text><div class="caption" v-html="userItem.item.description"></div></v-card-text>
-          </v-card>
-        </v-expansion-panel-content>
-      </v-expansion-panel>
+        <div class="footnote-area">
+          <a :href="userItem.item.url" target="_blank">元記事</a> &nbsp;|&nbsp;
+          {{ userItem.item.publishedAt | fromNow }}
+          <span v-if="userItem.item.author">by {{ userItem.item.author }}</span>
+        </div>
 
+        <div class="description-area" v-html="userItem.item.description">
+        </div>
+
+        <div class="shared-area">
+          <i class="fab fa-twitter"></i> &nbsp;
+          <i class="fab fa-facebook"></i> &nbsp;
+          <i class="fab fa-line"></i>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -75,8 +77,6 @@ export default {
   },
   created () {
     this.fetchData()
-
-    this.$eventHub.$on('shortcutEnter', this.shortcutEnter)
   },
   watch: {
     '$route': 'fetchData'
@@ -147,30 +147,69 @@ export default {
           userItem.pin = null
         })
     },
-    shortcutEnter () {
-      // activeItem の次の要素を見つける
-      /* let targetItemId = null
-      if (this.activeItem == null) {
-        if (this.userItems.length > 0) {
-          targetItemId = this.userItems[0].id
-        }
-      } else {
-        this.userItems.forEach((userItem, index, items) => {
-          if (userItem.itemId === this.activeItem.itemId) {
-            targetItemId = userItems[index + 1].itemId
-          }
-        })
+    itemBoxBackgroundColor (userItem) {
+      if (userItem.pin !== null) {
+        return 'item-box-pin'
       }
-
-      if (targetItemId != null) {
-        const key = 'itemRef_' + targetItemId
-        const targetElement = this.$refs[key]
-        targetElement[0].click()
-      } */
+      if (!userItem.unread) {
+        return 'item-box-read'
+      }
+      return ''
     }
   }
 }
 </script>
 
 <style scoped>
+.item-box {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  padding: 10px 15px 5px 15px;
+  background-color: white;
+  border: 1px dotted #BDBDBD;
+}
+
+.item-box-pin {
+  background-color: #FFF4F6;
+}
+
+.item-box-read {
+  background-color: #F5F5F5;
+}
+
+h3.item-title {
+  font-weight: 600;
+}
+
+.operation-area {
+  text-align: right;
+  font-size: 12px;
+}
+
+.operation-btn {
+  margin: 0;
+  color: #1976d2;
+}
+
+.operation-icon {
+  margin-right:5px;
+}
+
+.footnote-area {
+  padding-top: 5px;
+  color: #616161;
+  font-size: 12px;
+}
+
+.description-area {
+  padding: 10px;
+  font-size: 13px;
+  border-bottom: 1px solid #BDBDBD;
+}
+
+.shared-area {
+  font-size: 1.2em;
+  padding-top: 5px;
+  text-align: right;
+}
 </style>
