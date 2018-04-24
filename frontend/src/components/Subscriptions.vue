@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding-top: 15px">
     <subscription-dialog :dialog-visible="subscriptionDialog" :subscription="targetSubscription" @close="subscriptionDialog = false"></subscription-dialog>
     <unsubscribe-dialog :dialog-visible="unsubscribeDialog" :subscription="targetSubscription" @close="unsubscribeDialog = false"></unsubscribe-dialog>
 

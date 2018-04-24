@@ -2,7 +2,7 @@
   <div>
     <v-tooltip v-model="floatPins" right>
       <v-btn depressed small color="light-blue lighten-5" class="ma-0 pt-0" @click="readPins" slot="activator">
-        <v-icon small left class="mr-1" color="light-blue lighten-2" data-fa-transform="rotate-45" style="height: 14px;">fas fa-thumbtack</v-icon>
+        <v-icon left class="mr-1" color="light-blue lighten-2" data-fa-transform="rotate-45" style="height: 11px;">fas fa-thumbtack</v-icon>
         &nbsp;&nbsp;
         <span>{{ pins.length }}</span>
       </v-btn>

@@ -203,6 +203,7 @@ export default {
   position:sticky;
   top: 0;
   z-index: 100;
+  margin-right: 1px;
 }
 
 .sticky-search {
@@ -211,6 +212,7 @@ export default {
   top: 40px;
   z-index: 90;
   background-color: white;
+  margin-right: 1px;
 }
 
 .subscription-link {
