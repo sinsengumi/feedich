@@ -70,6 +70,11 @@ export default {
       set: function (value) {
         if (!value) {
           this.$emit('close')
+
+          this.discoverUrl = null
+          this.discoveredFeeds = null
+          this.loading = false
+          this.error = false
         }
       }
     }

@@ -4,15 +4,17 @@
     <button style="display: none" v-shortkey="['r']" @shortkey="reloadSubscription"></button>
     <button style="display: none" v-shortkey="['s']" @shortkey="nextSubscription"></button>
     <button style="display: none" v-shortkey="['a']" @shortkey="prevSubscription"></button>
-    <v-layout class="sticky-menu">
-      <v-flex xs12>
-        <v-card class="elevation-1 pb-0">
-          <v-btn flat small @click="fetchSubscriptions" class="ml-1 mr-0">
+    <button style="display: none" v-shortkey="['o']" @shortkey="readPins"></button>
+
+    <v-container class="sticky-menu">
+      <v-layout row wrap style="background-color: white; margin-right: 1px;" class="pt-2 pr-2 pb-1 pl-2">
+        <v-flex xs12 class="mb-1 pb-1" style="border-bottom:1px dotted #EEEEEE">
+          <v-btn flat small @click="fetchSubscriptions" class="ma-0">
             <v-icon small class="mr-1">autorenew</v-icon>Refresh
           </v-btn>
 
           <v-menu offset-y>
-            <v-btn flat small slot="activator" class="ml-0 mr-0">
+            <v-btn flat small slot="activator" class="ma-0">
               <v-icon small class="mr-1" style="height: 12px;">fas fa-sort-amount-up</v-icon>Sort
             </v-btn>
             <v-list>
@@ -43,13 +45,22 @@
             </v-list>
           </v-menu>
 
-          <v-btn flat small class="ml-1 mr-0" @click="subscribeDialog = true">
+          <v-btn flat small class="ma-0" @click="subscribeDialog = true">
             <v-icon small class="mr-1">add_circle_outline</v-icon>Add Feed
           </v-btn>
           <subscribe-dialog :dialog-visible="subscribeDialog" @close="closeSubscribeDialog"></subscribe-dialog>
-        </v-card>
-      </v-flex>
-    </v-layout>
+        </v-flex>
+
+        <v-flex xs12 class="mt-0">
+          <v-btn flat small class="ma-0" to="/subscriptions" exact:true>
+            <v-icon small class="mr-1">library_books</v-icon>Subscriptions
+          </v-btn>
+          <v-btn flat small class="ma-0" to="/pins">
+            <v-icon small class="mr-1" data-fa-transform="rotate-45" style="height: 12px;">fas fa-thumbtack</v-icon>Pins ({{ pins.length }})
+          </v-btn>
+        </v-flex>
+      </v-layout>
+    </v-container>
 
     <v-container fill-height v-if="loading">
       <v-progress-circular class="mx-auto" indeterminate :size="70" :width="7" color="blue"></v-progress-circular>
@@ -57,11 +68,7 @@
 
       <v-list dense subheader v-if="subscriptions">
         <div class="sticky-search">
-          <v-subheader>
-            <router-link class="subscription-link" to="/subscriptions"><v-icon small class="mr-1">library_books</v-icon>Subscriptions</router-link>
-          </v-subheader>
-
-          <v-subheader class="mb-2">
+          <v-subheader class="pl-1 pr-1">
             <v-text-field v-model="fileterWord" flat solo-inverted prepend-icon="fa-search" label="Search" style="min-height:32px; height:32px;"></v-text-field>
           </v-subheader>
         </div>
@@ -106,7 +113,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['subscriptions']),
+    ...mapState(['subscriptions', 'pins']),
     activeSubscriptionId () {
       return Number(this.$route.params.subscriptionId)
     },
@@ -121,6 +128,9 @@ export default {
 
       const sorter = new SubscriptionSorter()
       return sorter.sort(filteredList, ls.getSubscriptionSortKey())
+    },
+    ellipsedPins () {
+      return this.pins.slice(0, 10)
     }
   },
   methods: {
@@ -192,6 +202,12 @@ export default {
       if (targetSubscription !== null) {
         this.toItems(targetSubscription)
       }
+    },
+    readPins () {
+      this.ellipsedPins.forEach(pin => {
+        window.open(pin.url, '_blank')
+        this.$store.dispatch('REMOVE_PIN', {'pin': pin})
+      })
     }
   }
 }
@@ -203,19 +219,17 @@ export default {
   position:sticky;
   top: 0;
   z-index: 100;
-  margin-right: 1px;
+  padding: 0;
 }
 
 .sticky-search {
   position: -webkit-sticky;
   position:sticky;
-  top: 40px;
+  top: 78px;
   z-index: 90;
   background-color: white;
   margin-right: 1px;
-}
-
-.subscription-link {
-  color: rgba(0,0,0,.87);
+  border-bottom: 1px solid #E0E0E0;
+  border-top: 1px solid #E0E0E0;
 }
 </style>

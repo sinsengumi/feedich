@@ -51,4 +51,10 @@ public class PinController extends AbstractController {
         pinService.delete(pinId);
         return "OK";
     }
+
+    @DeleteMapping
+    public String clearPins() {
+        pinService.clear(UserController.USER_ID);
+        return "OK";
+    }
 }

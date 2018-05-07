@@ -14,7 +14,6 @@
       <button style="display: none" v-shortkey="['p']" @shortkey="togglePin"></button>
 
       <div class="sticky-header">
-        <pin-toolbar></pin-toolbar>
         <component-subscription :subscription="activeSubscription" :unread-item-count="unreadItemCount"></component-subscription>
       </div>
 
@@ -63,15 +62,13 @@
 <script>
 import ApiClient from '../ApiClient'
 import Subscription from './Subscription'
-import PinToolbar from './PinToolbar'
 
 const api = new ApiClient()
 
 export default {
   name: 'Item',
   components: {
-    'component-subscription': Subscription,
-    'pin-toolbar': PinToolbar
+    'component-subscription': Subscription
   },
   data () {
     return {
@@ -184,7 +181,7 @@ export default {
     },
     scrollToItem (itemIndex) {
       const element = this.$refs['item-box-' + itemIndex]
-      window.scrollTo(0, element[0].offsetTop - 246)
+      window.scrollTo(0, element[0].offsetTop - 214)
     },
     togglePin () {
       if (this.activeItemIndex === null) {

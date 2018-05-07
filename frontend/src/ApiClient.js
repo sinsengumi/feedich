@@ -75,4 +75,8 @@ export default class ApiClient {
     params.append('pinId', pinId)
     return axios.delete(`${API_BASE_URL}/api/pins/${pinId}`, params)
   }
+
+  clearPins () {
+    return axios.delete(`${API_BASE_URL}/api/pins`)
+  }
 }

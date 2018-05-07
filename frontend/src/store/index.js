@@ -52,6 +52,9 @@ export default new Vuex.Store({
       if (index !== -1) {
         state.pins.splice(index, 1)
       }
+    },
+    [mutation.CLEAR_PINS] (state, payload) {
+      state.pins = []
     }
   },
   actions: {
@@ -110,6 +113,15 @@ export default new Vuex.Store({
         .then((response) => {
           commit(mutation.REMOVE_PIN, {removedPin: payload.pin})
           return payload.pin
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    [action.CLEAR_PINS] ({ commit }, payload) {
+      return api.clearPins()
+        .then((response) => {
+          commit(mutation.CLEAR_PINS)
         })
         .catch((error) => {
           console.log(error)
