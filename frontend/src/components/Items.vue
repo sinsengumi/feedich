@@ -8,7 +8,7 @@
       {{ error }}
     </v-alert>
 
-    <div v-if="userItems">
+    <div v-if="userItems" style="padding-bottom: 400px">
       <button style="display: none" v-shortkey="['enter']" @shortkey="nextItem"></button>
       <button style="display: none" v-shortkey="['shift', 'enter']" @shortkey="prevItem"></button>
       <button style="display: none" v-shortkey="['p']" @shortkey="togglePin"></button>
@@ -54,7 +54,6 @@
           <i class="fab fa-line"></i>
         </div>
       </div>
-      <br v-for="index in 30" />
     </div>
   </div>
 </template>

@@ -13,7 +13,7 @@
 
     <v-spacer />
 
-    <v-btn icon>
+    <v-btn icon to="/settings">
       <v-icon>settings</v-icon>
     </v-btn>
   </v-toolbar>
