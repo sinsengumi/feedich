@@ -7,7 +7,11 @@
 <body>
 
 <h1>Index</h1>
+<p>userName: <span th:text="${userName}"></span></p>
 
+<form action="#" th:action="@{/logout}" method="post">
+    <input type="submit" value="Logout" />
+  </form>
 <p>
   <strong>current userId : <span th:text="${userId}"></span></strong>
   <form method="get" action="/user/switch"><input type="text" name="userId" /> <input type="submit" value="switch" /></form>
@@ -16,6 +20,10 @@
 <ul>
   <li><a href="/crawl">crawl</a></li>
 </ul>
+
+  <ul>
+    <li th:each="attribute : ${attributes}"><span style="font-weight: bold" th:text="${attribute.key}"></span>: <span th:text="${attribute.value}"></span></li>
+  </ul>
 
 </body>
 </html>

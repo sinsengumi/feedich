@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Login</title>
+<meta charset="UTF-8" />
+</head>
+<body>
+  <h1>Login</h1>
+  <table>
+    <tr th:each="clientRegistration : ${@clientRegistrationRepository}">
+      <td><a th:href="@{/oauth2/authorization/{id}(id=${clientRegistration.registrationId})}" th:text="|Sign in with ${clientRegistration.clientName}|">Signin with GitHub</a></td>
+    </tr>
+  </table>
+</body>
+</html>

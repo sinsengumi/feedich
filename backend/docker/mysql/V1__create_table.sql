@@ -58,3 +58,17 @@ CREATE TABLE pin (
   , updated_at   DATETIME       DEFAULT NULL
 );
 CREATE INDEX idx_pin_user_id ON pin (user_id);
+
+CREATE TABLE user (
+  id                 INT           AUTO_INCREMENT NOT NULL PRIMARY KEY
+  , email            VARCHAR(255)  NOT NULL
+  , name             VARCHAR(1000) NOT NULL
+  , auth_id_google   VARCHAR(1000)
+  , auth_id_github   VARCHAR(1000)
+  , auth_id_facebook VARCHAR(1000)
+  , auth_id_yahoo    VARCHAR(1000)
+  , auth_id_line     VARCHAR(1000)
+  , created_at       DATETIME      DEFAULT NULL
+  , updated_at       DATETIME      DEFAULT NULL
+);
+CREATE UNIQUE INDEX uidx_user_email ON user (email);

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.sinsengumi.feedich.repository.UserRepository">
+
+  <sql id="columns">
+    ${tableName}.id                 as user_id
+    , ${tableName}.email            as user_email
+    , ${tableName}.name             as user_name
+    , ${tableName}.auth_id_google   as user_auth_id_google
+    , ${tableName}.auth_id_github   as user_auth_id_github
+    , ${tableName}.auth_id_facebook as user_auth_id_facebook
+    , ${tableName}.auth_id_yahoo    as user_auth_id_yahoo
+    , ${tableName}.auth_id_line     as user_auth_id_line
+    , ${tableName}.created_at       as user_created_at
+    , ${tableName}.updated_at       as user_updated_at
+  </sql>
+
+  <resultMap id="map" type="User">
+    <id     property="id"             column="user_id" />
+    <result property="email"          column="user_email" />
+    <result property="name"           column="user_name" />
+    <result property="authIdGoogle"   column="user_auth_id_google" />
+    <result property="authIdGithub"   column="user_auth_id_github" />
+    <result property="authIdFacebook" column="user_auth_id_facebook" />
+    <result property="authIdYahoo"    column="user_auth_id_yahoo" />
+    <result property="authIdLine"     column="user_auth_id_line" />
+    <result property="createdAt"      column="user_created_at" />
+    <result property="updatedAt"      column="user_updated_at" />
+  </resultMap>
+
+  <insert id="create" parameterType="User">
+    insert into user (
+      email
+      , name
+      , auth_id_google
+      , auth_id_github
+      , auth_id_facebook
+      , auth_id_yahoo
+      , auth_id_line
+      , created_at
+    ) values (
+      #{email}
+      , #{name}
+      , #{authIdGoogle}
+      , #{authIdGithub}
+      , #{authIdFacebook}
+      , #{authIdYahoo}
+      , #{authIdLine}
+      , now()
+    )
+    <selectKey resultType="_int" order="AFTER" keyProperty="id">
+      select last_insert_id()
+    </selectKey>
+  </insert>
+
+  <select id="findByEmail" resultMap="map">
+    select
+      <include refid="columns"><property name="tableName" value="u" /></include>
+    from
+      user u
+    where
+      u.email = #{email}
+  </select>
+
+  <update id="updateAuthId">
+    update
+      user
+    set
+      <if test="serviceProvider.toString() == 'Google'">
+        auth_id_google = #{authId}
+      </if>
+      <if test="serviceProvider.toString() == 'Github'">
+        auth_id_github = #{authId}
+      </if>
+      <if test="serviceProvider.toString() == 'Facebook'">
+        auth_id_facebook = #{authId}
+      </if>
+      <if test="serviceProvider.toString() == 'Yahoo'">
+        auth_id_yahoo = #{authId}
+      </if>
+      <if test="serviceProvider.toString() == 'LINE'">
+        auth_id_line = #{authId}
+      </if>
+      , updated_at = now()
+    where
+      id = #{id}
+  </update>
+</mapper>
