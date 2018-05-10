@@ -8,11 +8,11 @@ axios.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response) {
-      Vue.toasted.global.error({message: error.response.data.message})
       if (error.response.data.status === 401) {
-        location.href = "/#/login"
-        return
+        location.href = '/#/login'
+        return Promise.reject(error)
       }
+      Vue.toasted.global.error({message: error.response.data.message})
     } else if (error.request) {
       Vue.toasted.global.error({message: 'Network Error'})
     } else {

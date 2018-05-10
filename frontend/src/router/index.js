@@ -19,12 +19,10 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      name: 'Root',
       component: Root,
       children: [
         {
           path: '/',
-          name: 'Public',
           component: Public,
           children: [
             {

@@ -18,6 +18,7 @@
     </v-btn>
 
     <form v-bind:action="logoutUrl" method="post">
+      <input type="hidden" name="_csrf" :value="xsrfToken" />
       <v-btn icon type="submit">
         <v-icon>exit_to_app</v-icon>
       </v-btn>
@@ -26,12 +27,21 @@
 </template>
 
 <script>
-import ApiClient from '../../ApiClient'
-
 export default {
   data () {
     return {
       logoutUrl: process.env.API_BASE_URL + '/logout'
+    }
+  },
+  computed: {
+    xsrfToken () {
+      const cookies = document.cookie.split(';')
+      for (let i = 0; i < cookies.length; i++) {
+        const elem = cookies[i].split('=')
+        if (elem[0].trim() === 'XSRF-TOKEN') {
+          return unescape(elem[1])
+        }
+      }
     }
   },
   methods: {

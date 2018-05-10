@@ -52,7 +52,7 @@
         </v-flex>
 
         <v-flex xs12 class="mt-0">
-          <v-btn flat small class="ma-0" to="/subscriptions" exact=true>
+          <v-btn flat small class="ma-0" to="/subscriptions" :exact="true">
             <v-icon small class="mr-1">library_books</v-icon>Subscriptions
           </v-btn>
           <v-btn flat small class="ma-0" to="/pins">
