@@ -16,11 +16,24 @@
     <v-btn icon to="/settings">
       <v-icon>settings</v-icon>
     </v-btn>
+
+    <form v-bind:action="logoutUrl" method="post">
+      <v-btn icon type="submit">
+        <v-icon>exit_to_app</v-icon>
+      </v-btn>
+    </form>
   </v-toolbar>
 </template>
 
 <script>
+import ApiClient from '../../ApiClient'
+
 export default {
+  data () {
+    return {
+      logoutUrl: process.env.API_BASE_URL + '/logout'
+    }
+  },
   methods: {
     toIndex () {
       this.$router.push({name: 'Index'})

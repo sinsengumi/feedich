@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import ApiClient from '../ApiClient'
+import ApiClient from '../../ApiClient'
 
 export default {
   props: [

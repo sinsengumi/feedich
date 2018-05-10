@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import ApiClient from '../ApiClient'
+import ApiClient from '../../ApiClient'
 import Subscription from './Subscription'
 
 const api = new ApiClient()

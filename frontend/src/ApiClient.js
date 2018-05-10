@@ -9,6 +9,10 @@ axios.interceptors.response.use(
   (error) => {
     if (error.response) {
       Vue.toasted.global.error({message: error.response.data.message})
+      if (error.response.data.status === 401) {
+        location.href = "/#/login"
+        return
+      }
     } else if (error.request) {
       Vue.toasted.global.error({message: 'Network Error'})
     } else {
@@ -78,5 +82,9 @@ export default class ApiClient {
 
   clearPins () {
     return axios.delete(`${API_BASE_URL}/api/pins`)
+  }
+
+  sessionValidate () {
+    return axios.get(`${API_BASE_URL}/api/session/validate`)
   }
 }

@@ -96,8 +96,8 @@
 <script>
 import SubscribeDialog from './SubscribeDialog'
 import { mapState } from 'vuex'
-import LocalStorage from '../LocalStorage'
-import SubscriptionSorter from '../SubscriptionSorter'
+import LocalStorage from '../../LocalStorage'
+import SubscriptionSorter from '../../SubscriptionSorter'
 
 const ls = new LocalStorage()
 
