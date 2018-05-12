@@ -43,15 +43,15 @@ public class OAuth2UserServiceJdbcService extends DefaultOAuth2UserService {
 
         User user = userService.findByEmail(email);
         if (user == null) {
-            User newUser = new User();
-            newUser.setEmail(email);
-            newUser.setName(serviceProvider.getName(attributes));
-            newUser.setAuthId(serviceProvider, authId);
-            userService.create(newUser);
+            user = new User();
+            user.setEmail(email);
+            user.setName(serviceProvider.getName(attributes));
+            user.setAuthId(serviceProvider, authId);
+            userService.create(user);
         } else {
             userService.updateAuthId(user.getId(), serviceProvider, authId);
         }
-        return new FeedichOAuth2User(oauth2User.getAuthorities(), oauth2User.getAttributes(), oauth2User.getName(),
+        return new FeedichOAuth2User(oauth2User.getAuthorities(), attributes, oauth2User.getName(),
                 user.getId(), user.getEmail(), user.getName());
     }
 

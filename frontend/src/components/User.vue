@@ -1,16 +1,25 @@
 <template>
   <v-app>
-    <layout-navigation />
 
     <layout-header />
 
-    <v-content>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-2 ">
+          <layout-navigation />
+        </div>
+        <main class="col-10 bd-content">
+          <router-view />
+        </main>
+      </div>
+    </div>
+    <!-- <v-content>
       <v-container fluid style="padding-top: 0">
         <router-view />
       </v-container>
     </v-content>
 
-    <layout-footer />
+    <layout-footer /> -->
   </v-app>
 </template>
 

@@ -1,29 +1,21 @@
 <template>
-  <v-toolbar app dark fixed color="light-blue darken-2"
-      :clipped-left="$vuetify.breakpoint.lgAndUp" height="46"
-      class="elevation-1" style="z-index: 120">
+  <header class="navbar navbar-expand navbar-dark flex-column flex-md-row bd-navbar pt-0 pb-0">
+    <a class="navbar-brand logo" href="/#/dashboard">Feedich</a>
+    <div><span class="description">Feedich is "simple" and "snappy" feed reader.</span></div>
 
-    <v-toolbar-title>
-      <a @click="toIndex" class="index-link">
-        <i class="fas fa-rss-square mr-2 ml-2"></i>
-        <span class="logo">Feedich</span>
-      </a>
-      <span class="description">The nanka kakkoii eigo wo kokoni kaku.</span>
-    </v-toolbar-title>
+    <ul class="navbar-nav flex-row ml-md-auto">
+      <li>
+        <b-button variant="link" class="nav-link" to="/settings"><v-icon>fa fa-cogs</v-icon></b-button>
+      </li>
+      <li>
+        <form v-bind:action="logoutUrl" method="post">
+          <input type="hidden" name="_csrf" :value="xsrfToken" />
+          <b-button variant="link" class="nav-link pr-0" type="submit"><v-icon>fa fa-sign-out-alt</v-icon></b-button>
+        </form>
+      </li>
+    </ul>
+  </header>
 
-    <v-spacer />
-
-    <v-btn icon to="/settings">
-      <v-icon>settings</v-icon>
-    </v-btn>
-
-    <form v-bind:action="logoutUrl" method="post">
-      <input type="hidden" name="_csrf" :value="xsrfToken" />
-      <v-btn icon type="submit">
-        <v-icon>exit_to_app</v-icon>
-      </v-btn>
-    </form>
-  </v-toolbar>
 </template>
 
 <script>
@@ -43,28 +35,18 @@ export default {
         }
       }
     }
-  },
-  methods: {
-    toIndex () {
-      this.$router.push({name: 'Index'})
-    }
   }
 }
 </script>
 
 <style scoped>
-.index-link {
-  color: white;
-}
-
 .logo {
   font-family: 'Bree Serif', serif;
 }
 
 .description {
-  font-size: 13px;
-  color: #B3E5FC;
+  font-size: 12px;
+  color: #cbbde2;
   font-family: 'Bree Serif', serif;
-  margin-left: 10px;
 }
 </style>

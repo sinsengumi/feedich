@@ -2,12 +2,15 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import Vuetify from 'vuetify'
+import BootstrapVue from 'bootstrap-vue'
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 import App from './App'
 import router from './router'
 import store from './store'
 /* eslint no-unused-vars: 0 */
 import toast from './toast'
-import 'vuetify/dist/vuetify.min.css'
+//import 'vuetify/dist/vuetify.min.css'
 import '@/assets/css/common.css'
 import moment from 'moment'
 import 'vue-awesome/icons'
@@ -17,6 +20,7 @@ import VueShortkey from 'vue-shortkey'
 Vue.config.productionTip = false
 
 Vue.use(Vuetify)
+Vue.use(BootstrapVue)
 Vue.use(VueShortkey, { prevent: ['input', 'textarea'] })
 
 Vue.component('icon', Icon)
