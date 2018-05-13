@@ -10,12 +10,16 @@ import router from './router'
 import store from './store'
 /* eslint no-unused-vars: 0 */
 import toast from './toast'
-//import 'vuetify/dist/vuetify.min.css'
+// import 'vuetify/dist/vuetify.min.css'
 import '@/assets/css/common.css'
 import moment from 'moment'
 import 'vue-awesome/icons'
 import Icon from 'vue-awesome/components/Icon'
 import VueShortkey from 'vue-shortkey'
+
+require('jquery/dist/jquery')
+require('popper.js/dist/umd/popper')
+require('bootstrap/dist/js/bootstrap')
 
 Vue.config.productionTip = false
 

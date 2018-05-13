@@ -17,9 +17,8 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import net.sinsengumi.feedich.model.FeedichOAuth2User;
 import net.sinsengumi.feedich.model.User;
@@ -68,7 +67,7 @@ public class OAuth2UserServiceJdbcService extends DefaultOAuth2UserService {
             GitHubEmail[] emails = restTemplate.getForObject("https://api.github.com/user/emails", GitHubEmail[].class);
             return Stream.of(emails).filter(e -> e.primary).map(e -> e.email).findFirst().orElseThrow(() -> {
                 OAuth2Error oauth2Error = new OAuth2Error("missing_user_email", "Missing required email", null);
-                throw new OAuth2AuthenticationException(oauth2Error, oauth2Error.toString());
+                return new OAuth2AuthenticationException(oauth2Error, oauth2Error.toString());
             });
         }
         return null;
@@ -85,8 +84,7 @@ public class OAuth2UserServiceJdbcService extends DefaultOAuth2UserService {
         };
     }
 
-    @Value
-    @ToString
+    @Data
     private static class GitHubEmail {
         private String email;
         private boolean verified;

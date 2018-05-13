@@ -1,47 +1,35 @@
 <template>
   <div>
-    <v-container fill-height v-if="loading">
-      <v-progress-circular class="mx-auto" indeterminate :size="70" :width="7" color="blue"></v-progress-circular>
-    </v-container>
+    <div class="title-area d-flex justify-content-between align-items-center">
+      <span class="mr-auto"><img class="align-text-top" :src="activeSubscription.feed.favicon" width="16" height="16" /> {{ activeSubscription.feed.title }} ({{ activeSubscription.unreadCount }})</span>
+      <a href="javascript:void(0)" class="mr-3" v-b-modal.subscriptionModal><i class="fas fa-info-circle"></i> フィード情報</a>
+      <a href="javascript:void(0)"><i class="far fa-trash-alt"></i> 購読停止</a>
+    </div>
+    <subscription-dialog :subscription="activeSubscription"></subscription-dialog>
 
-    <v-alert v-if="error" type="error" :value="true">
-      {{ error }}
-    </v-alert>
+    <div v-if="loading" class="d-flex justify-content-center align-items-center" style="height: 200px">
+      <icon name="spinner" class="text-muted" width="56" height="56" pulse></icon>
+    </div>
 
-    <div v-if="userItems" style="padding-bottom: 400px">
+    <div class="user-items" v-if="userItems">
       <button style="display: none" v-shortkey="['enter']" @shortkey="nextItem"></button>
       <button style="display: none" v-shortkey="['shift', 'enter']" @shortkey="prevItem"></button>
       <button style="display: none" v-shortkey="['p']" @shortkey="togglePin"></button>
 
-      <div class="sticky-header">
-        <component-subscription :subscription="activeSubscription" :unread-item-count="unreadItemCount"></component-subscription>
-      </div>
+      <div class="item-box" v-for="(userItem, index) in userItems" :key="'item_' + userItem.item.id" :ref="'item-box-' + index" :class="itemBoxBackgroundColor(userItem, index)">
+        <div class="d-flex justify-content-between align-items-center">
+          <span class="mr-auto" :class="userItem.unread ? 'item-title-unread' : 'item-title-read'">{{ userItem.item.title }}</span>
 
-      <div :ref="'item-box-' + index" class="item-box" v-for="(userItem, index) in userItems" :key="'item_' + userItem.item.id" :class="itemBoxBackgroundColor(userItem)">
-        <v-layout row wrap>
-          <v-flex xs9>
-            <h3 class="item-title">{{ userItem.item.title }}</h3>
-          </v-flex>
-          <v-flex xs3 class="operation-area">
-            <v-btn flat small class="operation-btn" v-if="userItem.pin === null" @click="addPin(userItem)">
-              <v-icon small data-fa-transform="rotate-45" class="operation-icon">fas fa-thumbtack</v-icon>Add Pin
-            </v-btn>
-            <v-btn flat small class="operation-btn" v-if="userItem.pin !== null" @click="removePin(userItem)">
-              <v-icon small data-fa-transform="rotate-45" class="operation-icon">fas fa-thumbtack</v-icon>Remove Pin
-            </v-btn>
+          <a class=" mr-3" href="javascript:void(0)" v-if="userItem.pin === null" @click="addPin(userItem, index)" title="スターを付ける"><icon name="regular/star" :height="18" :width="18" class="align-text-top"></icon></a>
+          <a class=" mr-3" href="javascript:void(0)" v-if="userItem.pin !== null" @click="removePin(userItem, index)" title="スターを外す"><icon name="star" :height="18" :width="18" class="align-text-top text-warning"></icon></a>
 
-            <v-btn flat small class="operation-btn" v-if="userItem.unread" @click.native="readItem(userItem)">
-              <icon name="eye" class="operation-icon"></icon> Mark as read
-            </v-btn>
-            <v-btn flat small class="operation-btn" v-if="!userItem.unread" @click.native="unreadItem(userItem)">
-              <icon name="eye-slash" class="operation-icon"></icon> Mark as unread
-            </v-btn>
-          </v-flex>
-        </v-layout>
+          <a class="" href="javascript:void(0)" v-if="userItem.unread"  @click="readItem(userItem, index)" title="既読にする"><icon name="eye" :height="18" :width="18" class="align-text-top"></icon></a>
+          <a class="" href="javascript:void(0)" v-if="!userItem.unread" @click="unreadItem(userItem, index)" title="未読にする"><icon name="eye-slash" :height="18" :width="18" class="align-text-top"></icon></a>
+        </div>
 
         <div class="footnote-area">
           <a :href="userItem.item.url" target="_blank">元記事</a> &nbsp;|&nbsp;
-          {{ userItem.item.publishedAt | fromNow }}
+          <span :title="userItem.item.publishedAt">{{ userItem.item.publishedAt | fromNow }}</span>
           <span v-if="userItem.item.author">by {{ userItem.item.author }}</span>
         </div>
 
@@ -61,18 +49,19 @@
 <script>
 import ApiClient from '../../ApiClient'
 import Subscription from './Subscription'
+import SubscriptionDialog from './SubscriptionDialog'
 
 const api = new ApiClient()
 
 export default {
   name: 'Item',
   components: {
-    'component-subscription': Subscription
+    'component-subscription': Subscription,
+    'subscription-dialog': SubscriptionDialog
   },
   data () {
     return {
       loading: false,
-      error: null,
       userItems: null,
       activeItemIndex: null
     }
@@ -100,7 +89,6 @@ export default {
     fetchData () {
       this.activeItemIndex = null
       this.userItems = null
-      this.error = null
       this.loading = true
 
       api.getItems(this.activeSubscriptionId)
@@ -110,10 +98,10 @@ export default {
         })
         .catch(() => {
           this.loading = false
-          this.error = 'データの取得に失敗しました'
         })
     },
-    readItem (userItem) {
+    readItem (userItem, index) {
+      this.activeItemIndex = index
       if (userItem.unread) {
         api.readItem(userItem.itemId)
           .then((response) => {
@@ -123,7 +111,8 @@ export default {
           })
       }
     },
-    unreadItem (userItem) {
+    unreadItem (userItem, index) {
+      this.activeItemIndex = index
       if (!userItem.unread) {
         api.unreadItem(userItem.itemId)
           .then((response) => {
@@ -133,26 +122,31 @@ export default {
           })
       }
     },
-    addPin (userItem) {
+    addPin (userItem, index) {
+      this.activeItemIndex = index
       this.$store.dispatch('ADD_PIN', {title: userItem.item.title, url: userItem.item.url})
         .then((addedPin) => {
+          this.$toasted.global.info({message: 'スターを付けました'})
           userItem.pin = addedPin
         })
     },
-    removePin (userItem) {
+    removePin (userItem, index) {
+      this.activeItemIndex = index
       this.$store.dispatch('REMOVE_PIN', {pin: userItem.pin})
         .then((removedPin) => {
+          this.$toasted.global.info({message: 'スターを外しました'})
           userItem.pin = null
         })
     },
-    itemBoxBackgroundColor (userItem) {
-      if (userItem.pin !== null) {
-        return 'item-box-pin'
+    itemBoxBackgroundColor (userItem, index) {
+      let activeClass = ' '
+      if (index === this.activeItemIndex) {
+        activeClass = 'item-box-active '
       }
       if (!userItem.unread) {
-        return 'item-box-read'
+        return activeClass + 'item-box-read'
       }
-      return ''
+      return activeClass
     },
     nextItem () {
       if (this.activeItemIndex === null) {
@@ -162,7 +156,7 @@ export default {
       }
 
       const userItem = this.userItems[this.activeItemIndex]
-      this.readItem(userItem)
+      this.readItem(userItem, this.activeItemIndex)
 
       this.scrollToItem(this.activeItemIndex)
     },
@@ -174,13 +168,13 @@ export default {
       }
 
       const userItem = this.userItems[this.activeItemIndex]
-      this.readItem(userItem)
+      this.readItem(userItem, this.activeItemIndex)
 
       this.scrollToItem(this.activeItemIndex)
     },
     scrollToItem (itemIndex) {
       const element = this.$refs['item-box-' + itemIndex]
-      window.scrollTo(0, element[0].offsetTop - 214)
+      window.scrollTo(0, element[0].offsetTop - 95)
     },
     togglePin () {
       if (this.activeItemIndex === null) {
@@ -188,9 +182,9 @@ export default {
       }
       const userItem = this.userItems[this.activeItemIndex]
       if (userItem.pin === null) {
-        this.addPin(userItem)
+        this.addPin(userItem, this.activeItemIndex)
       } else {
-        this.removePin(userItem)
+        this.removePin(userItem, this.activeItemIndex)
       }
     }
   }
@@ -198,64 +192,4 @@ export default {
 </script>
 
 <style scoped>
-.sticky-header {
-  position: -webkit-sticky;
-  position: sticky;
-  top: 46px;
-  padding-top: 15px;
-  z-index: 100;
-  background-color: #FAFAFA;
-}
-
-.item-box {
-  margin-top: 15px;
-  margin-bottom: 15px;
-  padding: 10px 15px 5px 15px;
-  background-color: white;
-  border: 1px dotted #BDBDBD;
-}
-
-.item-box-pin {
-  background-color: #FFF4F6;
-}
-
-.item-box-read {
-  background-color: #F5F5F5;
-}
-
-h3.item-title {
-  font-weight: 600;
-}
-
-.operation-area {
-  text-align: right;
-  font-size: 12px;
-}
-
-.operation-btn {
-  margin: 0;
-  color: #1976d2;
-}
-
-.operation-icon {
-  margin-right:5px;
-}
-
-.footnote-area {
-  padding-top: 5px;
-  color: #616161;
-  font-size: 12px;
-}
-
-.description-area {
-  padding: 10px;
-  font-size: 13px;
-  border-bottom: 1px solid #BDBDBD;
-}
-
-.shared-area {
-  font-size: 1.2em;
-  padding-top: 5px;
-  text-align: right;
-}
 </style>

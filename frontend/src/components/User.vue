@@ -5,21 +5,18 @@
 
     <div class="container-fluid">
       <div class="row">
-        <div class="col-2 ">
+        <nav class="sidebar d-md-block">
           <layout-navigation />
-        </div>
-        <main class="col-10 bd-content">
-          <router-view />
+        </nav>
+        <main class="main ml-sm-auto">
+          <div class="content">
+            <router-view />
+          </div>
         </main>
       </div>
     </div>
-    <!-- <v-content>
-      <v-container fluid style="padding-top: 0">
-        <router-view />
-      </v-container>
-    </v-content>
 
-    <layout-footer /> -->
+    <layout-footer />
   </v-app>
 </template>
 

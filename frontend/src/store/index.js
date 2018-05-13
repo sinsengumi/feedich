@@ -59,6 +59,7 @@ export default new Vuex.Store({
   },
   actions: {
     [action.GET_SUBSCRIPTIONS] ({ commit }, payload) {
+      commit(mutation.SET_SUBSCRIPTIONS, {subscriptions: []})
       return api.getSubscriptions()
         .then((response) => {
           commit(mutation.SET_SUBSCRIPTIONS, {subscriptions: response.data})

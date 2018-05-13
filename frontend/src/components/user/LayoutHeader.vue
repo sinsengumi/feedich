@@ -1,21 +1,22 @@
 <template>
-  <header class="navbar navbar-expand navbar-dark flex-column flex-md-row bd-navbar pt-0 pb-0">
-    <a class="navbar-brand logo" href="/#/dashboard">Feedich</a>
-    <div><span class="description">Feedich is "simple" and "snappy" feed reader.</span></div>
+  <header class="header fixed-top d-flex flex-row justify-content-between align-items-center">
+    <div class="logo">
+      <a href="/#/dashboard"><i class="fa fa-rss-square logo-icon"></i>Feedich</a>
+      <span class="description">Feedich is "simple" and "snappy" feed reader.</span>
+    </div>
 
-    <ul class="navbar-nav flex-row ml-md-auto">
+    <ul class="header-navi d-flex flex-row">
       <li>
-        <b-button variant="link" class="nav-link" to="/settings"><v-icon>fa fa-cogs</v-icon></b-button>
+        <b-button variant="link" to="/settings"><i class="fa fa-cogs"></i></b-button>
       </li>
       <li>
         <form v-bind:action="logoutUrl" method="post">
           <input type="hidden" name="_csrf" :value="xsrfToken" />
-          <b-button variant="link" class="nav-link pr-0" type="submit"><v-icon>fa fa-sign-out-alt</v-icon></b-button>
+          <b-button variant="link" type="submit"><i class="fa fa-sign-out-alt"></i></b-button>
         </form>
       </li>
     </ul>
   </header>
-
 </template>
 
 <script>
@@ -40,13 +41,4 @@ export default {
 </script>
 
 <style scoped>
-.logo {
-  font-family: 'Bree Serif', serif;
-}
-
-.description {
-  font-size: 12px;
-  color: #cbbde2;
-  font-family: 'Bree Serif', serif;
-}
 </style>
