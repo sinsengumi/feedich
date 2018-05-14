@@ -36,7 +36,7 @@
     </div>
 
     <div v-if="loading" class="d-flex justify-content-center align-items-center" style="height: 80%">
-      <i class="fas fa-spinner fa-pulse text-muted display-4"></i>
+      <i class="fas fa-circle-notch fa-spin text-muted fa-4x"></i>
     </div>
 
     <ul class="subscription-list">

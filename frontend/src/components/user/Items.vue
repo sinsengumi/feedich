@@ -9,7 +9,7 @@
     <unsubscribe-modal :subscription="activeSubscription" :modal-visible="unsubscribeModal" @close="unsubscribeModal = false"></unsubscribe-modal>
 
     <div v-if="loading" class="d-flex justify-content-center align-items-center" style="height: 200px">
-      <icon name="spinner" class="text-muted" width="56" height="56" pulse></icon>
+      <i class="fas fa-circle-notch fa-spin text-muted fa-4x"></i>
     </div>
 
     <div class="user-items" v-if="userItems">
@@ -21,11 +21,11 @@
         <div class="d-flex justify-content-between align-items-center">
           <span class="mr-auto" :class="userItem.unread ? 'item-title-unread' : 'item-title-read'">{{ userItem.item.title }}</span>
 
-          <a class=" mr-3" href="javascript:void(0)" v-if="userItem.pin === null" @click="addPin(userItem, index)" title="スターを付ける"><icon name="regular/star" :height="18" :width="18" class="align-text-top"></icon></a>
-          <a class=" mr-3" href="javascript:void(0)" v-if="userItem.pin !== null" @click="removePin(userItem, index)" title="スターを外す"><icon name="star" :height="18" :width="18" class="align-text-top text-warning"></icon></a>
+          <a class="mr-3" href="javascript:void(0)" v-if="userItem.pin === null" @click="addPin(userItem, index)" title="スターを付ける"><i class="far fa-star fa-lg"></i></a>
+          <a class="mr-3" href="javascript:void(0)" v-if="userItem.pin !== null" @click="removePin(userItem, index)" title="スターを外す"><i class="fa fa-star fa-lg text-warning"></i></a>
 
-          <a class="" href="javascript:void(0)" v-if="userItem.unread"  @click="readItem(userItem, index)" title="既読にする"><icon name="eye" :height="18" :width="18" class="align-text-top"></icon></a>
-          <a class="" href="javascript:void(0)" v-if="!userItem.unread" @click="unreadItem(userItem, index)" title="未読にする"><icon name="eye-slash" :height="18" :width="18" class="align-text-top"></icon></a>
+          <a href="javascript:void(0)" v-if="userItem.unread"  @click="readItem(userItem, index)" title="既読にする"><i class="fa fa-eye fa-lg"></i></a>
+          <a href="javascript:void(0)" v-if="!userItem.unread" @click="unreadItem(userItem, index)" title="未読にする"><i class="fa fa-eye-slash fa-lg"></i></a>
         </div>
 
         <div class="footnote-area">
@@ -38,8 +38,8 @@
         </div>
 
         <div class="shared-area">
-          <i class="fab fa-twitter"></i> &nbsp;
-          <i class="fab fa-facebook"></i> &nbsp;
+          <i class="fab fa-twitter"></i>
+          <i class="fab fa-facebook"></i>
           <i class="fab fa-line"></i>
         </div>
       </div>

@@ -14,12 +14,10 @@
             {{ data.value | fromNow }}
           </template>
           <template slot="operation" slot-scope="data">
-            <div class="btn-group btn-group-sm" role="group">
-              <a class="btn btn-primary" :href="data.item.feed.url" target="_blank" role="button"><i class="fas fa-globe"></i></a>
-              <a class="btn btn-info" :href="data.item.feed.feedUrl" target="_blank" role="button"><i class="fas fa-file-code"></i></a>
-              <button type="button" class="btn btn-success" @click="openSubscriptionModal(data.item)"><i class="fas fa-info-circle"></i></button>
-              <button type="button" class="btn btn-danger" @click="openUnsubscribeModal(data.item)"><i class="fas fa-trash-alt"></i></button>
-            </div>
+            <a :href="data.item.feed.url" target="_blank" class="mr-1"><i class="fa fa-globe"></i></a>
+            <a :href="data.item.feed.feedUrl" target="_blank" class="mr-1"><i class="fa fa-file-code"></i></a>
+            <a href="javascript:void(0)" @click="openSubscriptionModal(data.item)" class="mr-1"><i class="fa fa-info-circle"></i></a>
+            <a href="javascript:void(0)" @click="openUnsubscribeModal(data.item)"><i class="fa fa-trash-alt"></i></a>
           </template>
         </b-table>
       </div>
@@ -46,7 +44,7 @@ export default {
       ],
       subscriptionModal: false,
       unsubscribeModal: false,
-      targetSubscription: null,
+      targetSubscription: null
     }
   },
   created () {
@@ -96,7 +94,7 @@ export default {
 }
 
 .operation-th {
-  width: 150px;
+  width: 120px;
   text-align: center;
   padding: 5px 10px!important;
 }

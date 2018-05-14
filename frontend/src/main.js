@@ -11,8 +11,6 @@ import store from './store'
 import toast from './toast'
 import '@/assets/css/common.css'
 import moment from 'moment'
-import 'vue-awesome/icons'
-import Icon from 'vue-awesome/components/Icon'
 import VueShortkey from 'vue-shortkey'
 
 require('jquery/dist/jquery')
@@ -23,8 +21,6 @@ Vue.config.productionTip = false
 
 Vue.use(BootstrapVue)
 Vue.use(VueShortkey, { prevent: ['input', 'textarea'] })
-
-Vue.component('icon', Icon)
 
 Vue.filter('format', function (value, format) {
   if (!value) return '-'

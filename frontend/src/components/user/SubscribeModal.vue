@@ -6,7 +6,7 @@
     </div>
 
     <div v-if="loading" class="d-flex justify-content-center align-items-center" style="height: 100px">
-        <icon name="spinner" class="text-muted" width="56" height="56" pulse></icon>
+      <i class="fas fa-circle-notch fa-spin text-muted fa-3x"></i>
     </div>
 
     <div class="card mt-3" v-if="discoveredFeeds !== null && discoveredFeeds.length === 0">
