@@ -10,7 +10,7 @@
 
         <b-table :items="pins" :fields="fields" hover small show-empty empty-text="No results" thead-class="hidden-header" class="mb-0">
           <template slot="title" slot-scope="data">
-            <a href="javascript:void(0)" @click="readPin(data.item)"><i class="far fa-file-alt"></i> {{ data.value }}</a>
+            <a href="javascript:void(0)" @click="readPin(data.item)"><i class="far fa-file-alt mr-1"></i> {{ data.value }}</a>
           </template>
           <template slot="createdAt" slot-scope="data">
             {{ data.value | fromNow }}
@@ -31,9 +31,9 @@ export default {
   data () {
     return {
       fields: [
-        { key: 'title', tdClass: 'title-column' },
-        { key: 'createdAt', tdClass: 'createdAt-column' },
-        { key: 'operation', tdClass: 'operation-column' }
+        { key: 'title', tdClass: 'title-td' },
+        { key: 'createdAt', tdClass: 'createdAt-td' },
+        { key: 'operation', tdClass: 'operation-td' }
       ]
     }
   },
@@ -67,15 +67,17 @@ export default {
 </script>
 
 <style>
-.title-column {
+.title-td {
   padding: 5px 10px!important;
 }
-.createdAt-column {
+
+.createdAt-td {
   width: 140px;
   text-align: right;
   padding: 5px 10px!important;
 }
-.operation-column {
+
+.operation-td {
   width: 30px;
   text-align: center;
   padding: 5px 10px!important;

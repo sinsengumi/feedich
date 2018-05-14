@@ -217,6 +217,10 @@ a:hover {
   padding: 15px;
 }
 
+.content .subscriptions {
+  padding: 15px;
+}
+
 /* Footer */
 .footer {
   background-color: #1a252f;

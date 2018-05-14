@@ -5,8 +5,8 @@
       <a href="javascript:void(0)" v-b-modal.subscriptionModal class="mr-3"><i class="fas fa-info-circle"></i> フィード情報</a>
       <a href="javascript:void(0)" v-b-modal.unsubscribeModal><i class="far fa-trash-alt"></i> 購読停止</a>
     </div>
-    <subscription-modal :subscription="activeSubscription"></subscription-modal>
-    <unsubscribe-modal :subscription="activeSubscription"></unsubscribe-modal>
+    <subscription-modal :subscription="activeSubscription" :modal-visible="subscriptionModal" @close="subscriptionModal = false"></subscription-modal>
+    <unsubscribe-modal :subscription="activeSubscription" :modal-visible="unsubscribeModal" @close="unsubscribeModal = false"></unsubscribe-modal>
 
     <div v-if="loading" class="d-flex justify-content-center align-items-center" style="height: 200px">
       <icon name="spinner" class="text-muted" width="56" height="56" pulse></icon>
@@ -64,7 +64,9 @@ export default {
     return {
       loading: false,
       userItems: null,
-      activeItemIndex: null
+      activeItemIndex: null,
+      subscriptionModal: false,
+      unsubscribeModal: false
     }
   },
   created () {

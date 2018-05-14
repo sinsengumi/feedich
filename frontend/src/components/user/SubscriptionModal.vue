@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="subscriptionModal" :title="subscription.feed.title" hide-footer no-fade>
+  <b-modal id="subscriptionModal" v-model="modalVisibleInner" :title="subscription.feed.title" hide-footer no-fade>
     <table class="table table-striped">
       <tbody>
         <tr>
@@ -34,8 +34,21 @@
 <script>
 export default {
   props: [
+    'modalVisible',
     'subscription'
-  ]
+  ],
+  computed: {
+    modalVisibleInner: {
+      get: function () {
+        return this.modalVisible
+      },
+      set: function (value) {
+        if (!value) {
+          this.$emit('close')
+        }
+      }
+    }
+  }
 }
 </script>
 

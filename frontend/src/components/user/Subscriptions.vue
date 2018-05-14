@@ -1,52 +1,29 @@
 <template>
-  <div style="padding-top: 15px">
-    <!-- <subscription-dialog :dialog-visible="subscriptionDialog" :subscription="targetSubscription" @close="subscriptionDialog = false"></subscription-dialog> -->
-    <!-- <unsubscribe-dialog :dialog-visible="unsubscribeDialog" :subscription="targetSubscription" @close="unsubscribeDialog = false"></unsubscribe-dialog> -->
+  <div class="subscriptions">
+    <subscription-modal :subscription="targetSubscription" :modal-visible="subscriptionModal" @close="subscriptionModal = false"></subscription-modal>
+    <unsubscribe-modal :subscription="targetSubscription" :modal-visible="unsubscribeModal" @close="unsubscribeModal = false"></unsubscribe-modal>
 
-    <!-- <v-card>
-      <v-card-title class="pb-0">
-        <p class="title">Subscriptions</p>
-        <v-spacer></v-spacer>
-        <v-text-field append-icon="search" label="Search" single-line hide-details v-model="search"></v-text-field>
-      </v-card-title>
-
-      <v-data-table v-if="subscriptions != null"
-        :headers="headers"
-        :items="subscriptions"
-        :rows-per-page-items="rowsPerPageItems"
-        disable-initial-sort
-        :search="search"
-        :custom-filter="filterTitle">
-
-        <template slot="items" slot-scope="props">
-          <td style="height: 35px">
-            <img :src="props.item.feed.favicon" width="16" height="16" style="vertical-align: middle;" />&nbsp;
-            {{ props.item.feed.title }}
-          </td>
-
-          <td class="text-xs-center" style="width: 160px; height: 35px">{{ props.item.createdAt | fromNow }}</td>
-
-          <td class="text-xs-center px-0" style="width: 140px; height: 35px">
-            <a :href="props.item.feed.url" target="_blank">
-              <v-btn small icon class="mx-0 mt-0 mb-0">
-                <v-icon small color="green">fas fa-globe</v-icon>
-              </v-btn>
-            </a>
-            <a :href="props.item.feed.feedUrl" target="_blank">
-              <v-btn small icon class="mx-0 mt-0 mb-0">
-                <v-icon small color="teal">fas fa-file-code</v-icon>
-              </v-btn>
-            </a>
-            <v-btn small icon class="mx-0 mt-0 mb-0" @click="openSubscriptionDialog(props.item)">
-              <v-icon small color="blue">fas fa-info-circle</v-icon>
-            </v-btn>
-            <v-btn small icon class="mx-0 mt-0 mb-0" @click="openUnsubscribeDialog(props.item)">
-              <v-icon small color="pink">fas fa-trash-alt</v-icon>
-            </v-btn>
-          </td>
-        </template>
-      </v-data-table>
-    </v-card> -->
+    <div class="card">
+      <h5 class="card-header">購読フィード ({{ subscriptions.length }})</h5>
+      <div class="card-body">
+        <b-table :items="subscriptions" :fields="fields" hover small show-empty empty-text="No results" class="mb-0">
+          <template slot="title" slot-scope="data">
+            <img :src="data.item.feed.favicon" width="16" height="16" class="mr-1" /> {{ data.item.feed.title }}
+          </template>
+          <template slot="createdAt" slot-scope="data">
+            {{ data.value | fromNow }}
+          </template>
+          <template slot="operation" slot-scope="data">
+            <div class="btn-group btn-group-sm" role="group">
+              <a class="btn btn-primary" :href="data.item.feed.url" target="_blank" role="button"><i class="fas fa-globe"></i></a>
+              <a class="btn btn-info" :href="data.item.feed.feedUrl" target="_blank" role="button"><i class="fas fa-file-code"></i></a>
+              <button type="button" class="btn btn-success" @click="openSubscriptionModal(data.item)"><i class="fas fa-info-circle"></i></button>
+              <button type="button" class="btn btn-danger" @click="openUnsubscribeModal(data.item)"><i class="fas fa-trash-alt"></i></button>
+            </div>
+          </template>
+        </b-table>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -62,30 +39,14 @@ export default {
   },
   data () {
     return {
-      search: '',
-      headers: [
-        {
-          text: 'Title',
-          align: 'left',
-          value: 'feed.title',
-          sortable: true
-        },
-        {
-          text: 'Subscribed',
-          align: 'center',
-          value: 'createdAt',
-          sortable: true
-        },
-        {
-          text: 'Action',
-          align: 'center',
-          sortable: false
-        }
+      fields: [
+        { key: 'title', thClass: 'title-th', tdClass: 'title-td' },
+        { key: 'createdAt', thClass: 'createdAt-th', tdClass: 'createdAt-td' },
+        { key: 'operation', thClass: 'operation-th', tdClass: 'operation-td' }
       ],
-      rowsPerPageItems: [20, 50, 100, {'text': 'All', 'value': -1}],
-      subscriptionDialog: false,
-      unsubscribeDialog: false,
-      targetSubscription: null
+      subscriptionModal: false,
+      unsubscribeModal: false,
+      targetSubscription: null,
     }
   },
   created () {
@@ -102,17 +63,46 @@ export default {
         return title.indexOf(fileterWord) > -1
       })
     },
-    openSubscriptionDialog (subscription) {
-      this.subscriptionDialog = true
+    openSubscriptionModal (subscription) {
       this.targetSubscription = subscription
+      this.subscriptionModal = true
     },
-    openUnsubscribeDialog (subscription) {
-      this.unsubscribeDialog = true
+    openUnsubscribeModal (subscription) {
       this.targetSubscription = subscription
+      this.unsubscribeModal = true
     }
   }
 }
 </script>
 
-<style scoped>
+<style>
+.title-th {
+  padding: 5px 10px!important;
+}
+
+.title-td {
+  padding: 5px 10px!important;
+}
+
+.createdAt-th {
+  width: 140px;
+  text-align: right;
+  padding: 5px 10px!important;
+}
+
+.createdAt-td {
+  text-align: right;
+  padding: 5px 10px!important;
+}
+
+.operation-th {
+  width: 150px;
+  text-align: center;
+  padding: 5px 10px!important;
+}
+
+.operation-td {
+  text-align: center;
+  padding: 5px 10px!important;
+}
 </style>
