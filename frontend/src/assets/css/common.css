@@ -209,6 +209,14 @@ a:hover {
   text-align: right;
 }
 
+.content .setting {
+  padding: 15px;
+}
+
+.content .star {
+  padding: 15px;
+}
+
 /* Footer */
 .footer {
   background-color: #1a252f;
@@ -240,4 +248,8 @@ a:hover {
 
 .footer .copyright {
   margin-right: 5px;
+}
+
+.hidden-header {
+  display: none;
 }

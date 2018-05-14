@@ -21,7 +21,7 @@
             <a class="dropdown-item" href="javascript:void(0)" :class="isActiveSortKey('TITLE_DESC') ? 'active' : ''" @click="sortSubscriptions('TITLE_DESC')">タイトル 降順</a>
           </div>
         </div>
-        <button type="button" class="btn btn-light flex-fill"><i class="fas fa-plus"></i> 購読</button>
+        <button type="button" class="btn btn-light flex-fill" v-b-modal.subscribeModal><i class="fas fa-plus"></i> 購読</button>
       </div>
       <div class="btn-group d-flex" role="group">
         <b-button type="button" class="btn btn-light flex-fill" to="/subscriptions" :exact="true"><i class="far fa-clone"></i> 購読フィード</b-button>
@@ -50,7 +50,6 @@
 </template>
 
 <script>
-import SubscribeDialog from './SubscribeDialog'
 import { mapState } from 'vuex'
 import LocalStorage from '../../LocalStorage'
 import SubscriptionSorter from '../../SubscriptionSorter'
@@ -58,9 +57,6 @@ import SubscriptionSorter from '../../SubscriptionSorter'
 const ls = new LocalStorage()
 
 export default {
-  components: {
-    'subscribe-dialog': SubscribeDialog
-  },
   data () {
     return {
       loading: false,

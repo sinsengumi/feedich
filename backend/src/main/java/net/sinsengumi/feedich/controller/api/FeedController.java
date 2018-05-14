@@ -1,5 +1,6 @@
 package net.sinsengumi.feedich.controller.api;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,11 +29,16 @@ public class FeedController extends AbstractController {
 
     @GetMapping("discover")
     public List<DiscoverResponse> discover(@RequestParam String url, @AuthenticationPrincipal FeedichOAuth2User user) {
-        return feedDiscoverer.discover(url).stream()
-                .map(s -> {
-                    boolean subscribed = subscriptionService.subscribed(user.getId(), s.getUri());
-                    return DiscoverResponse.buildSyndFeed(s, subscribed);
-                })
-                .collect(Collectors.toList());
+        try {
+            return feedDiscoverer.discover(url).stream()
+                    .map(s -> {
+                        boolean subscribed = subscriptionService.subscribed(user.getId(), s.getUri());
+                        return DiscoverResponse.buildSyndFeed(s, subscribed);
+                    })
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            log.error("{}", e.getMessage(), e);
+            return Collections.emptyList();
+        }
     }
 }

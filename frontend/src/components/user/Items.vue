@@ -1,11 +1,12 @@
 <template>
   <div>
     <div class="title-area d-flex justify-content-between align-items-center">
-      <span class="mr-auto"><img class="align-text-top" :src="activeSubscription.feed.favicon" width="16" height="16" /> {{ activeSubscription.feed.title }} ({{ activeSubscription.unreadCount }})</span>
-      <a href="javascript:void(0)" class="mr-3" v-b-modal.subscriptionModal><i class="fas fa-info-circle"></i> フィード情報</a>
-      <a href="javascript:void(0)"><i class="far fa-trash-alt"></i> 購読停止</a>
+      <span class="mr-auto"><a :href="activeSubscription.feed.url" target="_blank"><img class="align-text-top" :src="activeSubscription.feed.favicon" width="16" height="16" /> {{ activeSubscription.feed.title }} ({{ activeSubscription.unreadCount }})</a></span>
+      <a href="javascript:void(0)" v-b-modal.subscriptionModal class="mr-3"><i class="fas fa-info-circle"></i> フィード情報</a>
+      <a href="javascript:void(0)" v-b-modal.unsubscribeModal><i class="far fa-trash-alt"></i> 購読停止</a>
     </div>
-    <subscription-dialog :subscription="activeSubscription"></subscription-dialog>
+    <subscription-modal :subscription="activeSubscription"></subscription-modal>
+    <unsubscribe-modal :subscription="activeSubscription"></unsubscribe-modal>
 
     <div v-if="loading" class="d-flex justify-content-center align-items-center" style="height: 200px">
       <icon name="spinner" class="text-muted" width="56" height="56" pulse></icon>
@@ -48,16 +49,16 @@
 
 <script>
 import ApiClient from '../../ApiClient'
-import Subscription from './Subscription'
-import SubscriptionDialog from './SubscriptionDialog'
+import SubscriptionModal from './SubscriptionModal'
+import UnsubscribeModal from './UnsubscribeModal'
 
 const api = new ApiClient()
 
 export default {
   name: 'Item',
   components: {
-    'component-subscription': Subscription,
-    'subscription-dialog': SubscriptionDialog
+    'subscription-modal': SubscriptionModal,
+    'unsubscribe-modal': UnsubscribeModal
   },
   data () {
     return {

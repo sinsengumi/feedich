@@ -1,28 +1,26 @@
 <template>
-  <div style="padding-top: 15px">
-    <v-card>
-      <v-card-title class="pb-0">
-        <p class="title">Pins ({{ pins.length }})</p>
-        <v-spacer></v-spacer>
-        <v-btn depressed small @click="readPins"><v-icon class="mr-1" style="font-size: 11px;">fas fa-external-link-alt</v-icon>Read {{ ellipsedPins.length }} pins (Open new windows)</v-btn>
-        <v-btn depressed small @click="clearPins"><v-icon class="mr-1" style="font-size: 11px;">fas fa-trash-alt</v-icon>Clear pins</v-btn>
-      </v-card-title>
+  <div class="star">
+    <div class="card">
+      <h5 class="card-header">スター ({{ pins.length }})</h5>
+      <div class="card-body">
+        <div class="mb-3 text-right">
+          <button type="button" class="btn btn-sm btn-info" @click="readPins"><i class="fas fa-external-link-alt"></i> 記事を一気に読む（新規タブを開きます）</button>
+          <button type="button" class="btn btn-sm btn-danger" @click="clearPins"><i class="fas fa-trash-alt"></i> 全削除</button>
+        </div>
 
-      <v-data-table v-if="pins != null" :items="pins" hide-actions hide-headers>
-
-        <template slot="items" slot-scope="props">
-          <td class="pin-list-td">
-            <a @click="readPin(props.item)"><v-icon style="font-size: 11px; margin: 0 2px 2px 0;">far fa-file-alt</v-icon> {{ props.item.title }}</a>
-          </td>
-          <td class="text-xs-center pin-list-td" style="width: 160px;">{{ props.item.createdAt | fromNow }}</td>
-          <td class="text-xs-center pin-list-td px-0" style="width: 40px;">
-            <v-btn small icon class="ma-0" @click="removePin(props.item)">
-              <v-icon small color="pink">fas fa-trash-alt</v-icon>
-            </v-btn>
-          </td>
-        </template>
-      </v-data-table>
-    </v-card>
+        <b-table :items="pins" :fields="fields" hover small show-empty empty-text="No results" thead-class="hidden-header" class="mb-0">
+          <template slot="title" slot-scope="data">
+            <a href="javascript:void(0)" @click="readPin(data.item)"><i class="far fa-file-alt"></i> {{ data.value }}</a>
+          </template>
+          <template slot="createdAt" slot-scope="data">
+            {{ data.value | fromNow }}
+          </template>
+          <template slot="operation" slot-scope="data">
+            <a href="javascript:void(0)" @click="removePin(data.item)"><i class="fas fa-trash-alt"></i></a>
+          </template>
+        </b-table>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -30,6 +28,15 @@
 import { mapState } from 'vuex'
 
 export default {
+  data () {
+    return {
+      fields: [
+        { key: 'title', tdClass: 'title-column' },
+        { key: 'createdAt', tdClass: 'createdAt-column' },
+        { key: 'operation', tdClass: 'operation-column' }
+      ]
+    }
+  },
   computed: {
     ...mapState(['pins']),
     ellipsedPins () {
@@ -51,7 +58,7 @@ export default {
       })
     },
     clearPins () {
-      if (window.confirm('Clear Pins ?')) {
+      if (window.confirm('スターを全削除します。よろしいですか？')) {
         this.$store.dispatch('CLEAR_PINS')
       }
     }
@@ -59,11 +66,18 @@ export default {
 }
 </script>
 
-<style scoped>
-.pin-list-td {
-  padding: 2px 10px 1px 10px!important;
-  height: auto;
-  color: #6a737d;
+<style>
+.title-column {
+  padding: 5px 10px!important;
 }
-
+.createdAt-column {
+  width: 140px;
+  text-align: right;
+  padding: 5px 10px!important;
+}
+.operation-column {
+  width: 30px;
+  text-align: center;
+  padding: 5px 10px!important;
+}
 </style>

@@ -1,9 +1,9 @@
 <template>
   <div style="padding-top: 15px">
-    <subscription-dialog :dialog-visible="subscriptionDialog" :subscription="targetSubscription" @close="subscriptionDialog = false"></subscription-dialog>
-    <unsubscribe-dialog :dialog-visible="unsubscribeDialog" :subscription="targetSubscription" @close="unsubscribeDialog = false"></unsubscribe-dialog>
+    <!-- <subscription-dialog :dialog-visible="subscriptionDialog" :subscription="targetSubscription" @close="subscriptionDialog = false"></subscription-dialog> -->
+    <!-- <unsubscribe-dialog :dialog-visible="unsubscribeDialog" :subscription="targetSubscription" @close="unsubscribeDialog = false"></unsubscribe-dialog> -->
 
-    <v-card>
+    <!-- <v-card>
       <v-card-title class="pb-0">
         <p class="title">Subscriptions</p>
         <v-spacer></v-spacer>
@@ -46,19 +46,19 @@
           </td>
         </template>
       </v-data-table>
-    </v-card>
+    </v-card> -->
   </div>
 </template>
 
 <script>
-import SubscriptionDialog from './SubscriptionDialog'
-import UnsubscribeDialog from './UnsubscribeDialog'
+import SubscriptionModal from './SubscriptionModal'
+import UnsubscribeModal from './UnsubscribeModal'
 import { mapState } from 'vuex'
 
 export default {
   components: {
-    'subscription-dialog': SubscriptionDialog,
-    'unsubscribe-dialog': UnsubscribeDialog
+    'subscription-modal': SubscriptionModal,
+    'unsubscribe-modal': UnsubscribeModal
   },
   data () {
     return {

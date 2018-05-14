@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="subscriptionModal" :title="subscription.feed.title" hide-footer>
+  <b-modal id="subscriptionModal" :title="subscription.feed.title" hide-footer no-fade>
     <table class="table table-striped">
       <tbody>
         <tr>

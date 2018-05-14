@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <div>
 
     <layout-header />
 
@@ -9,6 +9,7 @@
           <layout-navigation />
         </nav>
         <main class="main ml-sm-auto">
+          <subscribe-modal></subscribe-modal>
           <div class="content">
             <router-view />
           </div>
@@ -17,13 +18,14 @@
     </div>
 
     <layout-footer />
-  </v-app>
+  </div>
 </template>
 
 <script>
 import LayoutHeader from './user/LayoutHeader.vue'
 import LayoutFooter from './user/LayoutFooter.vue'
 import LayoutNavigation from './user/LayoutNavigation.vue'
+import SubscribeModal from './user/SubscribeModal'
 import { mapActions } from 'vuex'
 import * as action from '../store/action-types'
 
@@ -31,7 +33,8 @@ export default {
   components: {
     'layout-footer': LayoutFooter,
     'layout-header': LayoutHeader,
-    'layout-navigation': LayoutNavigation
+    'layout-navigation': LayoutNavigation,
+    'subscribe-modal': SubscribeModal
   },
   created () {
     this.GET_PINS()
