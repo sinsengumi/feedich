@@ -14,10 +14,10 @@
             {{ data.value | fromNow }}
           </template>
           <template slot="operation" slot-scope="data">
-            <a :href="data.item.feed.url" target="_blank" class="mr-1"><i class="fa fa-globe"></i></a>
-            <a :href="data.item.feed.feedUrl" target="_blank" class="mr-1"><i class="fa fa-file-code"></i></a>
-            <a href="javascript:void(0)" @click="openSubscriptionModal(data.item)" class="mr-1"><i class="fa fa-info-circle"></i></a>
-            <a href="javascript:void(0)" @click="openUnsubscribeModal(data.item)"><i class="fa fa-trash-alt"></i></a>
+            <a :href="data.item.feed.url" target="_blank" class="mr-1" title="サイト URL"><i class="fa fa-globe"></i></a>
+            <a :href="data.item.feed.feedUrl" target="_blank" class="mr-1" title="フィード URL"><i class="fa fa-file-code"></i></a>
+            <a href="javascript:void(0)" @click="openSubscriptionModal(data.item)" class="mr-1" title="フィード情報"><i class="fa fa-info-circle"></i></a>
+            <a href="javascript:void(0)" @click="openUnsubscribeModal(data.item)" title="購読停止"><i class="fa fa-trash-alt"></i></a>
           </template>
         </b-table>
       </div>

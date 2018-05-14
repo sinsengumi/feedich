@@ -16,7 +16,7 @@
             {{ data.value | fromNow }}
           </template>
           <template slot="operation" slot-scope="data">
-            <a href="javascript:void(0)" @click="removePin(data.item)"><i class="fas fa-trash-alt"></i></a>
+            <a href="javascript:void(0)" @click="removePin(data.item)" title="削除"><i class="fas fa-trash-alt"></i></a>
           </template>
         </b-table>
       </div>

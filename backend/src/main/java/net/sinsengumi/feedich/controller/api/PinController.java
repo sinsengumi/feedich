@@ -1,5 +1,6 @@
 package net.sinsengumi.feedich.controller.api;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,6 +40,7 @@ public class PinController extends AbstractController {
         pin.setUserId(user.getId());
         pin.setTitle(title);
         pin.setUrl(url);
+        pin.setCreatedAt(new Date());
 
         pinService.create(pin);
         return pin.toResponse();

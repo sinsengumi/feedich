@@ -39,6 +39,10 @@
       <i class="fas fa-circle-notch fa-spin text-muted fa-4x"></i>
     </div>
 
+    <div v-if="!loading && filteredSubscriptions.length === 0" class="d-flex justify-content-center align-items-center" style="height: 80%">
+      <span class="no-results">No results</span>
+    </div>
+
     <ul class="subscription-list">
       <li v-for="s in filteredSubscriptions" class="d-flex align-items-center" :title="s.feed.title" @click="toItems(s)" :class="{'active': s.id === activeSubscriptionId}" :key="s.feed.title">
         <img :src="s.feed.favicon" width="16" height="16" />

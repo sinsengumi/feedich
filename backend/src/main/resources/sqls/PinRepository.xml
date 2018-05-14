@@ -30,7 +30,7 @@
       #{userId}
       , #{title}
       , #{url}
-      , now()
+      , #{createdAt}
     )
     <selectKey resultType="_int" order="AFTER" keyProperty="id">
       select last_insert_id()

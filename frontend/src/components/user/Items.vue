@@ -94,6 +94,8 @@ export default {
       this.userItems = null
       this.loading = true
 
+      document.title = this.activeSubscription.feed.title + ' | Feedich'
+
       api.getItems(this.activeSubscriptionId)
         .then((response) => {
           this.userItems = response.data

@@ -200,6 +200,7 @@ a:hover {
 .content .user-items .description-area {
   padding: 10px;
   font-size: 13px;
+  color: #616161;
   border-bottom: 1px solid #BDBDBD;
 }
 
@@ -256,4 +257,9 @@ a:hover {
 
 .hidden-header {
   display: none;
+}
+
+.no-results {
+  color: #b4bcc4;
+  font-size: 1.5rem;
 }

@@ -1,6 +1,6 @@
 <template>
   <b-modal id="subscriptionModal" v-model="modalVisibleInner" :title="subscription.feed.title" hide-footer no-fade>
-    <table class="table table-striped">
+    <table class="table table-striped mb-0">
       <tbody>
         <tr>
           <th class="text-right" scope="row" style="width: 120px">概要</th>

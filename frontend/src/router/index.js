@@ -53,25 +53,25 @@ const router = new Router({
               path: 'subscriptions/:subscriptionId/items',
               name: 'Items',
               component: Items,
-              meta: { title: 'Items | Feedich', requiresAuth: true }
+              meta: { title: '記事 | Feedich', requiresAuth: true }
             },
             {
               path: 'subscriptions',
               name: 'Subscriptions',
               component: Subscriptions,
-              meta: { title: 'Subscriptions | Feedich', requiresAuth: true }
+              meta: { title: '購読フィード | Feedich', requiresAuth: true }
             },
             {
               path: 'pins',
               name: 'Pins',
               component: Pins,
-              meta: { title: 'Pins | Feedich', requiresAuth: true }
+              meta: { title: 'スター | Feedich', requiresAuth: true }
             },
             {
               path: 'settings',
               name: 'Settings',
               component: Settings,
-              meta: { title: 'Settings | Feedich', requiresAuth: true }
+              meta: { title: '設定 | Feedich', requiresAuth: true }
             }
           ]
         }
