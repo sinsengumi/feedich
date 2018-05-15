@@ -22,6 +22,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.sinsengumi.feedich.service.OAuth2UserServiceJdbcService;
+import net.sinsengumi.feedich.service.OidcUserServiceJdbcService;
 
 @Slf4j
 @EnableWebSecurity
@@ -32,6 +33,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private String frontendUrl;
 
     private final OAuth2UserServiceJdbcService oauth2UserServiceJdbcService;
+    private final OidcUserServiceJdbcService oidcUserServiceJdbcService;
     private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
     @Override
@@ -46,7 +48,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
             .logout().permitAll()
             .and()
-            .oauth2Login().defaultSuccessUrl(frontendUrl + "/#/dashboard", true).userInfoEndpoint().userService(oauth2UserServiceJdbcService)
+            .oauth2Login().defaultSuccessUrl(frontendUrl + "/#/dashboard", true).userInfoEndpoint().userService(oauth2UserServiceJdbcService).oidcUserService(oidcUserServiceJdbcService)
             .and()
             .loginPage("/login").permitAll()
             .and()

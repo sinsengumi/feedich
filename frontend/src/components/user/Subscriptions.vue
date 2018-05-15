@@ -6,7 +6,7 @@
     <div class="card">
       <h5 class="card-header">購読フィード ({{ subscriptions.length }})</h5>
       <div class="card-body">
-        <b-table :items="subscriptions" :fields="fields" hover small show-empty empty-text="No results" class="mb-0">
+        <b-table :items="subscriptions" :fields="fields" hover small show-empty empty-text="No Results" class="mb-0">
           <template slot="title" slot-scope="data">
             <img :src="data.item.feed.favicon" width="16" height="16" class="mr-1" /> {{ data.item.feed.title }}
           </template>

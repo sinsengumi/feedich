@@ -26,6 +26,18 @@
     <tr>
       <td><a href="http://localhost:8080/oauth2/authorization/google">Sign in with Google</a></td>
     </tr>
+    <tr>
+      <td><a href="http://localhost:8080/oauth2/authorization/twitter">Sign in with Twitter</a></td>
+    </tr>
+    <tr>
+      <td><a href="http://localhost:8080/oauth2/authorization/facebook">Sign in with Facebook</a></td>
+    </tr>
+    <tr>
+      <td><a href="http://localhost:8080/oauth2/authorization/line">Sign in with LINE</a></td>
+    </tr>
+    <tr>
+      <td><a href="http://localhost:8080/oauth2/authorization/yahoo">Sign in with Yahoo! Japan</a></td>
+    </tr>
   </table>
 
       </b-container>

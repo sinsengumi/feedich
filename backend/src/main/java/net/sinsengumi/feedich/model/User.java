@@ -72,7 +72,7 @@ public class User {
 
             @Override
             public String getName(Map<String, Object> attributes) {
-                return (String) attributes.get("name");
+                return (String) attributes.get("login");
             }
         },
         Facebook {
@@ -99,12 +99,12 @@ public class User {
 
             @Override
             public String getEmail(Map<String, Object> attributes) {
-                return (String) attributes.get("sub");
+                return (String) attributes.get("email");
             }
 
             @Override
             public String getName(Map<String, Object> attributes) {
-                return (String) attributes.get("sub");
+                return (String) attributes.get("email");
             }
         },
         LINE {
