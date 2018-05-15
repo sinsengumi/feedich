@@ -40,7 +40,7 @@
     </div>
 
     <div v-if="!loading && filteredSubscriptions.length === 0" class="d-flex justify-content-center align-items-center" style="height: 80%">
-      <span class="no-results">No results</span>
+      <span class="no-results">No Results</span>
     </div>
 
     <ul class="subscription-list">

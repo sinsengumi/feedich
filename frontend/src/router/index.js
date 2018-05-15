@@ -65,7 +65,7 @@ const router = new Router({
               path: 'pins',
               name: 'Pins',
               component: Pins,
-              meta: { title: 'スター | Feedich', requiresAuth: true }
+              meta: { title: 'ピン | Feedich', requiresAuth: true }
             },
             {
               path: 'settings',

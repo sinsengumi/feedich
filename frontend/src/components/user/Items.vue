@@ -21,8 +21,8 @@
         <div class="d-flex justify-content-between align-items-center">
           <span class="mr-auto" :class="userItem.unread ? 'item-title-unread' : 'item-title-read'">{{ userItem.item.title }}</span>
 
-          <a class="mr-3" href="javascript:void(0)" v-if="userItem.pin === null" @click="addPin(userItem, index)" title="スターを付ける"><i class="far fa-star fa-lg"></i></a>
-          <a class="mr-3" href="javascript:void(0)" v-if="userItem.pin !== null" @click="removePin(userItem, index)" title="スターを外す"><i class="fa fa-star fa-lg text-warning"></i></a>
+          <a class="mr-3 ml-2" href="javascript:void(0)" v-if="userItem.pin === null" @click="addPin(userItem, index)" title="ピンを付ける"><i class="fas fa-thumbtack fa-lg"></i></a>
+          <a class="mr-3 ml-2" href="javascript:void(0)" v-if="userItem.pin !== null" @click="removePin(userItem, index)" title="ピンを外す"><i class="fas fa-thumbtack fa-lg text-warning"></i></a>
 
           <a href="javascript:void(0)" v-if="userItem.unread"  @click="readItem(userItem, index)" title="既読にする"><i class="fa fa-eye fa-lg"></i></a>
           <a href="javascript:void(0)" v-if="!userItem.unread" @click="unreadItem(userItem, index)" title="未読にする"><i class="fa fa-eye-slash fa-lg"></i></a>
@@ -131,7 +131,6 @@ export default {
       this.activeItemIndex = index
       this.$store.dispatch('ADD_PIN', {title: userItem.item.title, url: userItem.item.url})
         .then((addedPin) => {
-          this.$toasted.global.info({message: 'スターを付けました'})
           userItem.pin = addedPin
         })
     },
@@ -139,7 +138,6 @@ export default {
       this.activeItemIndex = index
       this.$store.dispatch('REMOVE_PIN', {pin: userItem.pin})
         .then((removedPin) => {
-          this.$toasted.global.info({message: 'スターを外しました'})
           userItem.pin = null
         })
     },

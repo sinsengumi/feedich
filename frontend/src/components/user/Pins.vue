@@ -1,24 +1,22 @@
 <template>
   <div class="star">
     <div class="card">
-      <h5 class="card-header">スター ({{ pins.length }})</h5>
+      <h5 class="card-header">ピン ({{ pins.length }})</h5>
       <div class="card-body">
         <div class="mb-3 text-right">
-          <button type="button" class="btn btn-sm btn-info" @click="readPins"><i class="fas fa-external-link-alt"></i> 記事を一気に読む（新規タブを開きます）</button>
+          <button type="button" class="btn btn-sm btn-info" @click="readPins"><i class="fas fa-external-link-alt"></i> 一気に読む（新規タブを開きます）</button>
           <button type="button" class="btn btn-sm btn-danger" @click="clearPins"><i class="fas fa-trash-alt"></i> 全削除</button>
         </div>
 
-        <b-table :items="pins" :fields="fields" hover small show-empty empty-text="No results" thead-class="hidden-header" class="mb-0">
-          <template slot="title" slot-scope="data">
-            <a href="javascript:void(0)" @click="readPin(data.item)"><i class="far fa-file-alt mr-1"></i> {{ data.value }}</a>
-          </template>
-          <template slot="createdAt" slot-scope="data">
-            {{ data.value | fromNow }}
-          </template>
-          <template slot="operation" slot-scope="data">
-            <a href="javascript:void(0)" @click="removePin(data.item)" title="削除"><i class="fas fa-trash-alt"></i></a>
-          </template>
-        </b-table>
+        <table class="table table-sm table-hover mb-0">
+          <tbody>
+            <tr v-for="(pin, index) in pins" :key="'pins_' + pin.title" :class="index + 1 === ellipsedPins.length ? 'open-threshold' : ''">
+              <td class="title-td"><a href="javascript:void(0)" @click="readPin(pin)"><i class="far fa-file-alt mr-1"></i> {{ pin.title }}</a></td>
+              <td class="text-right" style="width: 140px">{{ pin.createdAt | fromNow }}</td>
+              <td class="text-center" style="width: 30px"><a href="javascript:void(0)" @click="removePin(pin)" title="削除"><i class="fas fa-trash-alt"></i></a></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -28,15 +26,6 @@
 import { mapState } from 'vuex'
 
 export default {
-  data () {
-    return {
-      fields: [
-        { key: 'title', tdClass: 'title-td' },
-        { key: 'createdAt', tdClass: 'createdAt-td' },
-        { key: 'operation', tdClass: 'operation-td' }
-      ]
-    }
-  },
   computed: {
     ...mapState(['pins']),
     ellipsedPins () {
@@ -58,7 +47,7 @@ export default {
       })
     },
     clearPins () {
-      if (window.confirm('スターを全削除します。よろしいですか？')) {
+      if (window.confirm('ピンを全削除します。よろしいですか？')) {
         this.$store.dispatch('CLEAR_PINS')
       }
     }
@@ -67,19 +56,7 @@ export default {
 </script>
 
 <style>
-.title-td {
-  padding: 5px 10px!important;
-}
-
-.createdAt-td {
-  width: 140px;
-  text-align: right;
-  padding: 5px 10px!important;
-}
-
-.operation-td {
-  width: 30px;
-  text-align: center;
-  padding: 5px 10px!important;
+.open-threshold {
+  border-bottom: 3px solid #dee2e6;
 }
 </style>
