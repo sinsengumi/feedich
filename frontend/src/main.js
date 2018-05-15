@@ -8,10 +8,10 @@ import App from './App'
 import router from './router'
 import store from './store'
 /* eslint no-unused-vars: 0 */
-import toast from './toast'
 import '@/assets/css/common.css'
 import moment from 'moment'
 import VueShortkey from 'vue-shortkey'
+import axios from 'axios'
 
 require('jquery/dist/jquery')
 require('popper.js/dist/umd/popper')
@@ -33,6 +33,26 @@ Vue.filter('fromNow', function (value) {
   if (!value) return '-'
   return moment(value).fromNow()
 })
+
+// axios settings
+axios.defaults.withCredentials = true
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response) {
+      if (error.response.data.status === 401) {
+        location.href = '/#/login'
+        return Promise.reject(error)
+      }
+      store.dispatch('SET_NOTIFY_MESSAGE', {dontUndo: true, message: '<span class="text-danger">' + error.response.data.message + '</span>'})
+    } else if (error.request) {
+      store.dispatch('SET_NOTIFY_MESSAGE', {dontUndo: true, message: '<span class="text-danger">ネットワークエラーが発生しました</span>'})
+    } else {
+      store.dispatch('SET_NOTIFY_MESSAGE', {dontUndo: true, message: '<span class="text-danger">原因不明のエラーが発生しました</span>'})
+    }
+    return Promise.reject(error)
+  }
+)
 
 /* eslint-disable no-new */
 new Vue({

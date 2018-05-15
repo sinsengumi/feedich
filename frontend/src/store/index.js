@@ -8,11 +8,25 @@ Vue.use(Vuex)
 
 const api = new ApiClient()
 
+var timer = null
+
+function ellipsedTitle (title) {
+  return title.length > 40 ? title.substring(0, 40) + '...' : title
+}
+
+function undoNotifyMessage (store) {
+  clearTimeout(timer)
+  timer = setTimeout(() => {
+    store.commit(mutation.SET_NOTIFY_MESSAGE, {message: '....'})
+  }, 3000)
+}
+
 export default new Vuex.Store({
   strict: process.env.NODE_ENV !== 'production',
   state: {
     subscriptions: [],
-    pins: []
+    pins: [],
+    notifyMessage: '....'
   },
   getters: {
     getSubscriptionById: (state) => (id) => {
@@ -55,6 +69,9 @@ export default new Vuex.Store({
     },
     [mutation.CLEAR_PINS] (state, payload) {
       state.pins = []
+    },
+    [mutation.SET_NOTIFY_MESSAGE] (state, payload) {
+      state.notifyMessage = payload.message
     }
   },
   actions: {
@@ -65,27 +82,36 @@ export default new Vuex.Store({
           commit(mutation.SET_SUBSCRIPTIONS, {subscriptions: response.data})
           return response.data
         })
+        .catch((error) => {
+          return Promise.reject(error)
+        })
     },
     [action.SUBSCRIBE] ({ commit }, payload) {
       return api.subscribe(payload.feedUrl)
         .then((response) => {
           commit(mutation.SUBSCRIBE, {addedSubscription: response.data})
-          Vue.toasted.global.info({message: 'Subscribe "' + response.data.feed.title + '"'})
+
+          commit(mutation.SET_NOTIFY_MESSAGE, {message: '<strong>「' + ellipsedTitle(response.data.feed.title) + '」</strong>' + 'を購読しました'})
+          undoNotifyMessage(this)
+
           return response.data
         })
         .catch((error) => {
-          console.log(error)
+          return Promise.reject(error)
         })
     },
     [action.UNSUBSCRIBE] ({ commit }, payload) {
       return api.unsubscribe(payload.subscription.id)
         .then((response) => {
           commit(mutation.UNSUBSCRIBE, {removedSubscription: payload.subscription})
-          Vue.toasted.global.info({message: 'Unsubscribe "' + payload.subscription.feed.title + '"'})
+
+          commit(mutation.SET_NOTIFY_MESSAGE, {message: '<strong>「' + ellipsedTitle(payload.subscription.feed.title) + '」</strong>' + 'を購読停止しました'})
+          undoNotifyMessage(this)
+
           return payload.subscription
         })
         .catch((error) => {
-          console.log(error)
+          return Promise.reject(error)
         })
     },
 
@@ -96,37 +122,55 @@ export default new Vuex.Store({
           return response.data
         })
         .catch((error) => {
-          console.log(error)
+          return Promise.reject(error)
         })
     },
     [action.ADD_PIN] ({ commit }, payload) {
       return api.addPin(payload.title, payload.url)
         .then((response) => {
           commit(mutation.ADD_PIN, {addedPin: response.data})
+
+          commit(mutation.SET_NOTIFY_MESSAGE, {message: '<strong>「' + ellipsedTitle(payload.title) + '」</strong>' + 'にピンを付けました'})
+          undoNotifyMessage(this)
+
           return response.data
         })
         .catch((error) => {
-          console.log(error)
+          return Promise.reject(error)
         })
     },
     [action.REMOVE_PIN] ({ commit }, payload) {
       return api.removePin(payload.pin.id)
         .then((response) => {
           commit(mutation.REMOVE_PIN, {removedPin: payload.pin})
+
+          commit(mutation.SET_NOTIFY_MESSAGE, {message: '<strong>「' + ellipsedTitle(payload.pin.title) + '」</strong>' + 'のピンを外しました'})
+          undoNotifyMessage(this)
+
           return payload.pin
         })
         .catch((error) => {
-          console.log(error)
+          return Promise.reject(error)
         })
     },
     [action.CLEAR_PINS] ({ commit }, payload) {
       return api.clearPins()
         .then((response) => {
           commit(mutation.CLEAR_PINS)
+
+          commit(mutation.SET_NOTIFY_MESSAGE, {message: 'ピンを全削除しました'})
+          undoNotifyMessage(this)
         })
         .catch((error) => {
-          console.log(error)
+          return Promise.reject(error)
         })
+    },
+    [action.SET_NOTIFY_MESSAGE] ({ commit }, payload) {
+      commit(mutation.SET_NOTIFY_MESSAGE, {message: payload.message})
+
+      if (payload.dontUndo === undefined) {
+        undoNotifyMessage(this)
+      }
     }
   }
 })

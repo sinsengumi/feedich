@@ -1,15 +1,19 @@
 <template>
   <div>
-    <div class="title-area d-flex justify-content-between align-items-center">
+    <div class="title-area d-flex justify-content-between align-items-center" v-if="activeSubscription !== undefined">
       <span class="mr-auto"><a :href="activeSubscription.feed.url" target="_blank"><img class="align-text-top" :src="activeSubscription.feed.favicon" width="16" height="16" /> {{ activeSubscription.feed.title }} ({{ activeSubscription.unreadCount }})</a></span>
       <a href="javascript:void(0)" v-b-modal.subscriptionModal class="mr-3"><i class="fas fa-info-circle"></i> フィード情報</a>
       <a href="javascript:void(0)" v-b-modal.unsubscribeModal><i class="far fa-trash-alt"></i> 購読停止</a>
     </div>
-    <subscription-modal :subscription="activeSubscription" :modal-visible="subscriptionModal" @close="subscriptionModal = false"></subscription-modal>
-    <unsubscribe-modal :subscription="activeSubscription" :modal-visible="unsubscribeModal" @close="unsubscribeModal = false"></unsubscribe-modal>
+    <subscription-modal v-if="activeSubscription !== undefined" :subscription="activeSubscription" :modal-visible="subscriptionModal" @close="subscriptionModal = false"></subscription-modal>
+    <unsubscribe-modal v-if="activeSubscription !== undefined" :subscription="activeSubscription" :modal-visible="unsubscribeModal" @close="unsubscribeModal = false"></unsubscribe-modal>
 
     <div v-if="loading" class="d-flex justify-content-center align-items-center" style="height: 200px">
       <i class="fas fa-circle-notch fa-spin text-muted fa-4x"></i>
+    </div>
+
+    <div v-if="!loading && userItems.length === 0" class="d-flex justify-content-center align-items-center" style="height: 200px">
+      <span class="no-results">No Results</span>
     </div>
 
     <div class="user-items" v-if="userItems">
@@ -94,7 +98,9 @@ export default {
       this.userItems = null
       this.loading = true
 
-      document.title = this.activeSubscription.feed.title + ' | Feedich'
+      if (this.activeSubscription !== undefined) {
+        document.title = this.activeSubscription.feed.title + ' | Feedich'
+      }
 
       api.getItems(this.activeSubscriptionId)
         .then((response) => {

@@ -1,7 +1,7 @@
 <template>
   <div class="subscriptions">
-    <subscription-modal :subscription="targetSubscription" :modal-visible="subscriptionModal" @close="subscriptionModal = false"></subscription-modal>
-    <unsubscribe-modal :subscription="targetSubscription" :modal-visible="unsubscribeModal" @close="unsubscribeModal = false"></unsubscribe-modal>
+    <subscription-modal v-if="targetSubscription !== null" :subscription="targetSubscription" :modal-visible="subscriptionModal" @close="subscriptionModal = false"></subscription-modal>
+    <unsubscribe-modal v-if="targetSubscription !== null" :subscription="targetSubscription" :modal-visible="unsubscribeModal" @close="unsubscribeModal = false"></unsubscribe-modal>
 
     <div class="card">
       <h5 class="card-header">購読フィード ({{ subscriptions.length }})</h5>
