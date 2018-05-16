@@ -47,6 +47,11 @@ a:hover {
   padding: 0;
 }
 
+.keyboard-shortcut {
+  font-size: 0.75rem;
+  margin-bottom: 0;
+}
+
 /* Sidebar */
 .sidebar {
   position: fixed;

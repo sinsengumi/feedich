@@ -20,6 +20,7 @@
       <button style="display: none" v-shortkey="['enter']" @shortkey="nextItem"></button>
       <button style="display: none" v-shortkey="['shift', 'enter']" @shortkey="prevItem"></button>
       <button style="display: none" v-shortkey="['p']" @shortkey="togglePin"></button>
+      <button style="display: none" v-shortkey="['del']" @shortkey="unsubscribe"></button>
 
       <div class="item-box" v-for="(userItem, index) in userItems" :key="'item_' + userItem.item.id" :ref="'item-box-' + index" :class="itemBoxBackgroundColor(userItem, index)">
         <div class="d-flex justify-content-between align-items-center">
@@ -109,6 +110,9 @@ export default {
         .catch(() => {
           this.loading = false
         })
+    },
+    unsubscribe () {
+      this.unsubscribeModal = true
     },
     readItem (userItem, index) {
       this.activeItemIndex = index

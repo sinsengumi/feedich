@@ -12,7 +12,44 @@
 
     <ul class="header-navi d-flex flex-row">
       <li>
-        <b-button variant="link" title="キーボードショートカット"><i class="fas fa-keyboard"></i></b-button>
+        <b-button id="keyboardShortcut" variant="link" title="キーボードショートカット"><i class="fas fa-keyboard"></i></b-button>
+
+        <b-popover target="keyboardShortcut" placement="bottom" triggers="hover" title="キーボードショートカット">
+          <table class="table table-borderless table-sm keyboard-shortcut">
+            <tr>
+              <td class="text-right">次のフィードに移動</td>
+              <td><kbd>s</kbd></td>
+            </tr>
+            <tr>
+              <td class="text-right">前のフィードに移動</td>
+              <td><kbd>a</kbd></td>
+            </tr>
+            <tr>
+              <td class="text-right">次のアイテムに移動</td>
+              <td><kbd>Enter</kbd></td>
+            </tr>
+            <tr>
+              <td class="text-right">前のアイテムに移動</td>
+              <td><kbd>Shift + Enter</kbd></td>
+            </tr>
+            <tr>
+              <td class="text-right">ピンを付ける/外す</td>
+              <td><kbd>p</kbd></td>
+            </tr>
+            <tr>
+              <td class="text-right">ピンを一気読み</td>
+              <td><kbd>o</kbd></td>
+            </tr>
+            <tr>
+              <td class="text-right">購読停止</td>
+              <td><kbd>Delete</kbd></td>
+            </tr>
+            <tr>
+              <td class="text-right">フィード一覧の更新</td>
+              <td><kbd>r</kbd></td>
+            </tr>
+          </table>
+        </b-popover>
       </li>
       <li>
         <b-button variant="link" to="/settings" title="設定"><i class="fa fa-cogs"></i></b-button>
