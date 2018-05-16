@@ -14,4 +14,6 @@ public interface UserRepository {
     User findByEmail(String email);
 
     int updateAuthId(@Param("id") int id, @Param("serviceProvider") ServiceProvider serviceProvider, @Param("authId") String authId);
+
+    int deleteById(int id);
 }

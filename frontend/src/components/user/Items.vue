@@ -40,10 +40,10 @@
           <span class="ml-2"><img :src="'http://b.hatena.ne.jp/entry/image/' + userItem.item.url" /></span>
         </div>
 
-        <div class="description-area" v-html="userItem.item.description">
+        <div class="description-area" v-html="userItem.item.description" v-if="!itemCompactView">
         </div>
 
-        <div class="shared-area">
+        <div class="shared-area" v-if="!itemCompactView">
           <i class="fab fa-twitter twitter" @click="twitter(userItem.item)" title="Twitter でシェアする"></i>
           <i class="fab fa-facebook facebook" @click="facebook(userItem.item)" title="Facebook でシェアする"></i>
         </div>
@@ -54,10 +54,12 @@
 
 <script>
 import ApiClient from '../../ApiClient'
+import LocalStorage from '../../LocalStorage'
 import SubscriptionModal from './SubscriptionModal'
 import UnsubscribeModal from './UnsubscribeModal'
 
 const api = new ApiClient()
+const ls = new LocalStorage()
 
 export default {
   name: 'Item',
@@ -71,11 +73,13 @@ export default {
       userItems: null,
       activeItemIndex: null,
       subscriptionModal: false,
-      unsubscribeModal: false
+      unsubscribeModal: false,
+      itemCompactView: false
     }
   },
   created () {
     this.fetchData()
+    this.itemCompactView = ls.getUseItemCompactView()
   },
   watch: {
     '$route': 'fetchData'

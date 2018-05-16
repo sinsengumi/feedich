@@ -24,6 +24,8 @@ public class OidcUserServiceJdbcService extends OidcUserService {
     @Override
     public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
         OidcUser oidcUser = super.loadUser(userRequest);
+        log.info("oidcUser = {}", oidcUser);
+
         Map<String, Object> attributes = oidcUser.getAttributes();
         ServiceProvider serviceProvider = ServiceProvider.of(userRequest.getClientRegistration().getRegistrationId());
 

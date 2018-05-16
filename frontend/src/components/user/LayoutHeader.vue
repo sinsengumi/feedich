@@ -37,7 +37,7 @@
               <td><kbd>p</kbd></td>
             </tr>
             <tr>
-              <td class="text-right">ピンを一気読み</td>
+              <td class="text-right">ピンを一気に読む</td>
               <td><kbd>o</kbd></td>
             </tr>
             <tr>

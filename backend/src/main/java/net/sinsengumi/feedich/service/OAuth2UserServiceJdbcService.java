@@ -34,6 +34,8 @@ public class OAuth2UserServiceJdbcService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oauth2User = super.loadUser(userRequest);
+        log.info("oauth2User = {}", oauth2User);
+
         Map<String, Object> attributes = oauth2User.getAttributes();
         ServiceProvider serviceProvider = ServiceProvider.of(userRequest.getClientRegistration().getRegistrationId());
 

@@ -24,4 +24,8 @@ public class UserService {
     public int updateAuthId(int id, ServiceProvider serviceProvider, String authId) {
         return userRepository.updateAuthId(id, serviceProvider, authId);
     }
+
+    public int withdraw(int id) {
+        return userRepository.deleteById(id);
+    }
 }

@@ -65,6 +65,10 @@ export default class ApiClient {
   }
 
   sessionValidate () {
-    return axios.get(`${API_BASE_URL}/api/session/validate`)
+    return axios.get(`${API_BASE_URL}/api/user/session/validate`)
+  }
+
+  withdraw () {
+    return axios.delete(`${API_BASE_URL}/api/user/withdraw`)
   }
 }

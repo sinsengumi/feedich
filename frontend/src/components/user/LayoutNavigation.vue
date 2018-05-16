@@ -86,7 +86,7 @@ export default {
       return sorter.sort(filteredList, ls.getSubscriptionSortKey())
     },
     ellipsedPins () {
-      return this.pins.slice(0, 10)
+      return this.pins.slice(0, ls.getPinOpenCount())
     }
   },
   methods: {
