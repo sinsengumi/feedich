@@ -205,10 +205,28 @@ a:hover {
 }
 
 .content .user-items .shared-area {
-  font-size: 1rem;
-  padding-top: 5px;
+  padding-top: 7px;
   text-align: right;
 }
+
+.content .user-items .shared-area i {
+  cursor: pointer;
+  font-size: 1rem;
+  margin-left: 5px;
+}
+
+.content .user-items .shared-area i.twitter:hover {
+  color: #1DA1F2;
+}
+
+.content .user-items .shared-area i.facebook:hover {
+  color: #3B5998;
+}
+
+.content .user-items .shared-area i.line:hover {
+  color: #1dcd00;
+}
+
 
 .content .setting {
   padding: 15px;

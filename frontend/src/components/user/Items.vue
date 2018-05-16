@@ -42,9 +42,8 @@
         </div>
 
         <div class="shared-area">
-          <i class="fab fa-twitter"></i>
-          <i class="fab fa-facebook"></i>
-          <i class="fab fa-line"></i>
+          <i class="fab fa-twitter twitter" @click="twitter(userItem.item)" title="Twitter でシェアする"></i>
+          <i class="fab fa-facebook facebook" @click="facebook(userItem.item)" title="Facebook でシェアする"></i>
         </div>
       </div>
     </div>
@@ -195,6 +194,19 @@ export default {
       } else {
         this.removePin(userItem, this.activeItemIndex)
       }
+    },
+    twitter (item) {
+      const url = 'https://twitter.com/intent/tweet?text=' + item.title + '&amp;url=' + item.url + '&amp;hashtags=Feedich'
+      this.shareWindowOpen(url)
+    },
+    facebook (item) {
+      const url = 'https://www.facebook.com/sharer/sharer.php?u=' + item.url
+      this.shareWindowOpen(url)
+    },
+    shareWindowOpen (url) {
+      const w = (screen.width - 650) / 2
+      const h = (screen.height - 650) / 2
+      window.open(encodeURI(decodeURI(url)), 'tweetwindow', 'width=650, height=650, personalbar=0, toolbar=0, scrollbars=1, sizable=1, left=' + w + ', top=' + h)
     }
   }
 }
