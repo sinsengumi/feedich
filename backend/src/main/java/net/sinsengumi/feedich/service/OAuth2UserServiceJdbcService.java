@@ -50,7 +50,7 @@ public class OAuth2UserServiceJdbcService extends DefaultOAuth2UserService {
         } else {
             userService.updateAuthId(user.getId(), serviceProvider, authId);
         }
-        return new FeedichOAuth2User(oauth2User.getAuthorities(), attributes, oauth2User.getName(),
+        return new FeedichOAuth2User(oauth2User.getName(), oauth2User.getAuthorities(), attributes,
                 user.getId(), user.getEmail(), user.getName());
     }
 

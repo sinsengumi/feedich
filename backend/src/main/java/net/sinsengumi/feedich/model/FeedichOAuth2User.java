@@ -23,22 +23,15 @@ public class FeedichOAuth2User implements OAuth2User, OidcUser {
     private final String email;
     private final String username;
 
-    public FeedichOAuth2User(Collection<? extends GrantedAuthority> authorities, Map<String, Object> attributes, String name,
+    public FeedichOAuth2User(String name, Collection<? extends GrantedAuthority> authorities, Map<String, Object> attributes,
             int id, String email, String username) {
+        this(name, authorities, attributes, null, id, email, username);
+    }
+
+    public FeedichOAuth2User(String name, Collection<? extends GrantedAuthority> authorities, Map<String, Object> attributes, OidcIdToken idToken, int id, String email, String username) {
         this.authorities = authorities;
         this.attributes = attributes;
         this.name = name;
-        this.idToken = null;
-
-        this.id = id;
-        this.email = email;
-        this.username = username;
-    }
-
-    public FeedichOAuth2User(OidcIdToken idToken, Map<String, Object> attributes, int id, String email, String username) {
-        this.authorities = null;
-        this.attributes = attributes;
-        this.name = null;
         this.idToken = idToken;
 
         this.id = id;

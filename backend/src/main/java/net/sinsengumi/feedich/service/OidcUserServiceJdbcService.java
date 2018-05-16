@@ -41,6 +41,7 @@ public class OidcUserServiceJdbcService extends OidcUserService {
             userService.updateAuthId(user.getId(), serviceProvider, authId);
         }
 
-        return new FeedichOAuth2User(oidcUser.getIdToken(), attributes, user.getId(), user.getEmail(), user.getName());
+        return new FeedichOAuth2User(oidcUser.getName(), oidcUser.getAuthorities(), attributes, oidcUser.getIdToken(),
+                user.getId(), user.getEmail(), user.getName());
     }
 }
