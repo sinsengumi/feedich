@@ -37,6 +37,7 @@
           <a :href="userItem.item.url" target="_blank">元記事</a> &nbsp;|&nbsp;
           <span :title="userItem.item.publishedAt">{{ userItem.item.publishedAt | fromNow }}</span>
           <span v-if="userItem.item.author">by {{ userItem.item.author }}</span>
+          <span class="ml-2"><img :src="'http://b.hatena.ne.jp/entry/image/' + userItem.item.url" /></span>
         </div>
 
         <div class="description-area" v-html="userItem.item.description">
