@@ -81,6 +81,9 @@ export default {
     this.fetchData()
     this.itemCompactView = ls.getUseItemCompactView()
   },
+  updated () {
+    this.replaceExternalLink()
+  },
   watch: {
     '$route': 'fetchData'
   },
@@ -115,6 +118,18 @@ export default {
         .catch(() => {
           this.loading = false
         })
+    },
+    replaceExternalLink () {
+      const aTags = document.querySelectorAll('.description-area > a:not([target="_blank"])')
+      for (let i = 0; i < aTags.length; i++) {
+        if (aTags[i].href.indexOf(window.location.host) !== -1) {
+          continue
+        }
+        if (aTags[i].href.indexOf('#') === 1) {
+          continue
+        }
+        aTags[i].setAttribute('target', '_blank')
+      }
     },
     unsubscribe () {
       this.unsubscribeModal = true
