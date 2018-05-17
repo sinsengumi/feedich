@@ -19,7 +19,7 @@
       <div class="card-body">
         <p class="card-text">{{ discoveredFeeds.length }}件のフィードが見つかりました。<br />購読したいフィードを選択してください。</p>
         <div class="list-group">
-          <a href="javascript:void(0)" @click="subscribe(feed)" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" :key="'discoveredFeeds_' + feed.title" v-for="feed in discoveredFeeds" :class="feed.subscribed ? 'list-group-item-secondary' : ''">
+          <a href="javascript:void(0)" @click="subscribe(feed)" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" :key="'discoveredFeeds_' + index" v-for="(feed, index) in discoveredFeeds" :class="feed.subscribed ? 'list-group-item-secondary' : ''">
             <img :src="feed.favicon" width="16" height="16" />
             <div class="ml-2 mr-1"><span v-if="feed.subscribed">[ 購読中 ]</span> {{ feed.title }}<br /><small class="text-secondary">{{ feed.description }}</small></div>
             <span class="badge badge-secondary ml-auto">{{ feed.feedType }}</span>

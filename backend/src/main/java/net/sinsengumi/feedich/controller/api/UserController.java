@@ -1,5 +1,7 @@
 package net.sinsengumi.feedich.controller.api;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,13 +21,14 @@ public class UserController extends AbstractController {
     private final UserService userService;
 
     @GetMapping("session/validate")
-    public String validate() {
-        return "OK";
+    public ResponseEntity<Void> validate() {
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("withdraw")
-    public String withdraw(@AuthenticationPrincipal FeedichOAuth2User user) {
+    public ResponseEntity<Void> withdraw(@AuthenticationPrincipal FeedichOAuth2User user) {
         userService.withdraw(user.getId());
-        return "OK";
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

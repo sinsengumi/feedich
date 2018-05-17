@@ -27,7 +27,9 @@ export default {
     unsubscribe (event) {
       event.preventDefault()
       this.$store.dispatch('UNSUBSCRIBE', {subscription: this.subscription})
-      this.$router.push({name: 'Index'})
+
+      this.modalVisibleInner = false
+      this.$emit('finishUnsubscribe')
     }
   }
 }

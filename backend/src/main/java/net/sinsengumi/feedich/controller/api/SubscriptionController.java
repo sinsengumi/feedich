@@ -38,40 +38,40 @@ public class SubscriptionController extends AbstractController {
     private final FeedOpmlService feedOpmlService;
 
     @GetMapping
-    public List<SubscriptionResponse> subscriptions(@AuthenticationPrincipal FeedichOAuth2User user) {
-        return subscriptionService.findByUserId(user.getId()).stream()
+    public ResponseEntity<List<SubscriptionResponse>> subscriptions(@AuthenticationPrincipal FeedichOAuth2User user) {
+        List<SubscriptionResponse> result = subscriptionService.findByUserId(user.getId()).stream()
                 .map(Subscription::toResponse)
                 .collect(Collectors.toList());
-    }
 
-    @GetMapping("{subscriptionId}")
-    public SubscriptionResponse subscription(@PathVariable int subscriptionId, @AuthenticationPrincipal FeedichOAuth2User user) {
-        Subscription subscription = subscriptionService.findById(subscriptionId);
-        authorizeResource(subscription, user.getId());
-        return subscription.toResponse();
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("{subscriptionId}/items")
-    public List<UserItemResponse> items(@PathVariable int subscriptionId, @AuthenticationPrincipal FeedichOAuth2User user) {
+    public ResponseEntity<List<UserItemResponse>> items(@PathVariable int subscriptionId, @AuthenticationPrincipal FeedichOAuth2User user) {
         Subscription subscription = subscriptionService.findById(subscriptionId);
         authorizeResource(subscription, user.getId());
 
-        return userItemService.findUnreadItems(user.getId(), subscription.getFeedId()).stream()
+        List<UserItemResponse> result = userItemService.findUnreadItems(user.getId(), subscription.getFeedId()).stream()
                 .map(UserItem::toResponse)
                 .collect(Collectors.toList());
+
+        return ResponseEntity.ok(result);
     }
 
     @PutMapping
-    public SubscriptionResponse subscribe(@RequestParam String feedUrl, @AuthenticationPrincipal FeedichOAuth2User user) {
-        return subscriptionService.subscribe(user.getId(), feedUrl).toResponse();
+    public ResponseEntity<SubscriptionResponse> subscribe(@RequestParam String feedUrl, @AuthenticationPrincipal FeedichOAuth2User user) {
+        SubscriptionResponse result = subscriptionService.subscribe(user.getId(), feedUrl).toResponse();
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     @DeleteMapping("{subscriptionId}")
-    public int unsubscribe(@PathVariable int subscriptionId, @AuthenticationPrincipal FeedichOAuth2User user) {
+    public ResponseEntity<Void> unsubscribe(@PathVariable int subscriptionId, @AuthenticationPrincipal FeedichOAuth2User user) {
         Subscription subscription = subscriptionService.findById(subscriptionId);
         authorizeResource(subscription, user.getId());
 
-        return subscriptionService.unsubscribe(subscriptionId, user.getId(), subscription.getFeedId());
+        subscriptionService.unsubscribe(subscriptionId, user.getId(), subscription.getFeedId());
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("export")

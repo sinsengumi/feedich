@@ -6,7 +6,7 @@
       <a href="javascript:void(0)" v-b-modal.unsubscribeModal><i class="far fa-trash-alt"></i> 購読停止</a>
     </div>
     <subscription-modal v-if="activeSubscription !== undefined" :subscription="activeSubscription" :modal-visible="subscriptionModal" @close="subscriptionModal = false"></subscription-modal>
-    <unsubscribe-modal v-if="activeSubscription !== undefined" :subscription="activeSubscription" :modal-visible="unsubscribeModal" @close="unsubscribeModal = false"></unsubscribe-modal>
+    <unsubscribe-modal v-if="activeSubscription !== undefined" :subscription="activeSubscription" :modal-visible="unsubscribeModal" @close="unsubscribeModal = false" @finishUnsubscribe="finishUnsubscribe"></unsubscribe-modal>
 
     <div v-if="loading" class="d-flex justify-content-center align-items-center" style="height: 200px">
       <i class="fas fa-circle-notch fa-spin text-muted fa-4x"></i>
@@ -231,6 +231,9 @@ export default {
       const w = (screen.width - 650) / 2
       const h = (screen.height - 650) / 2
       window.open(encodeURI(decodeURI(url)), 'tweetwindow', 'width=650, height=650, personalbar=0, toolbar=0, scrollbars=1, sizable=1, left=' + w + ', top=' + h)
+    },
+    finishUnsubscribe () {
+      this.$router.push({name: 'Index'})
     }
   }
 }

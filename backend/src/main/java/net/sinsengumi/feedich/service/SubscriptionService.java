@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.rometools.rome.feed.synd.SyndEntry;
@@ -69,7 +70,7 @@ public class SubscriptionService {
 
     public int unsubscribe(int id, int userId, int feedId) {
         int result = subscriptionRepository.delete(id);
-        userItemService.deleteByfeedId(userId, feedId);
+        userItemService.deleteByFeedId(userId, feedId);
         return result;
     }
 
@@ -114,5 +115,10 @@ public class SubscriptionService {
 
     public boolean subscribed(int userId, String feedUrl) {
         return subscriptionRepository.subscribed(userId, feedUrl);
+    }
+
+    @Async
+    public void deleteByUserId(int userId) {
+        subscriptionRepository.deleteByUserId(userId);
     }
 }

@@ -23,10 +23,6 @@ export default class ApiClient {
     return axios.get(`${API_BASE_URL}/api/subscriptions`)
   }
 
-  getSubscription (subscriptionId) {
-    return axios.get(`${API_BASE_URL}/api/subscriptions/${subscriptionId}`)
-  }
-
   getItems (subscriptionId) {
     return axios.get(`${API_BASE_URL}/api/subscriptions/${subscriptionId}/items`)
   }

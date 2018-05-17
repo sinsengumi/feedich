@@ -2,6 +2,7 @@ package net.sinsengumi.feedich.service;
 
 import java.util.List;
 
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
@@ -34,7 +35,12 @@ public class UserItemService {
         return userItemRepository.unread(userId, itemId);
     }
 
-    public int deleteByfeedId(int userId, int feedId) {
-        return userItemRepository.deleteByfeedId(userId, feedId);
+    public int deleteByFeedId(int userId, int feedId) {
+        return userItemRepository.deleteByFeedId(userId, feedId);
+    }
+
+    @Async
+    public void deleteByUserId(int userId) {
+        userItemRepository.deleteByUserId(userId);
     }
 }

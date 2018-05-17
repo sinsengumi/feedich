@@ -2,6 +2,8 @@ package net.sinsengumi.feedich.model;
 
 import java.util.Date;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.rometools.rome.feed.synd.SyndEntry;
 
 import lombok.Data;
@@ -23,12 +25,12 @@ public class Item {
     public static Item build(int feedId, Date createdAt, SyndEntry entry) {
         Item item = new Item();
         item.setFeedId(feedId);
-        item.setTitle(entry.getTitle());
+        item.setTitle(StringUtils.trim(entry.getTitle()));
         if (entry.getDescription() != null) {
-            item.setDescription(entry.getDescription().getValue());
+            item.setDescription(StringUtils.trim(entry.getDescription().getValue()));
         }
-        item.setUrl(entry.getLink());
-        item.setAuthor(entry.getAuthor());
+        item.setUrl(StringUtils.trim(entry.getLink()));
+        item.setAuthor(StringUtils.trim(entry.getAuthor()));
         item.setPublishedAt(entry.getPublishedDate());
         item.setCreatedAt(createdAt);
         return item;

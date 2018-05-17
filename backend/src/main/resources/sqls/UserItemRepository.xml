@@ -87,7 +87,11 @@
       and item_id = #{itemId}
   </update>
 
-  <delete id="deleteByfeedId">
+  <delete id="deleteByFeedId">
     delete from user_item where user_id = #{userId} and feed_id = #{feedId}
+  </delete>
+
+  <delete id="deleteByUserId">
+    delete from user_item where user_id = #{userId}
   </delete>
 </mapper>

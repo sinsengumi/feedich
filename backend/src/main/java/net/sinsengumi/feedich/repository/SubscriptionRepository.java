@@ -23,4 +23,6 @@ public interface SubscriptionRepository {
     List<Integer> getSubscribeUsers(int feedId);
 
     boolean subscribed(@Param("userId") int userId, @Param("feedUrl") String feedUrl);
+
+    int deleteByUserId(int userId);
 }

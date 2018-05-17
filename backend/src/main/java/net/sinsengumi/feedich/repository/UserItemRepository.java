@@ -20,5 +20,7 @@ public interface UserItemRepository {
 
     int unread(@Param("userId") int userId, @Param("itemId") int itemId);
 
-    int deleteByfeedId(@Param("userId") int userId, @Param("feedId") int feedId);
+    int deleteByFeedId(@Param("userId") int userId, @Param("feedId") int feedId);
+
+    int deleteByUserId(int userId);
 }

@@ -98,4 +98,8 @@
       s.user_id = #{userId}
       and f.feed_url = #{feedUrl}
   </select>
+
+  <delete id="deleteByUserId">
+    delete from subscription where user_id = #{userId}
+  </delete>
 </mapper>

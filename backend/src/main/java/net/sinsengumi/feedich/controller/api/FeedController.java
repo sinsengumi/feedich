@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,17 +29,18 @@ public class FeedController extends AbstractController {
     private final SubscriptionService subscriptionService;
 
     @GetMapping("discover")
-    public List<DiscoverResponse> discover(@RequestParam String url, @AuthenticationPrincipal FeedichOAuth2User user) {
+    public ResponseEntity<List<DiscoverResponse>> discover(@RequestParam String url,
+            @AuthenticationPrincipal FeedichOAuth2User user) {
         try {
-            return feedDiscoverer.discover(url).stream()
+            List<DiscoverResponse> result = feedDiscoverer.discover(url).stream()
                     .map(s -> {
                         boolean subscribed = subscriptionService.subscribed(user.getId(), s.getUri());
                         return DiscoverResponse.buildSyndFeed(s, subscribed);
-                    })
-                    .collect(Collectors.toList());
+                    }).collect(Collectors.toList());
+            return ResponseEntity.ok(result);
         } catch (Exception e) {
             log.error("{}", e.getMessage(), e);
-            return Collections.emptyList();
+            return ResponseEntity.ok(Collections.emptyList());
         }
     }
 }

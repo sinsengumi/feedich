@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,14 +30,16 @@ public class PinController extends AbstractController {
     private final PinService pinService;
 
     @GetMapping
-    public List<PinResponse> pins(@AuthenticationPrincipal FeedichOAuth2User user) {
-        return pinService.findByUserId(user.getId()).stream()
-                .map(Pin::toResponse)
-                .collect(Collectors.toList());
+    public ResponseEntity<List<PinResponse>> pins(@AuthenticationPrincipal FeedichOAuth2User user) {
+        List<PinResponse> pins = pinService.findByUserId(user.getId()).stream()
+            .map(Pin::toResponse)
+            .collect(Collectors.toList());
+
+        return ResponseEntity.ok(pins);
     }
 
     @PutMapping
-    public PinResponse addPin(@RequestParam String title, @RequestParam String url, @AuthenticationPrincipal FeedichOAuth2User user) {
+    public ResponseEntity<PinResponse> addPin(@RequestParam String title, @RequestParam String url, @AuthenticationPrincipal FeedichOAuth2User user) {
         Date now = new Date();
 
         Pin pin = new Pin();
@@ -46,21 +50,24 @@ public class PinController extends AbstractController {
         pin.setUpdatedAt(now);
 
         pinService.create(pin);
-        return pin.toResponse();
+
+        return new ResponseEntity<>(pin.toResponse(), HttpStatus.CREATED);
     }
 
     @DeleteMapping("{pinId}")
-    public String removePin(@PathVariable int pinId, @AuthenticationPrincipal FeedichOAuth2User user) {
+    public ResponseEntity<Void> removePin(@PathVariable int pinId, @AuthenticationPrincipal FeedichOAuth2User user) {
         Pin pin = pinService.findById(pinId);
         authorizeResource(pin, user.getId());
 
         pinService.delete(pinId);
-        return "OK";
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping
-    public String clearPins(@AuthenticationPrincipal FeedichOAuth2User user) {
+    public ResponseEntity<Void> clearPins(@AuthenticationPrincipal FeedichOAuth2User user) {
         pinService.clear(user.getId());
-        return "OK";
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

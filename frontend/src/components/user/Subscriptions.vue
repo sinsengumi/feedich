@@ -11,7 +11,7 @@
             <img :src="data.item.feed.favicon" width="16" height="16" class="mr-1" /> {{ data.item.feed.title }}
           </template>
           <template slot="createdAt" slot-scope="data">
-            {{ data.value | fromNow }}
+            <span :title="data.value | format('YYYY/MM/DD HH:mm.ss Z')">{{ data.value | fromNow }}</span>
           </template>
           <template slot="operation" slot-scope="data">
             <a :href="data.item.feed.url" target="_blank" class="mr-1" title="サイト URL"><i class="fa fa-globe"></i></a>
@@ -38,9 +38,9 @@ export default {
   data () {
     return {
       fields: [
-        { key: 'title', thClass: 'title-th', tdClass: 'title-td' },
-        { key: 'createdAt', thClass: 'createdAt-th', tdClass: 'createdAt-td' },
-        { key: 'operation', thClass: 'operation-th', tdClass: 'operation-td' }
+        { key: 'title', label: 'タイトル', thClass: 'title-th', tdClass: 'title-td' },
+        { key: 'createdAt', label: 'フィード登録日', thClass: 'createdAt-th', tdClass: 'createdAt-td' },
+        { key: 'operation', label: '操作', thClass: 'operation-th', tdClass: 'operation-td' }
       ],
       subscriptionModal: false,
       unsubscribeModal: false,

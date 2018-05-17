@@ -1,5 +1,7 @@
 package net.sinsengumi.feedich.controller.api;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,20 +22,22 @@ public class ItemController extends AbstractController {
     private final UserItemService userItemService;
 
     @PostMapping("read")
-    public String read(@RequestParam int itemId, @AuthenticationPrincipal FeedichOAuth2User user) {
+    public ResponseEntity<Void> read(@RequestParam int itemId, @AuthenticationPrincipal FeedichOAuth2User user) {
         int userId = user.getId();
         UserItem userItem = userItemService.findByUserIdAndItemId(userId, itemId);
         authorizeResource(userItem, userId);
         userItemService.read(userId, itemId);
-        return "OK";
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("unread")
-    public String unread(@RequestParam int itemId, @AuthenticationPrincipal FeedichOAuth2User user) {
+    public ResponseEntity<Void> unread(@RequestParam int itemId, @AuthenticationPrincipal FeedichOAuth2User user) {
         int userId = user.getId();
         UserItem userItem = userItemService.findByUserIdAndItemId(userId, itemId);
         authorizeResource(userItem, userId);
         userItemService.unread(userId, itemId);
-        return "OK";
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

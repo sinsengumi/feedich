@@ -32,6 +32,9 @@
                       </div>
                     </div>
                     <hr />
+                    <!-- <p>
+                      時刻の相対表示
+                    </p> -->
                     <!-- <div class="d-flex flex-row align-items-center">
                       <strong class="text-right pr-3" style="width:220px;">記事を既読にするタイミング</strong>
                       <div>

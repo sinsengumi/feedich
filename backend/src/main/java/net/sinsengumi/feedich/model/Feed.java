@@ -2,6 +2,8 @@ package net.sinsengumi.feedich.model;
 
 import java.util.Date;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.rometools.rome.feed.synd.SyndFeed;
 
 import lombok.Data;
@@ -28,16 +30,16 @@ public class Feed {
 
     public static Feed build(SyndFeed syndFeed) {
         Feed feed = new Feed();
-        feed.setTitle(syndFeed.getTitle());
-        feed.setDescription(syndFeed.getDescription());
-        feed.setUrl(syndFeed.getLink());
-        feed.setFeedUrl(syndFeed.getUri());
-        feed.setFeedType(syndFeed.getFeedType());
+        feed.setTitle(StringUtils.trim(syndFeed.getTitle()));
+        feed.setDescription(StringUtils.trim(syndFeed.getDescription()));
+        feed.setUrl(StringUtils.trim(syndFeed.getLink()));
+        feed.setFeedUrl(StringUtils.trim(syndFeed.getUri()));
+        feed.setFeedType(StringUtils.trim(syndFeed.getFeedType()));
         if (syndFeed.getIcon() != null) {
-            feed.setIcon(syndFeed.getIcon().getUrl());
+            feed.setIcon(StringUtils.trim(syndFeed.getIcon().getUrl()));
         }
         if (syndFeed.getImage() != null) {
-            feed.setImage(syndFeed.getImage().getUrl());
+            feed.setImage(StringUtils.trim(syndFeed.getImage().getUrl()));
         }
         feed.setFavicon(HttpUtil.extractFavicon(feed.getUrl()));
         feed.setPublishedAt(syndFeed.getPublishedDate());
