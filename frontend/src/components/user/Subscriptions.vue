@@ -8,7 +8,9 @@
       <div class="card-body">
         <b-table :items="subscriptions" :fields="fields" hover small show-empty empty-text="No Results" class="mb-0">
           <template slot="title" slot-scope="data">
-            <img :src="data.item.feed.favicon" width="16" height="16" class="mr-1" /> {{ data.item.feed.title }}
+            <img :src="data.item.feed.favicon" width="16" height="16" class="mr-1" v-if="data.item.feed.favicon !== null" />
+            <i class="far fa-file-alt ml-1 mr-2" v-if="data.item.feed.favicon === null"></i>
+            {{ data.item.feed.title }}
           </template>
           <template slot="createdAt" slot-scope="data">
             <span :title="data.value | format('YYYY/MM/DD HH:mm.ss Z')">{{ data.value | fromNow }}</span>

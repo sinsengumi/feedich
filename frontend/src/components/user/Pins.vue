@@ -4,8 +4,8 @@
       <h5 class="card-header">ピン ({{ pins.length }})</h5>
       <div class="card-body">
         <div class="mb-3 text-right">
-          <button type="button" class="btn btn-sm btn-info" @click="readPins"><i class="fas fa-external-link-alt"></i> 一気に読む（新規タブを開きます）</button>
-          <button type="button" class="btn btn-sm btn-danger" @click="clearPins"><i class="fas fa-trash-alt"></i> 全削除</button>
+          <button type="button" class="btn btn-sm btn-outline-info" @click="readPins"><i class="fas fa-external-link-alt"></i> 一気に読む（新規タブを開きます）</button>
+          <button type="button" class="btn btn-sm btn-outline-danger" @click="clearPins"><i class="fas fa-trash-alt"></i> 全削除</button>
         </div>
 
         <table class="table table-sm table-hover mb-0">

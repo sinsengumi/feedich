@@ -183,6 +183,7 @@ export default {
     withdraw () {
       if (window.confirm('退会します。よろしいですか？')) {
         api.withdraw()
+        ls.clear()
         this.$router.push('/login')
       }
     }

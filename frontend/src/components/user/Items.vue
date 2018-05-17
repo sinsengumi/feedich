@@ -1,7 +1,13 @@
 <template>
   <div>
     <div class="title-area d-flex justify-content-between align-items-center" v-if="activeSubscription !== undefined">
-      <span class="mr-auto"><a :href="activeSubscription.feed.url" target="_blank"><img class="align-text-top" :src="activeSubscription.feed.favicon" width="16" height="16" /> {{ activeSubscription.feed.title }} ({{ activeSubscription.unreadCount }})</a></span>
+      <span class="mr-auto">
+        <a :href="activeSubscription.feed.url" target="_blank">
+          <img class="align-text-top" :src="activeSubscription.feed.favicon" width="16" height="16" v-if="activeSubscription.feed.favicon !== null" />
+          <i class="far fa-file-alt ml-1 mr-1" v-if="activeSubscription.feed.favicon === null"></i>
+          {{ activeSubscription.feed.title }} ({{ activeSubscription.unreadCount }})
+        </a>
+      </span>
       <a href="javascript:void(0)" v-b-modal.subscriptionModal class="mr-3"><i class="fas fa-info-circle"></i> フィード情報</a>
       <a href="javascript:void(0)" v-b-modal.unsubscribeModal><i class="far fa-trash-alt"></i> 購読停止</a>
     </div>
@@ -120,7 +126,7 @@ export default {
         })
     },
     replaceExternalLink () {
-      const aTags = document.querySelectorAll('.description-area > a:not([target="_blank"])')
+      const aTags = document.querySelectorAll('.description-area a:not([target="_blank"])')
       for (let i = 0; i < aTags.length; i++) {
         if (aTags[i].href.indexOf(window.location.host) !== -1) {
           continue

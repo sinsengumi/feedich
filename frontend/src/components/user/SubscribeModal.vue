@@ -2,7 +2,7 @@
   <b-modal id="subscribeModal" ref="subscribeModal" title="購読" @shown="shown" @hidden="clearData" no-fade hide-footer>
     <div class="d-flex">
       <input type="text" ref="discoverUrl" v-model="discoverUrl" class="form-control form-control-sm mr-2" placeholder="サイトの URL または フィードの URL を指定してください" @keyup.enter="discoverFeed" />
-      <button type="button" class="btn btn-sm btn-info" @click="discoverFeed">検索</button>
+      <button type="button" class="btn btn-sm btn-outline-info" @click="discoverFeed">検索</button>
     </div>
 
     <div v-if="loading" class="d-flex justify-content-center align-items-center" style="height: 100px">

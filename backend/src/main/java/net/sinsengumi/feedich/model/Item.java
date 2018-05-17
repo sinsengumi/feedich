@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.rometools.rome.feed.synd.SyndContent;
 import com.rometools.rome.feed.synd.SyndEntry;
 
 import lombok.Data;
@@ -26,9 +27,16 @@ public class Item {
         Item item = new Item();
         item.setFeedId(feedId);
         item.setTitle(StringUtils.trim(entry.getTitle()));
+
+        // description
         if (entry.getDescription() != null) {
             item.setDescription(StringUtils.trim(entry.getDescription().getValue()));
         }
+        if (!entry.getContents().isEmpty()) {
+            SyndContent syndContent = entry.getContents().get(0);
+            item.setDescription(StringUtils.trim(syndContent.getValue()));
+        }
+
         item.setUrl(StringUtils.trim(entry.getLink()));
         item.setAuthor(StringUtils.trim(entry.getAuthor()));
         item.setPublishedAt(entry.getPublishedDate());

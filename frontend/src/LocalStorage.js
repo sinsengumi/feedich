@@ -33,4 +33,8 @@ export default class LocalStrage {
   setPinOpenCount (pinOpenCount) {
     localStorage.setItem(this.pinOpenCount, pinOpenCount)
   }
+
+  clear () {
+    localStorage.clear()
+  }
 }

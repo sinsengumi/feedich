@@ -58,8 +58,10 @@ a:hover {
   top: 0;
   bottom: 0;
   left: 0;
-  z-index: 100; /* Behind the navbar */
-  padding: 45px 0 0; /* Height of navbar */
+  z-index: 100;
+  /* Behind the navbar */
+  padding: 45px 0 0;
+  /* Height of navbar */
   border-right: 5px solid #F5F5F5;
   width: 20%;
   background-color: white;
@@ -76,13 +78,12 @@ a:hover {
   /* Scrollable contents if viewport is shorter than content. */
 }
 
-
 .operation-area {
   height: 105px;
   background-color: white;
   position: sticky;
   top: 0;
-  font-size: 0.6rem!important;
+  font-size: 0.6rem !important;
   border-bottom: 1px solid #F1F1F1;
 }
 
@@ -145,10 +146,11 @@ a:hover {
   margin-right: 6px;
 }
 
-
 /* Main */
+
 .main {
-  padding-top: 45px; /* Space for fixed navbar */
+  padding-top: 45px;
+  /* Space for fixed navbar */
   padding-bottom: 25px;
   width: 80%;
 }
@@ -167,7 +169,7 @@ a:hover {
 }
 
 .content .user-items {
-  padding: 15px 15px 550px 15px;
+  padding: 15px 15px 600px 15px;
 }
 
 .content .user-items .item-box {
@@ -203,10 +205,24 @@ a:hover {
 }
 
 .content .user-items .description-area {
-  padding: 10px;
+  padding: 10px 15px;
   font-size: 13px;
   color: #616161;
   border-bottom: 1px solid #BDBDBD;
+}
+
+.content .user-items .description-area pre {
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  padding: 3px 6px;
+  border-radius: 0.2rem;
+}
+
+.content .user-items .description-area img {
+  max-width: 600px;
+  height: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .content .user-items .shared-area {
@@ -231,7 +247,6 @@ a:hover {
 .content .user-items .shared-area i.line:hover {
   color: #1dcd00;
 }
-
 
 .content .setting {
   padding: 15px;

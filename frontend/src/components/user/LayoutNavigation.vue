@@ -45,7 +45,8 @@
 
     <ul class="subscription-list">
       <li v-for="s in filteredSubscriptions" class="d-flex align-items-center" :title="s.feed.title" @click="toItems(s)" :class="{'active': s.id === activeSubscriptionId}" :key="s.feed.title">
-        <img :src="s.feed.favicon" width="16" height="16" />
+        <img :src="s.feed.favicon" width="16" height="16" v-if="s.feed.favicon !== null" />
+        <i class="far fa-file-alt ml-1 mr-1" v-if="s.feed.favicon === null"></i>
         <span class="subscription-title text-truncate">{{ s.feed.title }}</span>
         <span class="ml-auto badge text-info">{{ s.unreadCount }}</span>
       </li>
