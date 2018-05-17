@@ -25,11 +25,9 @@
     insert into subscription (
       user_id
       , feed_id
-      , created_at
     ) values (
       #{userId}
       , #{feedId}
-      , now()
     )
     <selectKey resultType="_int" order="AFTER" keyProperty="id">
       select last_insert_id()

@@ -36,11 +36,14 @@ public class PinController extends AbstractController {
 
     @PutMapping
     public PinResponse addPin(@RequestParam String title, @RequestParam String url, @AuthenticationPrincipal FeedichOAuth2User user) {
+        Date now = new Date();
+
         Pin pin = new Pin();
         pin.setUserId(user.getId());
         pin.setTitle(title);
         pin.setUrl(url);
-        pin.setCreatedAt(new Date());
+        pin.setCreatedAt(now);
+        pin.setUpdatedAt(now);
 
         pinService.create(pin);
         return pin.toResponse();

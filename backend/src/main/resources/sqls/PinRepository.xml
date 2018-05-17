@@ -26,11 +26,13 @@
       , title
       , url
       , created_at
+      , updated_at
     ) values (
       #{userId}
       , #{title}
       , #{url}
       , #{createdAt}
+      , #{updatedAt}
     )
     <selectKey resultType="_int" order="AFTER" keyProperty="id">
       select last_insert_id()

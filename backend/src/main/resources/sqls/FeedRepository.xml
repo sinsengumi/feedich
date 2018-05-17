@@ -43,8 +43,6 @@
       , image
       , favicon
       , published_at
-      , created_at
-      , updated_at
     ) values (
       #{title}
       , #{description}
@@ -55,8 +53,6 @@
       , #{image}
       , #{favicon}
       , #{publishedAt}
-      , now()
-      , now()
     )
     <selectKey resultType="_int" order="AFTER" keyProperty="id">
       select last_insert_id()

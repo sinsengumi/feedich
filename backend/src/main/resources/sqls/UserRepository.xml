@@ -37,7 +37,6 @@
       , auth_id_facebook
       , auth_id_yahoo
       , auth_id_line
-      , created_at
     ) values (
       #{email}
       , #{name}
@@ -46,7 +45,6 @@
       , #{authIdFacebook}
       , #{authIdYahoo}
       , #{authIdLine}
-      , now()
     )
     <selectKey resultType="_int" order="AFTER" keyProperty="id">
       select last_insert_id()
