@@ -40,11 +40,13 @@ axios.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response) {
-      if (error.response.data.status === 401) {
+      if (error.response.status === 401) {
         location.href = '/#/login'
         return Promise.reject(error)
       }
-      store.dispatch('SET_NOTIFY_MESSAGE', {dontUndo: true, message: '<span class="text-danger">' + error.response.data.message + '</span>'})
+      if (error.response.status !== 400) {
+        store.dispatch('SET_NOTIFY_MESSAGE', {dontUndo: true, message: '<span class="text-danger">' + error.response.data.message + '</span>'})
+      }
     } else if (error.request) {
       store.dispatch('SET_NOTIFY_MESSAGE', {dontUndo: true, message: '<span class="text-danger">ネットワークエラーが発生しました</span>'})
     } else {

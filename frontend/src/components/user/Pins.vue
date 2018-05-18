@@ -12,7 +12,7 @@
           <tbody>
             <tr v-for="(pin, index) in pins" :key="'pins_' + pin.title" :class="index + 1 === ellipsedPins.length ? 'open-threshold' : ''">
               <td class="title-td"><a href="javascript:void(0)" @click="readPin(pin)"><i class="far fa-file-alt mr-1"></i> {{ pin.title }}</a></td>
-              <td class="text-right" style="width: 140px"><span :title="pin.createdAt | format('YYYY/MM/DD HH:mm.ss Z')">{{ pin.createdAt | fromNow }}</span></td>
+              <td class="text-right" style="width: 140px"><span :title="pin.createdAt | format('YYYY/MM/DD HH:mm:ss Z')">{{ pin.createdAt | fromNow }}</span></td>
               <td class="text-center" style="width: 30px"><a href="javascript:void(0)" @click="removePin(pin)" title="削除"><i class="fas fa-trash-alt"></i></a></td>
             </tr>
           </tbody>

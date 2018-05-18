@@ -73,3 +73,24 @@ CREATE TABLE pin (
   , updated_at   DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 CREATE INDEX idx_pin_user_id ON pin (user_id);
+
+
+CREATE TABLE import (
+  id           INT         AUTO_INCREMENT NOT NULL PRIMARY KEY
+  , user_id    INT         NOT NULL
+  , status     VARCHAR(30) NOT NULL DEFAULT 'RUNNING'
+  , created_at DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP
+  , updated_at DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+CREATE INDEX idx_import_user_id ON import (user_id);
+
+
+CREATE TABLE import_feed (
+  id          INT           AUTO_INCREMENT NOT NULL PRIMARY KEY
+  , import_id INT           NOT NULL
+  , title     VARCHAR(5000)
+  , xml_url   VARCHAR(1000) NOT NULL
+  , html_url  VARCHAR(1000)
+  , status    VARCHAR(30)   NOT NULL
+);
+CREATE INDEX idx_import_feed_import_id ON import_feed (import_id);

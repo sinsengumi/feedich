@@ -13,7 +13,7 @@
             {{ data.item.feed.title }}
           </template>
           <template slot="createdAt" slot-scope="data">
-            <span :title="data.value | format('YYYY/MM/DD HH:mm.ss Z')">{{ data.value | fromNow }}</span>
+            <span :title="data.value | format('YYYY/MM/DD HH:mm:ss Z')">{{ data.value | fromNow }}</span>
           </template>
           <template slot="operation" slot-scope="data">
             <a :href="data.item.feed.url" target="_blank" class="mr-1" title="サイト URL"><i class="fa fa-globe"></i></a>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.sinsengumi.feedich.repository.ImportRepository">
+
+  <sql id="columns">
+    ${tableName}.id           as import_id
+    , ${tableName}.user_id    as import_user_id
+    , ${tableName}.status     as import_status
+    , ${tableName}.created_at as import_created_at
+    , ${tableName}.updated_at as import_updated_at
+  </sql>
+
+  <resultMap id="map" type="Import">
+    <id     property="id"        column="import_id" />
+    <result property="userId"    column="import_user_id" />
+    <result property="status"    column="import_status" />
+    <result property="createdAt" column="import_created_at" />
+    <result property="updatedAt" column="import_updated_at" />
+
+    <association property="importFeeds" resultMap="net.sinsengumi.feedich.repository.ImportFeedRepository.map" />
+  </resultMap>
+
+  <insert id="create" parameterType="Import">
+    insert into import (
+      user_id
+      , status
+      , created_at
+      , updated_at
+    ) values (
+      #{userId}
+      , #{status}
+      , #{createdAt}
+      , #{updatedAt}
+    )
+    <selectKey resultType="_int" order="AFTER" keyProperty="id">
+      select last_insert_id()
+    </selectKey>
+  </insert>
+
+  <update id="updateStatus">
+    update
+      import
+    set
+      status = #{status}
+    where
+      id = #{id}
+  </update>
+
+  <select id="getLatestImport" resultMap="map">
+    select
+      <include refid="columns"><property name="tableName" value="i" /></include>
+      , <include refid="net.sinsengumi.feedich.repository.ImportFeedRepository.columns"><property name="tableName" value="imf" /></include>
+    from
+      import i
+      join import_feed imf on (imf.import_id = i.id)
+    where
+      i.id = (select max(i2.id) from import i2 where i2.user_id = #{userId})
+  </select>
+</mapper>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.sinsengumi.feedich.repository.ImportFeedRepository">
+
+  <sql id="columns">
+    ${tableName}.id          as import_feed_id
+    , ${tableName}.import_id as import_feed_import_id
+    , ${tableName}.title     as import_feed_title
+    , ${tableName}.xml_url   as import_feed_xml_url
+    , ${tableName}.html_url  as import_feed_html_url
+    , ${tableName}.status    as import_feed_status
+  </sql>
+
+  <resultMap id="map" type="ImportFeed">
+    <id     property="id"       column="import_feed_id" />
+    <result property="importId" column="import_feed_import_id" />
+    <result property="title"    column="import_feed_title" />
+    <result property="xmlUrl"   column="import_feed_xml_url" />
+    <result property="htmlUrl"  column="import_feed_html_url" />
+    <result property="status"   column="import_feed_status" />
+  </resultMap>
+
+  <insert id="create" parameterType="ImportFeed">
+    insert into import_feed (
+      import_id
+      , title
+      , xml_url
+      , html_url
+      , status
+    ) values
+      <foreach item="i" collection="importFeeds" separator=",">
+      (
+        #{i.importId}
+        , #{i.title}
+        , #{i.xmlUrl}
+        , #{i.htmlUrl}
+        , #{i.status}
+      )
+      </foreach>
+  </insert>
+
+  <select id="findByImportId" resultMap="map">
+    select
+      <include refid="columns"><property name="tableName" value="i" /></include>
+    from
+      import_feed i
+    where
+      i.import_id = #{importId}
+    order by
+      i.id
+  </select>
+
+  <update id="updateStatus">
+    update
+      import_feed
+    set
+      status = #{status}
+    where
+      id = #{id}
+  </update>
+</mapper>

@@ -64,6 +64,16 @@ export default class ApiClient {
     return axios.get(`${API_BASE_URL}/api/user/session/validate`)
   }
 
+  importOpml (file) {
+    const params = new FormData()
+    params.append('importOpml', file)
+    return axios.post(`${API_BASE_URL}/api/subscriptions/import`, params)
+  }
+
+  latestImport () {
+    return axios.get(`${API_BASE_URL}/api/subscriptions/latestImport`)
+  }
+
   withdraw () {
     return axios.delete(`${API_BASE_URL}/api/user/withdraw`)
   }

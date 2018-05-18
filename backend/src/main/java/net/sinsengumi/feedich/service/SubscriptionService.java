@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
@@ -54,6 +56,8 @@ public class SubscriptionService {
             syndFeed = feedDiscoverer.parseFeed(feedUrl);
         }
 
+        // TODO: feed の更新
+        
         Subscription subscription = findByUserIdAndFeedId(userId, feed.getId());
         if (subscription == null) {
             subscription = new Subscription();
@@ -66,6 +70,11 @@ public class SubscriptionService {
         }
 
         return findById(subscription.getId());
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public Subscription subscribeOtherTransaction(int userId, String feedUrl) {
+        return subscribe(userId, feedUrl);
     }
 
     public int unsubscribe(int id, int userId, int feedId) {

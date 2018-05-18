@@ -1,5 +1,7 @@
 package net.sinsengumi.feedich.service;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.util.List;
 
@@ -13,8 +15,13 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import com.rometools.opml.feed.opml.Opml;
+import com.rometools.rome.io.FeedException;
+import com.rometools.rome.io.WireFeedInput;
 
 import lombok.AllArgsConstructor;
 import net.sinsengumi.feedich.exception.ApplicationException;
@@ -23,6 +30,11 @@ import net.sinsengumi.feedich.model.Feed;
 @Service
 @AllArgsConstructor
 public class FeedOpmlService {
+
+    public Opml importOpml(MultipartFile file) throws IllegalArgumentException, FeedException, IOException {
+        WireFeedInput input = new WireFeedInput();
+        return (Opml) input.build(new InputStreamReader(file.getInputStream()));
+    }
 
     public String exportOpml(List<Feed> feeds) {
         try {
