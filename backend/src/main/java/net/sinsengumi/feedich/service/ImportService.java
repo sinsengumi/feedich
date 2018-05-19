@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StopWatch;
 
 import com.rometools.opml.feed.opml.Opml;
 
@@ -43,6 +44,9 @@ public class ImportService {
 
     @Async
     public void importFeeds(int userId, List<ImportFeed> importFeeds) {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+
         List<Subscription> subscriptions = subscriptionService.findByUserId(userId);
 
         for (ImportFeed importFeed : importFeeds) {
@@ -70,6 +74,9 @@ public class ImportService {
 
         ImportService service = applicationContext.getBean(ImportService.class);
         service.updateStatus(importFeeds.get(0).getImportId(), ImportStatus.FINISHED);
+
+        stopWatch.stop();
+        log.info("Import feeds. userId = {}, feeds = {}, elapsed = {} (ms)", userId, importFeeds.size(), stopWatch.getTotalTimeMillis());
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)

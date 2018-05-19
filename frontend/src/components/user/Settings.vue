@@ -97,7 +97,7 @@
                         <b-form-file style="width:350px;" v-model="importOpmlFile" ref="importOpmlFile" placeholder="OPML 形式のファイルを選択してください"></b-form-file>
                         <button type="button" class="btn btn-outline-primary btn-sm ml-3" @click="importOpml">インポート</button>
                       </div>
-                      <p class="text-danger mt-1" style="margin-left:220px;" v-if="errorImport !== null">{{ errorImport }}</p>
+                      <p class="text-danger mt-1" style="margin-left:120px;" v-if="errorImport !== null">{{ errorImport }}</p>
                     </div>
 
                     <!-- Import が終了している時 -->
@@ -251,11 +251,9 @@ export default {
     this.importPollingIntervalId = setInterval(() => {
       api.latestImport()
         .then((response) => {
-          console.log(response)
           this.latestImport = response.data
         })
         .catch((error) => {
-          console.log(error)
           this.errorImport = error.response.data.message
         })
     }, 1000)
@@ -311,7 +309,6 @@ export default {
 
       api.importOpml(this.importOpmlFile)
         .then((response) => {
-          console.log(response)
           this.latestImport = response.data
 
           this.importOpmlFile = null
@@ -336,5 +333,22 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+.custom-file {
+  height: calc(1.82rem + 2px);
+}
+
+.custom-file-input {
+  height: calc(1.82rem + 2px);
+}
+
+.custom-file-label {
+  height: calc(1.82rem + 2px);
+  padding: 0.3rem 0.75rem;
+}
+
+.custom-file-label::after {
+  height: 1.82rem;
+  padding: 0.3rem 0.75rem;
+}
 </style>
