@@ -35,6 +35,7 @@ public class FeedCrawlService {
     public void crawl() {
         // クラスタリングするときはここを分割する
         List<Feed> feeds = feedService.findByAll();
+        log.info("feedSize = {}", feeds.size());
         feeds.forEach(feed -> {
             try {
                 crawl(feed);
@@ -77,6 +78,7 @@ public class FeedCrawlService {
 
                 userItemService.create(userItems);
 
+                // TODO: feed 情報を更新
                 feedService.updateUpdatedAt(feedId, now);
             }
         } catch (IllegalArgumentException | FeedException | IOException e) {

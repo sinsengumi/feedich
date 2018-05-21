@@ -30,6 +30,7 @@ import net.sinsengumi.feedich.model.User.ServiceProvider;
 public class OAuth2UserServiceJdbcService extends DefaultOAuth2UserService {
 
     private final UserService userService;
+    private final SlackService slackService;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -49,6 +50,7 @@ public class OAuth2UserServiceJdbcService extends DefaultOAuth2UserService {
             user.setName(serviceProvider.getName(attributes));
             user.setAuthId(serviceProvider, authId);
             userService.create(user);
+            slackService.notify("Registered new user. id = " + user.getId());
         } else {
             userService.updateAuthId(user.getId(), serviceProvider, authId);
         }

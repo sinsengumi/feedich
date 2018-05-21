@@ -8,7 +8,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StopWatch;
 
 import com.rometools.opml.feed.opml.Opml;
 
@@ -20,6 +19,7 @@ import net.sinsengumi.feedich.model.ImportFeed;
 import net.sinsengumi.feedich.model.ImportFeed.ImportFeedStatus;
 import net.sinsengumi.feedich.model.Subscription;
 import net.sinsengumi.feedich.repository.ImportRepository;
+import net.sinsengumi.feedich.util.StopWatchUtil;
 
 @Slf4j
 @Service
@@ -44,8 +44,7 @@ public class ImportService {
 
     @Async
     public void importFeeds(int userId, List<ImportFeed> importFeeds) {
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
+        StopWatchUtil stopWatch = new StopWatchUtil();
 
         List<Subscription> subscriptions = subscriptionService.findByUserId(userId);
 
@@ -75,7 +74,6 @@ public class ImportService {
         ImportService service = applicationContext.getBean(ImportService.class);
         service.updateStatus(importFeeds.get(0).getImportId(), ImportStatus.FINISHED);
 
-        stopWatch.stop();
         log.info("Import feeds. userId = {}, feeds = {}, elapsed = {} (ms)", userId, importFeeds.size(), stopWatch.getTotalTimeMillis());
     }
 
