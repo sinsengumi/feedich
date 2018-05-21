@@ -9,6 +9,7 @@ import Subscriptions from '@/components/user/Subscriptions'
 import Pins from '@/components/user/Pins'
 import Settings from '@/components/user/Settings'
 import Login from '@/components/public/Login'
+import NotFound from '@/components/public/NotFound'
 import ApiClient from '../ApiClient'
 
 const api = new ApiClient()
@@ -35,6 +36,12 @@ const router = new Router({
               name: 'Login',
               component: Login,
               meta: { title: 'Login | Feedich', requiresAuth: false }
+            },
+            {
+              path: '404',
+              name: 'NotFound',
+              component: NotFound,
+              meta: { title: '404 Not Found | Feedich', requiresAuth: false }
             }
           ]
         },
@@ -76,6 +83,10 @@ const router = new Router({
           ]
         }
       ]
+    },
+    {
+      path: '*',
+      redirect: { name: 'NotFound' }
     }
   ],
   scrollBehavior (to, from, savedPosition) {
