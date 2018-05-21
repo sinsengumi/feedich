@@ -1,5 +1,6 @@
 package net.sinsengumi.feedich.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,6 +48,7 @@ public class ImportService {
         StopWatchUtil stopWatch = new StopWatchUtil();
 
         List<Subscription> subscriptions = subscriptionService.findByUserId(userId);
+        List<ImportFeed> failedFeeds = new ArrayList<>();
 
         for (ImportFeed importFeed : importFeeds) {
             log.info("importFeed = {}", importFeed);
@@ -64,11 +66,16 @@ public class ImportService {
                     importFeed.setStatus(ImportFeedStatus.SUCCESS);
                 }
             } catch (Exception e) {
-                log.error(e.getMessage(), e);
+                log.warn(e.getMessage(), e);
+                failedFeeds.add(importFeed);
                 importFeed.setStatus(ImportFeedStatus.FAILED);
             }
 
             importFeedService.updateStatus(id, importFeed.getStatus());
+        }
+
+        if (!failedFeeds.isEmpty()) {
+            log.error("Import failed. userId = {}, size = {}", userId, failedFeeds.size());
         }
 
         ImportService service = applicationContext.getBean(ImportService.class);

@@ -16,15 +16,15 @@ public abstract class AbstractController {
 
     protected void authorizeResource(Authorizable authorizable, Integer owner) {
         if (authorizable == null) {
-            throw new NotFoundException(String.format("resource is not found. owner = %d", owner));
+            throw new NotFoundException(String.format("resource is not found. owner = %d", owner), "リソースが見つかりません");
         }
         if (owner == null) {
-            throw new NotFoundException("owner is not found.");
+            throw new NotFoundException("owner is not found.", "リソースのオーナーが見つかりません");
         }
 
         if (authorizable.getOwner() != owner) {
             throw new UnauthorizedException(String.format(
-                    "resource is not permitted. resourceOwner = %s, accessUser = %s", authorizable.getOwner(), owner));
+                    "resource is not permitted. resourceOwner = %s, accessUser = %s", authorizable.getOwner(), owner), "アクセスできないリソースです");
         }
     }
 }

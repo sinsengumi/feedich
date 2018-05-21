@@ -95,13 +95,13 @@ public class SubscriptionController extends AbstractController {
     @PostMapping("import")
     public ResponseEntity<ImportResponse> importOpml(@RequestParam(required = false) MultipartFile importOpml, @AuthenticationPrincipal FeedichOAuth2User user) {
         if (SpringUtil.isEmptyMultipartFile(importOpml)) {
-            throw new InvalidOpmlException("OPML ファイルが空です");
+            throw new InvalidOpmlException("OPML ファイルが空です", "OPML ファイルが空です");
         }
 
         try {
             Opml opml = feedOpmlService.importOpml(importOpml);
             if (opml.getOutlines().isEmpty()) {
-                throw new InvalidOpmlException("OPML ファイルのエントリーがありません");
+                throw new InvalidOpmlException("OPML ファイルのエントリーがありません", "OPML ファイルのエントリーがありません");
             }
 
             Date now = new Date();

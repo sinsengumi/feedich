@@ -7,6 +7,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -19,6 +21,10 @@ import net.sinsengumi.feedich.exception.ApplicationException;
 public final class HttpUtil {
 
     private HttpUtil() {
+    }
+
+    public static String getRemoteAddr(HttpServletRequest request) {
+        return request.getRemoteAddr();
     }
 
     public static String getFinalUrl(String url) {
@@ -64,7 +70,7 @@ public final class HttpUtil {
             }
             return getFinalUrl(faviconUrl);
         } catch (IOException e) {
-            log.error(e.getMessage(), e);
+            log.warn(e.getMessage(), e);
             return faviconUrl;
         }
     }
@@ -107,7 +113,7 @@ public final class HttpUtil {
                 return new URI(accessUrlBase + relativeOrAbsolutePath).normalize().toString();
             }
         } catch (MalformedURLException | URISyntaxException e) {
-            throw new ApplicationException(e);
+            throw new ApplicationException("URL を解決できませんでした", e);
         }
     }
 }

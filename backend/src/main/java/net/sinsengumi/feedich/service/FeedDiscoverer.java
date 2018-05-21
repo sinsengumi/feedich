@@ -79,13 +79,13 @@ public class FeedDiscoverer {
                     log.info("Success Unicode in CDATA... {}", feedUrl);
                 } catch (IllegalArgumentException | FeedException | IOException e2) {
                     log.info("Failed Unicode in CDATA... {}", feedUrl);
-                    throw new ApplicationException(e2);
+                    throw new ApplicationException("フィードの解析中にエラーが発生しました", e2);
                 }
             } catch (IllegalArgumentException | IOException e1) {
-                throw new ApplicationException(e1);
+                throw new ApplicationException("フィードの解析中にエラーが発生しました", e1);
             }
         } catch (IllegalArgumentException | IOException e) {
-            throw new ApplicationException(e);
+            throw new ApplicationException("フィードの解析中にエラーが発生しました", e);
         }
 
         if (syndFeed != null) {

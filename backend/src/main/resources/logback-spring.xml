@@ -21,9 +21,16 @@
     </encoder>
   </appender>
 
+  <appender name="SENTRY" class="io.sentry.logback.SentryAppender">
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>ERROR</level>
+    </filter>
+  </appender>
+
   <root level="INFO">
     <appender-ref ref="STDOUT" />
     <appender-ref ref="FILE" />
+    <appender-ref ref="SENTRY" />
   </root>
   
   <!-- <logger name="net.sinsengumi.feedich.repository" level="DEBUG" /> -->

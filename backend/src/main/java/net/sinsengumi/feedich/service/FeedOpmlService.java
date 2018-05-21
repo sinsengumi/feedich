@@ -67,7 +67,7 @@ public class FeedOpmlService {
 
             return createXMLString(document);
         } catch (ParserConfigurationException | TransformerException e) {
-            throw new ApplicationException(e);
+            throw new ApplicationException("フィードのエクスポート中にエラーが発生しました", e);
         }
     }
 

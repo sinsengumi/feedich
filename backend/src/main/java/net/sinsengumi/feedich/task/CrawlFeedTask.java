@@ -1,5 +1,6 @@
 package net.sinsengumi.feedich.task;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.scheduling.annotation.Scheduled;
@@ -30,15 +31,22 @@ public class CrawlFeedTask {
         String message = String.format("Begin crawl. feedSize = %d", feeds.size());
         notify(message);
 
-        feeds.forEach(feed -> {
+        List<Feed> failedFeeds = new ArrayList<>();
+
+        for (Feed feed : feeds) {
             try {
                 feedCrawlService.crawl(feed);
             } catch (Exception e) {
-                log.error("Failed crawl feed. id = {}, url = {}", feed.getId(), feed.getFeedUrl(), e);
+                failedFeeds.add(feed);
+                log.warn("Failed crawl feed. id = {}, url = {}", feed.getId(), feed.getFeedUrl(), e);
             }
-        });
+        }
 
-        message = String.format("End   crawl. elapsed = %.3f (s)", stopWatch.getTotalTimeSeconds());
+        if (!failedFeeds.isEmpty()) {
+            log.error("Crawl failed size = {}", failedFeeds.size());
+        }
+
+        message = String.format("End crawl. elapsed = %.3f (s)", stopWatch.getTotalTimeSeconds());
         notify(message);
     }
 

@@ -26,7 +26,6 @@ public class SlackService {
             attachment.setText(message);
             session.sendMessage(channel, null, attachment);
         } catch (Exception e) {
-            // ignore
             log.error(e.getMessage(), e);
         }
     }

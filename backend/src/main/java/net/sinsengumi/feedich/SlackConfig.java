@@ -25,7 +25,7 @@ public class SlackConfig {
             session.connect();
             return session;
         } catch (IOException e) {
-            throw new ApplicationException(e);
+            throw new ApplicationException("Failed create SlackSession bean.", e);
         }
     }
 }

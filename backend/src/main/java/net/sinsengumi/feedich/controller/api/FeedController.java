@@ -39,7 +39,7 @@ public class FeedController extends AbstractController {
                     }).collect(Collectors.toList());
             return ResponseEntity.ok(result);
         } catch (Exception e) {
-            log.error("{}", e.getMessage(), e);
+            log.warn("{}", e.getMessage(), e);
             return ResponseEntity.ok(Collections.emptyList());
         }
     }

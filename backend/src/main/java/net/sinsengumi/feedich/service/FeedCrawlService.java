@@ -82,7 +82,7 @@ public class FeedCrawlService {
                 feedService.updateUpdatedAt(feedId, now);
             }
         } catch (IllegalArgumentException | FeedException | IOException e) {
-            throw new ApplicationException(e);
+            throw new ApplicationException("クロール中にエラーが発生しました", e);
         }
     }
 
