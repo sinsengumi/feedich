@@ -301,3 +301,11 @@ a:hover {
   color: #b4bcc4;
   font-size: 1.5rem;
 }
+
+.tooltip {
+  font-size: 0.7rem;
+}
+
+.tooltip-inner {
+  max-width: 100%;
+}

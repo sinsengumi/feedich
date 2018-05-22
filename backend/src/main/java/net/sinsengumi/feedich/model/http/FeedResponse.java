@@ -3,6 +3,7 @@ package net.sinsengumi.feedich.model.http;
 import java.util.Date;
 
 import lombok.Data;
+import net.sinsengumi.feedich.model.Feed.FeedStatus;
 
 @Data
 public class FeedResponse {
@@ -15,6 +16,7 @@ public class FeedResponse {
     private String icon;
     private String image;
     private String favicon;
+    private FeedStatus status;
     private Date publishedAt;
     private Date createdAt;
     private Date updatedAt;

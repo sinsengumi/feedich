@@ -56,8 +56,6 @@ public class SubscriptionService {
             syndFeed = feedDiscoverer.parseFeed(feedUrl);
         }
 
-        // TODO: feed の更新
-        
         Subscription subscription = findByUserIdAndFeedId(userId, feed.getId());
         if (subscription == null) {
             subscription = new Subscription();

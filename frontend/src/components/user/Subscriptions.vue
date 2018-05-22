@@ -15,6 +15,12 @@
           <template slot="createdAt" slot-scope="data">
             <span :title="data.value | format('YYYY/MM/DD HH:mm:ss Z')">{{ data.value | fromNow }}</span>
           </template>
+          <template slot="status" slot-scope="data">
+            <span class="badge badge-success" v-if="data.item.feed.status === 'NORMAL'" :id="'status-normal'+ data.item.id"><i class="far fa-check-circle"></i> NORMAL</span>
+            <b-tooltip triggers="hover" :target="'status-normal'+ data.item.id">フィードは正常です</b-tooltip>
+            <span class="badge badge-danger" v-if="data.item.feed.status === 'BROKEN'" :id="'status-broken'+ data.item.id"><i class="far fa-times-circle"></i> BROKEN</span>
+            <b-tooltip triggers="hover" :target="'status-broken'+ data.item.id">フィードのクロールに失敗しました<br />フィードが壊れている可能性があります</b-tooltip>
+          </template>
           <template slot="operation" slot-scope="data">
             <a :href="data.item.feed.url" target="_blank" class="mr-1" title="サイト URL"><i class="fa fa-globe"></i></a>
             <a :href="data.item.feed.feedUrl" target="_blank" class="mr-1" title="フィード URL"><i class="fa fa-file-code"></i></a>
@@ -42,6 +48,7 @@ export default {
       fields: [
         { key: 'title', label: 'タイトル', thClass: 'title-th', tdClass: 'title-td' },
         { key: 'createdAt', label: 'フィード登録日', thClass: 'createdAt-th', tdClass: 'createdAt-td' },
+        { key: 'status', label: 'ステータス', thClass: 'status-th', tdClass: 'status-td' },
         { key: 'operation', label: '操作', thClass: 'operation-th', tdClass: 'operation-td' }
       ],
       subscriptionModal: false,
@@ -92,6 +99,17 @@ export default {
 
 .createdAt-td {
   text-align: right;
+  padding: 5px 10px!important;
+}
+
+.status-th {
+  width: 100px;
+  text-align: center;
+  padding: 5px 10px!important;
+}
+
+.status-td {
+  text-align: center;
   padding: 5px 10px!important;
 }
 

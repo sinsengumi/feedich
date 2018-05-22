@@ -23,6 +23,7 @@ CREATE TABLE feed (
   , icon         VARCHAR(1000)
   , image        VARCHAR(1000)
   , favicon      VARCHAR(1000)
+  , status       VARCHAR(30)   NOT NULL DEFAULT 'NORMAL'
   , published_at DATETIME
   , created_at   DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP
   , updated_at   DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

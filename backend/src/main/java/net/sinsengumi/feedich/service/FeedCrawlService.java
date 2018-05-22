@@ -1,7 +1,5 @@
 package net.sinsengumi.feedich.service;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,14 +9,12 @@ import org.springframework.stereotype.Service;
 
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
-import com.rometools.rome.io.FeedException;
-import com.rometools.rome.io.SyndFeedInput;
-import com.rometools.rome.io.XmlReader;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.sinsengumi.feedich.exception.ApplicationException;
 import net.sinsengumi.feedich.model.Feed;
+import net.sinsengumi.feedich.model.Feed.FeedStatus;
 import net.sinsengumi.feedich.model.Item;
 import net.sinsengumi.feedich.model.UserItem;
 
@@ -27,23 +23,11 @@ import net.sinsengumi.feedich.model.UserItem;
 @AllArgsConstructor
 public class FeedCrawlService {
 
+    private final FeedDiscoverer feedDiscoverer;
     private final FeedService feedService;
     private final ItemService itemService;
     private final SubscriptionService subscriptionService;
     private final UserItemService userItemService;
-
-    public void crawl() {
-        // クラスタリングするときはここを分割する
-        List<Feed> feeds = feedService.findByAll();
-        log.info("feedSize = {}", feeds.size());
-        feeds.forEach(feed -> {
-            try {
-                crawl(feed);
-            } catch (Exception e) {
-                log.error("Failed crawl feed. id = {}, url = {}", feed.getId(), feed.getFeedUrl(), e);
-            }
-        });
-    }
 
     public void crawl(Feed feed) {
         int feedId = feed.getId();
@@ -51,8 +35,7 @@ public class FeedCrawlService {
         log.info("Crawl id = {}, feedUrl = {}", feedId, feedUrl);
 
         try {
-            SyndFeedInput input = new SyndFeedInput();
-            SyndFeed syndFeed = input.build(new XmlReader(new URL(feedUrl)));
+            SyndFeed syndFeed = feedDiscoverer.parseFeed(feedUrl);
             List<SyndEntry> entries = syndFeed.getEntries();
             log.info("item size = {}, feedUrl = {}", entries.size(), feedUrl);
 
@@ -78,10 +61,15 @@ public class FeedCrawlService {
 
                 userItemService.create(userItems);
 
-                // TODO: feed 情報を更新
-                feedService.updateUpdatedAt(feedId, now);
+                Feed newFeed = Feed.build(feedId, syndFeed);
+                feedService.update(newFeed);
+            } else if (feed.getStatus() == FeedStatus.BROKEN) {
+                // item がなくても、BROKEN 状態のもので正常にフィードを取得できた場合は更新する。
+                Feed newFeed = Feed.build(feedId, syndFeed);
+                feedService.update(newFeed);
             }
-        } catch (IllegalArgumentException | FeedException | IOException e) {
+        } catch (Exception e) {
+            feedService.updateStatus(feedId, FeedStatus.BROKEN);
             throw new ApplicationException("クロール中にエラーが発生しました", e);
         }
     }

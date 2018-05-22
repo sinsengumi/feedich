@@ -43,7 +43,7 @@
       , <include refid="net.sinsengumi.feedich.repository.PinRepository.columns"><property name="tableName" value="p" /></include>
     from
       user_item ui
-      left join item i on (i.id = ui.item_id)
+      join item i on (i.id = ui.item_id)
       left join pin p on (p.url = i.url and p.user_id = ui.user_id)
     where
       ui.user_id = #{userId}
@@ -60,7 +60,7 @@
       , <include refid="net.sinsengumi.feedich.repository.PinRepository.columns"><property name="tableName" value="p" /></include>
     from
       user_item ui
-      left join item i on (i.id = ui.item_id)
+      join item i on (i.id = ui.item_id)
       left join pin p on (p.url = i.url and p.user_id = ui.user_id)
     where
       ui.user_id = #{userId}

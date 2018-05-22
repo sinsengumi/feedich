@@ -24,6 +24,7 @@ public class Feed {
     private String icon;
     private String image;
     private String favicon;
+    private FeedStatus status = FeedStatus.NORMAL;
     private Date publishedAt;
     private Date createdAt;
     private Date updatedAt;
@@ -42,7 +43,14 @@ public class Feed {
             feed.setImage(StringUtils.trim(syndFeed.getImage().getUrl()));
         }
         feed.setFavicon(HttpUtil.extractFavicon(feed.getUrl()));
+        feed.setStatus(FeedStatus.NORMAL);
         feed.setPublishedAt(syndFeed.getPublishedDate());
+        return feed;
+    }
+
+    public static Feed build(int id, SyndFeed syndFeed) {
+        Feed feed = build(syndFeed);
+        feed.setId(id);
         return feed;
     }
 
@@ -57,9 +65,15 @@ public class Feed {
         response.setIcon(icon);
         response.setImage(image);
         response.setFavicon(favicon);
+        response.setStatus(status);
         response.setCreatedAt(createdAt);
         response.setUpdatedAt(updatedAt);
         response.setPublishedAt(publishedAt);
         return response;
+    }
+
+    public enum FeedStatus {
+        NORMAL,
+        BROKEN
     }
 }

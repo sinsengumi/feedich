@@ -12,6 +12,7 @@
     , ${tableName}.icon         as feed_icon
     , ${tableName}.image        as feed_image
     , ${tableName}.favicon      as feed_favicon
+    , ${tableName}.status       as feed_status
     , ${tableName}.published_at as feed_published_at
     , ${tableName}.created_at   as feed_created_at
     , ${tableName}.updated_at   as feed_updated_at
@@ -27,6 +28,7 @@
     <result property="icon"        column="feed_icon" />
     <result property="image"       column="feed_image" />
     <result property="favicon"     column="feed_favicon" />
+    <result property="status"      column="feed_status" />
     <result property="publishedAt" column="feed_published_at" />
     <result property="createdAt"   column="feed_created_at" />
     <result property="updatedAt"   column="feed_updated_at" />
@@ -42,6 +44,7 @@
       , icon
       , image
       , favicon
+      , status
       , published_at
     ) values (
       #{title}
@@ -52,12 +55,36 @@
       , #{icon}
       , #{image}
       , #{favicon}
+      , #{status}
       , #{publishedAt}
     )
     <selectKey resultType="_int" order="AFTER" keyProperty="id">
       select last_insert_id()
     </selectKey>
   </insert>
+
+
+  <update id="update">
+    update
+      feed
+    set
+      title          = #{title}
+      , description  = #{description}
+      , url          = #{url}
+      , feed_url     = #{feedUrl}
+      , feed_type    = #{feedType}
+      , icon         = #{icon}
+      , image        = #{image}
+      , favicon      = #{favicon}
+      , status       = #{status}
+      , published_at = #{publishedAt}
+    where
+      id = #{id}
+  </update>
+
+  <update id="updateStatus">
+    update feed set status = #{status} where id = #{id}
+  </update>
 
   <update id="updateUpdatedAt">
     update feed set updated_at = #{updatedAt} where id = #{id}
