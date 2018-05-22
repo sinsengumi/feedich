@@ -5,11 +5,11 @@
         <div class="row pt-3 pb-3">
           <div class="col-6 offset-1 pr-2">
             <h2>Simple and Snapply Feed Reader</h2>
-            <p>Feedich は livedoor Reader (Live Dwango Reader) にインスパイされた Feed Reader です。<br />軽快な動作とわかりやすい UI が特徴です。</p>
+            <p>Feedich は livedoor Reader (Live Dwango Reader) にインスパイアされた Feed Reader です。<br />軽快な動作とわかりやすい UI が特徴です。</p>
             <iframe width="540" height="304" src="https://www.youtube.com/embed/Q3K9vtIybFA?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
           </div>
           <div class="col-4 pl-4">
-            <p>ソーシャルアカウントがあればすぐにログインできます</p>
+            <p>ソーシャルアカウントがあればすぐにご利用できます</p>
             <ul class="list-unstyled">
               <li class="mb-2"><a href="http://localhost:8080/oauth2/authorization/github" class="btn btn-light btn-sm btn-block"><i class="fab fa-github"></i> GitHub アカウントでログイン</a></li>
               <li class="mb-2"><a href="http://localhost:8080/oauth2/authorization/google" class="btn btn-light btn-sm btn-block"><i class="fab fa-google"></i> Google アカウントでログイン</a></li>
