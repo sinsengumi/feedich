@@ -42,17 +42,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().configurationSource(corsConfigurationSource());
 
         http.authorizeRequests()
+            .antMatchers("/api/contact").permitAll()
             .anyRequest().authenticated()
             .and()
             .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint)
             .and()
-            .logout().permitAll()
+            .logout().permitAll().logoutSuccessUrl(frontendUrl + "/#/")
             .and()
-            .oauth2Login().defaultSuccessUrl(frontendUrl + "/#/dashboard", true).userInfoEndpoint().userService(oauth2UserServiceJdbcService).oidcUserService(oidcUserServiceJdbcService)
-            .and()
-            .loginPage("/login").permitAll()
-            .and()
-            .logout().logoutSuccessUrl(frontendUrl + "/#/");
+            .oauth2Login().defaultSuccessUrl(frontendUrl + "/#/dashboard", true).userInfoEndpoint().userService(oauth2UserServiceJdbcService).oidcUserService(oidcUserServiceJdbcService);
     }
 
     private CorsConfigurationSource corsConfigurationSource() {

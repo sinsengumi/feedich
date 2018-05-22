@@ -1,14 +1,15 @@
 <template>
-  <div>
+  <div class="main-visual-wrapper">
     <div class="main-visual">
       <div class="container">
         <div class="row pt-3 pb-3">
           <div class="col-6 offset-1 pr-2">
             <h2>Simple and Snapply Feed Reader</h2>
-            <p>Feedich は livedoor reader (live dwango reader) に強く影響を受けた、feed reader です。<br />軽快な動作とわかりやすい UI が特徴です。</p>
+            <p>Feedich は livedoor Reader (Live Dwango Reader) にインスパイされた Feed Reader です。<br />軽快な動作とわかりやすい UI が特徴です。</p>
             <iframe width="540" height="304" src="https://www.youtube.com/embed/Q3K9vtIybFA?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
           </div>
           <div class="col-4 pl-4">
+            <p>ソーシャルアカウントがあればすぐにログインできます</p>
             <ul class="list-unstyled">
               <li class="mb-2"><a href="http://localhost:8080/oauth2/authorization/github" class="btn btn-light btn-sm btn-block"><i class="fab fa-github"></i> GitHub アカウントでログイン</a></li>
               <li class="mb-2"><a href="http://localhost:8080/oauth2/authorization/google" class="btn btn-light btn-sm btn-block"><i class="fab fa-google"></i> Google アカウントでログイン</a></li>
@@ -83,11 +84,15 @@
 </script>
 
 <style scoped>
+.main-visual-wrapper {
+  border-top: 1px solid #384d63;
+}
+
 .main-visual {
   background-color: #2c3e50;
   color: white;
   padding: 10px 0;
   margin-bottom: 20px;
-  border-top: 1px solid #293a4c;
+  border-top: 1px solid #1f2c3a;
 }
 </style>

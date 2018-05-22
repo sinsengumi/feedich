@@ -23,5 +23,6 @@ public class SlackProperties {
     public class Channel {
         private String notify;
         private String alert;
+        private String contact;
     }
 }

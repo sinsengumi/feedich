@@ -77,4 +77,11 @@ export default class ApiClient {
   withdraw () {
     return axios.delete(`${API_BASE_URL}/api/user/withdraw`)
   }
+
+  contact (email, message) {
+    const params = new URLSearchParams()
+    params.append('email', email)
+    params.append('message', message)
+    return axios.post(`${API_BASE_URL}/api/contact`, params)
+  }
 }

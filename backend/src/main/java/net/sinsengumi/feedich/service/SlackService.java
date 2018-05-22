@@ -29,4 +29,13 @@ public class SlackService {
             log.error(e.getMessage(), e);
         }
     }
+
+    public void contact(String message) {
+        try {
+            SlackChannel channel = session.findChannelByName(properties.getChannel().getContact());
+            session.sendMessage(channel, message);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+    }
 }
