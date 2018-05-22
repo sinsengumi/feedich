@@ -12,6 +12,9 @@
             <i class="far fa-file-alt ml-1 mr-2" v-if="data.item.feed.favicon === null"></i>
             {{ data.item.feed.title }}
           </template>
+          <template slot="publishedAt" slot-scope="data">
+            <span :title="data.item.feed.publishedAt | format('YYYY/MM/DD HH:mm:ss Z')">{{ data.item.feed.publishedAt | fromNow }}</span>
+          </template>
           <template slot="createdAt" slot-scope="data">
             <span :title="data.value | format('YYYY/MM/DD HH:mm:ss Z')">{{ data.value | fromNow }}</span>
           </template>
@@ -47,6 +50,7 @@ export default {
     return {
       fields: [
         { key: 'title', label: 'タイトル', thClass: 'title-th', tdClass: 'title-td' },
+        { key: 'publishedAt', label: '最終更新日', thClass: 'publishedAt-th', tdClass: 'publishedAt-td' },
         { key: 'createdAt', label: 'フィード登録日', thClass: 'createdAt-th', tdClass: 'createdAt-td' },
         { key: 'status', label: 'ステータス', thClass: 'status-th', tdClass: 'status-td' },
         { key: 'operation', label: '操作', thClass: 'operation-th', tdClass: 'operation-td' }
@@ -88,6 +92,17 @@ export default {
 }
 
 .title-td {
+  padding: 5px 10px!important;
+}
+
+.publishedAt-th {
+  width: 140px;
+  text-align: right;
+  padding: 5px 10px!important;
+}
+
+.publishedAt-td {
+  text-align: right;
   padding: 5px 10px!important;
 }
 

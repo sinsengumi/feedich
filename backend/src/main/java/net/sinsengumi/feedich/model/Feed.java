@@ -1,9 +1,14 @@
 package net.sinsengumi.feedich.model;
 
+import static java.util.Comparator.*;
+
+import java.util.Comparator;
 import java.util.Date;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
 
 import lombok.Data;
@@ -44,7 +49,16 @@ public class Feed {
         }
         feed.setFavicon(HttpUtil.extractFavicon(feed.getUrl()));
         feed.setStatus(FeedStatus.NORMAL);
-        feed.setPublishedAt(syndFeed.getPublishedDate());
+
+        if (syndFeed.getPublishedDate() == null) {
+            Comparator<SyndEntry> comparator = nullsLast(comparing(SyndEntry::getPublishedDate).reversed());
+            Optional<Date> entryLatestPublishedDate = syndFeed.getEntries().stream().sorted(comparator).map(SyndEntry::getPublishedDate).findFirst();
+            if (entryLatestPublishedDate.isPresent()) {
+                feed.setPublishedAt(entryLatestPublishedDate.get());
+            }
+        } else {
+            feed.setPublishedAt(syndFeed.getPublishedDate());
+        }
         return feed;
     }
 

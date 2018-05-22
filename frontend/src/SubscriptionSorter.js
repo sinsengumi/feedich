@@ -33,8 +33,8 @@ export default class SubscriptionSorter {
 
   sortUpdatedAt (subscriptions) {
     return subscriptions.sort((a, b) => {
-      const aUnix = moment(a.feed.updatedAt).unix()
-      const bUnix = moment(b.feed.updatedAt).unix()
+      const aUnix = moment(a.feed.publishedAt).unix()
+      const bUnix = moment(b.feed.publishedAt).unix()
 
       const result = aUnix - bUnix
       if (result === 0) {
