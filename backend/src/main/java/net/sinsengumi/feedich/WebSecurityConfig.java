@@ -52,7 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
             .loginPage("/login").permitAll()
             .and()
-            .logout().logoutSuccessUrl(frontendUrl + "/#/login");
+            .logout().logoutSuccessUrl(frontendUrl + "/#/");
     }
 
     private CorsConfigurationSource corsConfigurationSource() {

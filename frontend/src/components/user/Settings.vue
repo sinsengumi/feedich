@@ -218,7 +218,7 @@ export default {
   computed: {
     importPercentage () {
       if (this.latestImport === null) {
-        return 0;
+        return 0
       }
       const finishedCount = this.latestImport.importFeeds.filter(feed => feed.status !== 'QUEUED').length
       const allCount = this.latestImport.importFeeds.length
@@ -226,19 +226,19 @@ export default {
     },
     importFailedCount () {
       if (this.latestImport === null) {
-        return 0;
+        return 0
       }
       return this.latestImport.importFeeds.filter(feed => feed.status === 'FAILED').length
     },
     importSuccessCount () {
       if (this.latestImport === null) {
-        return 0;
+        return 0
       }
       return this.latestImport.importFeeds.filter(feed => feed.status === 'SUCCESS').length
     },
     importAlreadySubscribedCount () {
       if (this.latestImport === null) {
-        return 0;
+        return 0
       }
       return this.latestImport.importFeeds.filter(feed => feed.status === 'ALREADY_SUBSCRIBED').length
     }
@@ -326,7 +326,7 @@ export default {
       if (window.confirm('退会します。よろしいですか？')) {
         api.withdraw()
         ls.clear()
-        this.$router.push('/login')
+        this.$router.push('/')
       }
     }
   }

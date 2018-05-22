@@ -8,7 +8,11 @@ import Items from '@/components/user/Items'
 import Subscriptions from '@/components/user/Subscriptions'
 import Pins from '@/components/user/Pins'
 import Settings from '@/components/user/Settings'
-import Login from '@/components/public/Login'
+import Index from '@/components/public/Index'
+import Terms from '@/components/public/Terms'
+import Policy from '@/components/public/Policy'
+import Contact from '@/components/public/Contact'
+import Help from '@/components/public/Help'
 import NotFound from '@/components/public/NotFound'
 import ApiClient from '../ApiClient'
 
@@ -29,13 +33,32 @@ const router = new Router({
             {
               path: '',
               name: 'Index',
-              redirect: '/dashboard'
+              component: Index,
+              meta: { title: 'Feedich', requiresAuth: false }
             },
             {
-              path: 'login',
-              name: 'Login',
-              component: Login,
-              meta: { title: 'Login | Feedich', requiresAuth: false }
+              path: 'help',
+              name: 'Help',
+              component: Help,
+              meta: { title: 'ヘルプ | Feedich', requiresAuth: false }
+            },
+            {
+              path: 'terms',
+              name: 'Terms',
+              component: Terms,
+              meta: { title: '利用規約 | Feedich', requiresAuth: false }
+            },
+            {
+              path: 'policy',
+              name: 'Policy',
+              component: Policy,
+              meta: { title: 'プライバシーポリシー | Feedich', requiresAuth: false }
+            },
+            {
+              path: 'contact',
+              name: 'Contact',
+              component: Contact,
+              meta: { title: 'お問い合わせ | Feedich', requiresAuth: false }
             },
             {
               path: '404',
@@ -98,7 +121,7 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     api.sessionValidate()
       .then(response => next())
-      .catch(() => next({ path: '/login' }))
+      .catch(() => next({ path: '/' }))
   } else {
     next()
   }

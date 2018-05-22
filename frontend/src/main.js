@@ -12,6 +12,8 @@ import '@/assets/css/common.css'
 import moment from 'moment'
 import VueShortkey from 'vue-shortkey'
 import axios from 'axios'
+import Raven from 'raven-js'
+import RavenVue from 'raven-js/plugins/vue'
 
 require('jquery/dist/jquery')
 require('popper.js/dist/umd/popper')
@@ -41,7 +43,7 @@ axios.interceptors.response.use(
   (error) => {
     if (error.response) {
       if (error.response.status === 401) {
-        location.href = '/#/login'
+        location.href = '/#/'
         return Promise.reject(error)
       }
       if (error.response.status !== 400) {
@@ -55,6 +57,10 @@ axios.interceptors.response.use(
     return Promise.reject(error)
   }
 )
+
+Raven.config('https://9c1db90c84d74c04b1d258179fad6291@sentry.io/1210592')
+  .addPlugin(RavenVue, Vue)
+  .install()
 
 /* eslint-disable no-new */
 new Vue({
