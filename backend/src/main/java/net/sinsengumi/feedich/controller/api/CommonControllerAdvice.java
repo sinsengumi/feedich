@@ -3,11 +3,14 @@ package net.sinsengumi.feedich.controller.api;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import lombok.AllArgsConstructor;
@@ -24,6 +27,11 @@ import net.sinsengumi.feedich.util.AppUtil;
 public class CommonControllerAdvice {
 
     private final ErrorService errorService;
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
+    }
 
     @ExceptionHandler(Throwable.class)
     public ResponseEntity<ErrorResponse> handleError(Throwable e, HttpServletRequest request,

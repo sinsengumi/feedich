@@ -40,6 +40,11 @@ public class PinController extends AbstractController {
 
     @PutMapping
     public ResponseEntity<PinResponse> addPin(@RequestParam String title, @RequestParam String url, @AuthenticationPrincipal FeedichOAuth2User user) {
+        Pin alreadyExistPin = pinService.findByUserIdAndUrl(user.getId(), url);
+        if (alreadyExistPin != null) {
+            return new ResponseEntity<>(alreadyExistPin.toResponse(), HttpStatus.OK);
+        }
+
         Date now = new Date();
 
         Pin pin = new Pin();

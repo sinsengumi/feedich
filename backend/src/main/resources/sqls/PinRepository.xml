@@ -59,6 +59,16 @@
       p.created_at desc
   </select>
 
+  <select id="findByUserIdAndUrl" resultMap="map">
+    select
+      <include refid="columns"><property name="tableName" value="p" /></include>
+    from
+      pin p
+    where
+      p.user_id = #{userId}
+      and p.url = #{url}
+  </select>
+
   <delete id="delete">
     delete from pin where id = #{id}
   </delete>
