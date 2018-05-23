@@ -24,7 +24,12 @@ public final class HttpUtil {
     }
 
     public static String getRemoteAddr(HttpServletRequest request) {
-        return request.getRemoteAddr();
+        String xForwardedFor = request.getHeader("X-Forwarded-For");
+        if (StringUtils.isEmpty(xForwardedFor)) {
+            return request.getRemoteAddr();
+        } else {
+            return xForwardedFor.split(",")[0];
+        }
     }
 
     public static String getFinalUrl(String url) {

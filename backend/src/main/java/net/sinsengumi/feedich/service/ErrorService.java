@@ -12,7 +12,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.sinsengumi.feedich.infrastructure.Env;
 import net.sinsengumi.feedich.model.FeedichOAuth2User;
-import net.sinsengumi.feedich.util.AppUtil;
 import net.sinsengumi.feedich.util.HttpUtil;
 
 @Slf4j
@@ -23,10 +22,6 @@ public class ErrorService {
     private final Env env;
 
     public void error(String errorCode, Throwable e, HttpServletRequest request, FeedichOAuth2User user) {
-        if (errorCode == null) {
-            errorCode = AppUtil.createErrorCode();
-        }
-
         MDC.put("errorCode", errorCode);
 
         if (user != null) {
@@ -43,9 +38,5 @@ public class ErrorService {
         log.error("[{}] {}", errorCode, e.getMessage(), e);
 
         MDC.remove("errorCode");
-    }
-
-    public void error(String errorCode, Throwable e) {
-        error(errorCode, e, null, null);
     }
 }

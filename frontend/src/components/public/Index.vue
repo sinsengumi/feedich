@@ -4,7 +4,7 @@
       <div class="container">
         <div class="row pt-3 pb-3">
           <div class="col-6 offset-1 pr-2">
-            <h2>Simple and Snapply Feed Reader</h2>
+            <h2>Simple and Snappy Feed Reader</h2>
             <p>Feedich は livedoor Reader (Live Dwango Reader) にインスパイアされた Feed Reader です。<br />軽快な動作とわかりやすい UI が特徴です。</p>
             <iframe width="540" height="304" src="https://www.youtube.com/embed/Q3K9vtIybFA?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
           </div>
@@ -85,7 +85,7 @@
 
 <style scoped>
 .main-visual-wrapper {
-  border-top: 1px solid #384d63;
+  border-top: 1px solid #1f2c3a;
 }
 
 .main-visual {
@@ -93,6 +93,6 @@
   color: white;
   padding: 10px 0;
   margin-bottom: 20px;
-  border-top: 1px solid #1f2c3a;
+  border-top: 1px solid #384d63;
 }
 </style>

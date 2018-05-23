@@ -3,8 +3,8 @@
     <header class="public-header">
       <div class="container">
         <div class="d-flex justify-content-between align-items-center pt-2 pb-2 pl-3 pr-3">
-          <h1><a href="/"><i class="fa fa-rss-square logo-icon"></i> Feedich</a></h1>
-          <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="ml-auto twitter-share-button" data-show-count="false">Tweet</a>
+          <h1><a href="/"><i class="fa fa-rss-square logo-icon mr-1"></i> Feedich</a></h1>
+          <a href="https://twitter.com/share?text=Feedich (Simple and Snappy Feed Reader)&amp;url=https://feedich.com&amp;via=feedich_dev" class="ml-auto twitter-share-button" data-show-count="false">Tweet</a>
         </div>
       </div>
     </header>
@@ -19,9 +19,9 @@
           <small class="d-block mb-3 text-muted">&copy; {{ new Date().getFullYear() }} feedich.com</small>
 
           <ul class="list-inline social-icon">
-            <li class="list-inline-item"><a href="#"><i class="fab fa-twitter"></i></a></li>
-            <li class="list-inline-item"><a href="#"><i class="fab fa-slack"></i></a></li>
-            <li class="list-inline-item"><a href="#"><i class="fab fa-medium"></i></a></li>
+            <li class="list-inline-item"><a href="https://twitter.com/feedich_dev" target="_blank"><i class="fab fa-twitter"></i></a></li>
+            <li class="list-inline-item"><a href="https://join.slack.com/t/feedich/shared_invite/enQtMzY4NTA4NDU2OTMxLWIwNThlMzE4ZWQ5NDY4MDYxYWUwMjYxNzg0NmQzNDU1YjRiNzhkN2Q0NWExNGU2NDE5ZmE5ODk1ODZlNWRlZDM" target="_blank"><i class="fab fa-slack"></i></a></li>
+            <li class="list-inline-item"><a href="https://www.youtube.com/channel/UCdWmPMihWwye-d2mJV8D24A" target="_blank"><i class="fab fa-youtube"></i></a></li>
           </ul>
         </div>
         <div class="col-3">
@@ -29,7 +29,7 @@
           <ul class="list-unstyled text-small mb-0">
             <li class="mb-1"><router-link class="text-muted" to="/help">ヘルプ</router-link></li>
             <li class="mb-1"><router-link class="text-muted" to="/contact">お問い合わせ</router-link></li>
-            <li><a class="text-muted" href="#">開発者ブログ</a></li>
+            <li><a class="text-muted" href="https://feedich.hatenablog.com/" target="_blank">開発者ブログ</a></li>
           </ul>
         </div>
         <div class="col-3">
