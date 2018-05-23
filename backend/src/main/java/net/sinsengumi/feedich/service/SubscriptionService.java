@@ -46,13 +46,10 @@ public class SubscriptionService {
     public Subscription subscribe(int userId, String feedUrl) {
         // feed に存在しなかったら登録しておく。
         Feed feed = feedService.findByFeedUrl(feedUrl);
-        SyndFeed syndFeed = null;
+        SyndFeed syndFeed = feedDiscoverer.parseFeed(feedUrl);
         if (feed == null) {
-            syndFeed = feedDiscoverer.parseFeed(feedUrl);
             feed = Feed.build(syndFeed);
             feedService.create(feed);
-        } else {
-            syndFeed = feedDiscoverer.parseFeed(feedUrl);
         }
 
         Subscription subscription = findByUserIdAndFeedId(userId, feed.getId());

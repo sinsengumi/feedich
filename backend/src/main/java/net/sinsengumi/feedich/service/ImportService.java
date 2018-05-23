@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.rometools.opml.feed.opml.Opml;
 
@@ -46,42 +47,53 @@ public class ImportService {
     @Async
     public void importFeeds(int userId, List<ImportFeed> importFeeds) {
         StopWatchUtil stopWatch = new StopWatchUtil();
+        ImportService service = applicationContext.getBean(ImportService.class);
 
         List<Subscription> subscriptions = subscriptionService.findByUserId(userId);
         List<ImportFeed> failedFeeds = new ArrayList<>();
 
         for (ImportFeed importFeed : importFeeds) {
-            log.info("importFeed = {}", importFeed);
-            int id = importFeed.getId();
-
-            try {
-                boolean alreadySubscribed = subscriptions.stream()
-                        .anyMatch(s -> s.getFeed().getFeedUrl().equals(importFeed.getXmlUrl()));
-                if (alreadySubscribed) {
-                    log.info("importFeed {}. AlreadySubscribed.", id);
-                    importFeed.setStatus(ImportFeedStatus.ALREADY_SUBSCRIBED);
-                } else {
-                    log.info("importFeed {}. Subscribe.", id);
-                    subscriptionService.subscribeOtherTransaction(userId, importFeed.getXmlUrl());
-                    importFeed.setStatus(ImportFeedStatus.SUCCESS);
-                }
-            } catch (Exception e) {
-                log.warn(e.getMessage(), e);
+            boolean success = service.importFeed(userId, importFeed, subscriptions);
+            if (!success) {
                 failedFeeds.add(importFeed);
-                importFeed.setStatus(ImportFeedStatus.FAILED);
             }
-
-            importFeedService.updateStatus(id, importFeed.getStatus());
         }
 
         if (!failedFeeds.isEmpty()) {
             log.error("Import failed. userId = {}, size = {}", userId, failedFeeds.size());
         }
 
-        ImportService service = applicationContext.getBean(ImportService.class);
         service.updateStatus(importFeeds.get(0).getImportId(), ImportStatus.FINISHED);
 
         log.info("Import feeds. userId = {}, feeds = {}, elapsed = {} (ms)", userId, importFeeds.size(), stopWatch.getTotalTimeMillis());
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public boolean importFeed(int userId, ImportFeed importFeed, List<Subscription> subscriptions) {
+        log.info("importFeed = {}", importFeed);
+        int id = importFeed.getId();
+
+        try {
+            boolean alreadySubscribed = subscriptions.stream()
+                    .anyMatch(s -> s.getFeed().getFeedUrl().equals(importFeed.getXmlUrl()));
+            if (alreadySubscribed) {
+                log.info("importFeed {}. AlreadySubscribed.", id);
+
+                importFeedService.updateStatus(id, ImportFeedStatus.ALREADY_SUBSCRIBED);
+            } else {
+                log.info("importFeed {}. Subscribe.", id);
+
+                subscriptionService.subscribe(userId, importFeed.getXmlUrl());
+                importFeedService.updateStatus(id, ImportFeedStatus.SUCCESS);
+            }
+            return true;
+        } catch (Exception e) {
+            log.warn("Failed Import {}.", id, e);
+
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            importFeedService.updateStatus(id, ImportFeedStatus.FAILED);
+            return false;
+        }
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
