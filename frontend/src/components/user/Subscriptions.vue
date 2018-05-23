@@ -6,31 +6,52 @@
     <div class="card">
       <h5 class="card-header">購読フィード ({{ subscriptions.length }})</h5>
       <div class="card-body">
-        <b-table :items="subscriptions" :fields="fields" hover small show-empty empty-text="No Results" class="mb-0">
-          <template slot="title" slot-scope="data">
-            <img :src="data.item.feed.favicon" width="16" height="16" class="mr-1" v-if="data.item.feed.favicon !== null" />
-            <i class="far fa-file-alt ml-1 mr-2" v-if="data.item.feed.favicon === null"></i>
-            {{ data.item.feed.title }}
-          </template>
-          <template slot="publishedAt" slot-scope="data">
-            <span :title="data.item.feed.publishedAt | format('YYYY/MM/DD HH:mm:ss Z')">{{ data.item.feed.publishedAt | fromNow }}</span>
-          </template>
-          <template slot="createdAt" slot-scope="data">
-            <span :title="data.value | format('YYYY/MM/DD HH:mm:ss Z')">{{ data.value | fromNow }}</span>
-          </template>
-          <template slot="status" slot-scope="data">
-            <span class="badge badge-success" v-if="data.item.feed.status === 'NORMAL'" :id="'status-normal'+ data.item.id"><i class="far fa-check-circle"></i> NORMAL</span>
-            <b-tooltip triggers="hover" :target="'status-normal'+ data.item.id">フィードは正常です</b-tooltip>
-            <span class="badge badge-danger" v-if="data.item.feed.status === 'BROKEN'" :id="'status-broken'+ data.item.id"><i class="far fa-times-circle"></i> BROKEN</span>
-            <b-tooltip triggers="hover" :target="'status-broken'+ data.item.id">フィードのクロールに失敗しました<br />フィードが壊れている可能性があります</b-tooltip>
-          </template>
-          <template slot="operation" slot-scope="data">
-            <a :href="data.item.feed.url" target="_blank" class="mr-1" title="サイト URL"><i class="fa fa-globe"></i></a>
-            <a :href="data.item.feed.feedUrl" target="_blank" class="mr-1" title="フィード URL"><i class="fa fa-file-code"></i></a>
-            <a href="javascript:void(0)" @click="openSubscriptionModal(data.item)" class="mr-1" title="フィード情報"><i class="fa fa-info-circle"></i></a>
-            <a href="javascript:void(0)" @click="openUnsubscribeModal(data.item)" title="購読停止"><i class="fa fa-trash-alt"></i></a>
-          </template>
-        </b-table>
+        <div class="form-row mb-2">
+          <div class="offset-9 col-3">
+            <input type="text" class="form-control form-control-sm" v-model="searchQuery" placeholder="Search..." />
+          </div>
+        </div>
+
+        <table class="subscriptions-table table table-sm table-hover mb-0">
+          <thead>
+            <tr>
+              <th v-for="c in columns" :key="'column_' + c.key" :class="c.class + ' ' + (c.sortable ? 'sortable' : '')" :style="c.style" @click="c.sortable ? sortBy(c.key) : ''">
+                <span :class="sortKey === c.key ? 'font-weight-bold' : ''">{{ c.label }}</span>
+                <template v-if="c.sortable">
+                  <i class="fas fa-sort-up align-bottom" v-if="sortOrders[c.key] > 0"></i>
+                  <i class="fas fa-sort-down align-text-top" v-if="sortOrders[c.key] < 0"></i>
+                </template>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="s in filteredSubscriptions" :key="'subscriptions_table' + s.id">
+              <td>
+                <img :src="s.feed.favicon" width="16" height="16" class="mr-1 align-text-top" v-if="s.feed.favicon !== null" />
+                <i class="far fa-file-alt ml-1 mr-2" v-if="s.feed.favicon === null"></i>
+                {{ s.feed.title }}
+              </td>
+              <td class="text-right">
+                <span :title="s.feed.publishedAt | format('YYYY/MM/DD HH:mm:ss Z')">{{ s.feed.publishedAt | fromNow }}</span>
+              </td>
+              <td class="text-right">
+                <span :title="s.createdAt | format('YYYY/MM/DD HH:mm:ss Z')">{{ s.createdAt | fromNow }}</span>
+              </td>
+              <td class="text-center">
+                <span class="badge badge-success" v-if="s.feed.status === 'NORMAL'" :id="'status-normal'+ s.id"><i class="far fa-check-circle"></i> NORMAL</span>
+                <b-tooltip triggers="hover" :target="'status-normal'+ s.id">フィードは正常です</b-tooltip>
+                <span class="badge badge-danger" v-if="s.feed.status === 'BROKEN'" :id="'status-broken'+ s.id"><i class="far fa-times-circle"></i> BROKEN</span>
+                <b-tooltip triggers="hover" :target="'status-broken'+ s.id">フィードのクロールに失敗しました<br />フィードが壊れている可能性があります</b-tooltip>
+              </td>
+              <td class="text-center">
+                <a :href="s.feed.url" target="_blank" class="mr-1" title="サイト URL"><i class="fa fa-globe"></i></a>
+                <a :href="s.feed.feedUrl" target="_blank" class="mr-1" title="フィード URL"><i class="fa fa-file-code"></i></a>
+                <a href="javascript:void(0)" @click="openSubscriptionModal(s)" class="mr-1" title="フィード情報"><i class="fa fa-info-circle"></i></a>
+                <a href="javascript:void(0)" @click="openUnsubscribeModal(s)" title="購読停止"><i class="fa fa-trash-alt"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -40,21 +61,32 @@
 import SubscriptionModal from './SubscriptionModal'
 import UnsubscribeModal from './UnsubscribeModal'
 import { mapState } from 'vuex'
+import SubscriptionSorter from '../../SubscriptionSorter'
+
+const sorter = new SubscriptionSorter()
 
 export default {
   components: {
     'subscription-modal': SubscriptionModal,
     'unsubscribe-modal': UnsubscribeModal
   },
-  data () {
+  data: function () {
+    const columns = [
+      { key: 'title', label: 'タイトル', class: '', style: {}, sortable: true },
+      { key: 'publishedAt', label: '最終更新日', class: 'text-right', style: {'width': '130px'}, sortable: true },
+      { key: 'createdAt', label: 'フィード登録日', class: 'text-right', style: {'width': '130px'}, sortable: true },
+      { key: 'status', label: 'ステータス', class: 'text-center', style: {'width': '100px'}, sortable: true },
+      { key: 'operation', label: '操作', class: 'text-center', style: {'width': '85px'}, sortable: false }
+    ]
+    let sortOrders = {}
+    columns.forEach(function (column) {
+      sortOrders[column.key] = 1
+    })
     return {
-      fields: [
-        { key: 'title', label: 'タイトル', thClass: 'title-th', tdClass: 'title-td' },
-        { key: 'publishedAt', label: '最終更新日', thClass: 'publishedAt-th', tdClass: 'publishedAt-td' },
-        { key: 'createdAt', label: 'フィード登録日', thClass: 'createdAt-th', tdClass: 'createdAt-td' },
-        { key: 'status', label: 'ステータス', thClass: 'status-th', tdClass: 'status-td' },
-        { key: 'operation', label: '操作', thClass: 'operation-th', tdClass: 'operation-td' }
-      ],
+      searchQuery: '',
+      columns: columns,
+      sortKey: '',
+      sortOrders: sortOrders,
       subscriptionModal: false,
       unsubscribeModal: false,
       targetSubscription: null
@@ -64,15 +96,51 @@ export default {
     this.$store.dispatch('GET_SUBSCRIPTIONS')
   },
   computed: {
-    ...mapState(['subscriptions'])
+    ...mapState(['subscriptions']),
+    filteredSubscriptions () {
+      const filteredList = this.subscriptions
+        .filter(s => {
+          const title = s.feed.title.toLowerCase()
+          const searchQuery = this.searchQuery.toLowerCase()
+          return title.indexOf(searchQuery) > -1
+        })
+
+      let subscriptionSortKey = null
+      if (this.sortKey === 'title') {
+        if (this.sortOrders[this.sortKey] > 0) {
+          subscriptionSortKey = SubscriptionSorter.sortKey.TITLE_ASC
+        } else {
+          subscriptionSortKey = SubscriptionSorter.sortKey.TITLE_DESC
+        }
+      }
+      if (this.sortKey === 'publishedAt') {
+        if (this.sortOrders[this.sortKey] > 0) {
+          subscriptionSortKey = SubscriptionSorter.sortKey.UPDATED_AT_ASC
+        } else {
+          subscriptionSortKey = SubscriptionSorter.sortKey.UPDATED_AT_DESC
+        }
+      }
+      if (this.sortKey === 'createdAt') {
+        if (this.sortOrders[this.sortKey] > 0) {
+          subscriptionSortKey = SubscriptionSorter.sortKey.CREATED_AT_ASC
+        } else {
+          subscriptionSortKey = SubscriptionSorter.sortKey.CREATED_AT_DESC
+        }
+      }
+      if (this.sortKey === 'status') {
+        if (this.sortOrders[this.sortKey] > 0) {
+          subscriptionSortKey = SubscriptionSorter.sortKey.STATUS_ASC
+        } else {
+          subscriptionSortKey = SubscriptionSorter.sortKey.STATUS_DESC
+        }
+      }
+      return sorter.sort(filteredList, subscriptionSortKey)
+    }
   },
   methods: {
-    filterTitle (subscriptions, search) {
-      const fileterWord = search.toLowerCase()
-      return subscriptions.filter((subscription) => {
-        const title = subscription.feed.title.toLowerCase()
-        return title.indexOf(fileterWord) > -1
-      })
+    sortBy (key) {
+      this.sortKey = key
+      this.sortOrders[key] = this.sortOrders[key] * -1
     },
     openSubscriptionModal (subscription) {
       this.targetSubscription = subscription
@@ -86,56 +154,12 @@ export default {
 }
 </script>
 
-<style>
-.title-th {
-  padding: 5px 10px!important;
+<style >
+.subscriptions-table th {
+  font-weight: normal;
 }
 
-.title-td {
-  padding: 5px 10px!important;
-}
-
-.publishedAt-th {
-  width: 140px;
-  text-align: right;
-  padding: 5px 10px!important;
-}
-
-.publishedAt-td {
-  text-align: right;
-  padding: 5px 10px!important;
-}
-
-.createdAt-th {
-  width: 140px;
-  text-align: right;
-  padding: 5px 10px!important;
-}
-
-.createdAt-td {
-  text-align: right;
-  padding: 5px 10px!important;
-}
-
-.status-th {
-  width: 100px;
-  text-align: center;
-  padding: 5px 10px!important;
-}
-
-.status-td {
-  text-align: center;
-  padding: 5px 10px!important;
-}
-
-.operation-th {
-  width: 120px;
-  text-align: center;
-  padding: 5px 10px!important;
-}
-
-.operation-td {
-  text-align: center;
-  padding: 5px 10px!important;
+.sortable {
+  cursor: pointer;
 }
 </style>

@@ -60,6 +60,7 @@ import LocalStorage from '../../LocalStorage'
 import SubscriptionSorter from '../../SubscriptionSorter'
 
 const ls = new LocalStorage()
+const sorter = new SubscriptionSorter()
 
 export default {
   data () {
@@ -83,7 +84,6 @@ export default {
           return title.indexOf(fileterWord) > -1
         })
 
-      const sorter = new SubscriptionSorter()
       return sorter.sort(filteredList, ls.getSubscriptionSortKey())
     },
     ellipsedPins () {
