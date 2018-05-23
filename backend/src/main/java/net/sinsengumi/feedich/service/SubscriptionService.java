@@ -1,6 +1,5 @@
 package net.sinsengumi.feedich.service;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -63,7 +62,7 @@ public class SubscriptionService {
             subscription.setFeedId(feed.getId());
             subscriptionRepository.create(subscription);
 
-            // 初回クロール
+            // 初回クロール（他の人の item も更新するので、速度優先で FeedCrawlService.crawl は使わない）
             firstCrawl(userId, feed, syndFeed);
         }
 
@@ -86,33 +85,35 @@ public class SubscriptionService {
         List<SyndEntry> entries = syndFeed.getEntries();
 
         if (!entries.isEmpty()) {
-            boolean feedUpdate = false;
             Date now = new Date();
 
             for (SyndEntry e : entries) {
                 final Item item = itemService.findByUrl(feedId, e.getLink());
                 if (item == null) {
-                    feedUpdate = true;
-
                     // item が登録されていない場合
                     // item を登録して、他の購読者の未読に追加する
                     Item newItem = Item.build(feedId, now, e);
                     itemService.create(newItem);
 
-                    List<Integer> subscribeUsers = getSubscribeUsers(feedId);
-                    List<UserItem> userItems = subscribeUsers.stream()
-                            .map(uid -> UserItem.build(uid, newItem))
+                    List<Integer> subscribeUsers = getSubscribeUsers(feedId).stream()
+                            .filter(id -> id != userId)
                             .collect(Collectors.toList());
-                    userItemService.create(userItems); // TODO: 非同期にする（対象者以外）
+                    if (!subscribeUsers.isEmpty()) {
+                        List<UserItem> userItems = subscribeUsers.stream()
+                                .map(uid -> UserItem.build(uid, newItem))
+                                .collect(Collectors.toList());
+                        userItemService.createAsync(userItems);
+                    }
+
+                    // 自分のも登録する（同期）
+                    userItemService.create(UserItem.build(userId, newItem));
                 } else {
                     // すでに item が登録されている場合
-                    userItemService.create(Arrays.asList(UserItem.build(userId, item)));
+                    userItemService.create(UserItem.build(userId, item));
                 }
             }
 
-            if (feedUpdate) {
-                feedService.updateUpdatedAt(feedId, now);
-            }
+            feedService.update(Feed.build(syndFeed));
         }
     }
 

@@ -1,5 +1,6 @@
 package net.sinsengumi.feedich.service;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.scheduling.annotation.Async;
@@ -15,8 +16,17 @@ public class UserItemService {
 
     private final UserItemRepository userItemRepository;
 
+    public int create(UserItem userItem) {
+        return create(Arrays.asList(userItem));
+    }
+
     public int create(List<UserItem> userItems) {
         return userItemRepository.create(userItems);
+    }
+
+    @Async
+    public void createAsync(List<UserItem> userItems) {
+        create(userItems);
     }
 
     public List<UserItem> findUnreadItems(int userId, int feedId) {
