@@ -1,6 +1,5 @@
 package net.sinsengumi.feedich.service;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -29,10 +28,6 @@ public class FeedService {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public int updateStatus(int id, FeedStatus status) {
         return feedRepository.updateStatus(id, status);
-    }
-
-    public int updateUpdatedAt(int id, Date updatedAt) {
-        return feedRepository.updateUpdatedAt(id, updatedAt);
     }
 
     public List<Feed> findByAll() {

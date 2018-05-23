@@ -1,6 +1,5 @@
 package net.sinsengumi.feedich.repository;
 
-import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -17,8 +16,6 @@ public interface FeedRepository {
     int update(Feed feed);
 
     int updateStatus(@Param("id") int id, @Param("status") FeedStatus status);
-
-    int updateUpdatedAt(@Param("id") int id, @Param("updatedAt") Date updatedAt);
 
     List<Feed> findAll();
 

@@ -86,10 +86,6 @@
     update feed set status = #{status} where id = #{id}
   </update>
 
-  <update id="updateUpdatedAt">
-    update feed set updated_at = #{updatedAt} where id = #{id}
-  </update>
-
   <select id="findAll" resultMap="map">
     select
       <include refid="columns"><property name="tableName" value="f" /></include>
