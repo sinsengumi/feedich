@@ -14,9 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.sinsengumi.feedich.controller.AbstractController;
+import net.sinsengumi.feedich.model.Feed;
 import net.sinsengumi.feedich.model.FeedichOAuth2User;
 import net.sinsengumi.feedich.model.http.DiscoverResponse;
+import net.sinsengumi.feedich.model.http.FeedResponse;
 import net.sinsengumi.feedich.service.FeedDiscoverer;
+import net.sinsengumi.feedich.service.FeedService;
 import net.sinsengumi.feedich.service.SubscriptionService;
 
 @Slf4j
@@ -27,6 +30,7 @@ public class FeedController extends AbstractController {
 
     private final FeedDiscoverer feedDiscoverer;
     private final SubscriptionService subscriptionService;
+    private final FeedService feedService;
 
     @GetMapping("discover")
     public ResponseEntity<List<DiscoverResponse>> discover(@RequestParam String url,
@@ -42,5 +46,13 @@ public class FeedController extends AbstractController {
             log.warn("{}", e.getMessage(), e);
             return ResponseEntity.ok(Collections.emptyList());
         }
+    }
+
+    @GetMapping("recommend")
+    public ResponseEntity<List<FeedResponse>> recommendFeeds(@AuthenticationPrincipal FeedichOAuth2User user) {
+        List<FeedResponse> result = feedService.getRecommendFeeds(user.getId(), 4).stream()
+                .map(Feed::toResponse)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(result);
     }
 }

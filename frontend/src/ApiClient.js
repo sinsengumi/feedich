@@ -7,6 +7,10 @@ export default class ApiClient {
     return axios.get(`${API_BASE_URL}/api/feeds/discover?url=${url}`)
   }
 
+  recommendFeeds () {
+    return axios.get(`${API_BASE_URL}/api/feeds/recommend`)
+  }
+
   subscribe (feedUrl) {
     const params = new URLSearchParams()
     params.append('feedUrl', feedUrl)

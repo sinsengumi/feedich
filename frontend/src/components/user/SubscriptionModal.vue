@@ -1,6 +1,6 @@
 <template>
   <b-modal id="subscriptionModal" v-model="modalVisibleInner" :title="subscription.feed.title" hide-footer no-fade>
-    <table class="table table-striped mb-0">
+    <table class="table table-striped mb-0" style="table-layout:fixed;">
       <tbody>
         <tr>
           <th class="text-right" scope="row" style="width: 120px">概要</th>
@@ -12,7 +12,7 @@
         </tr>
         <tr>
           <th class="text-right" scope="row">フィード URL</th>
-          <td><a :href="subscription.feed.feedUrl" target="_blank">{{ subscription.feed.feedUrl }}</a></td>
+          <td style="word-wrap:break-word;"><a :href="subscription.feed.feedUrl" target="_blank">{{ subscription.feed.feedUrl }}</a></td>
         </tr>
         <tr>
           <th class="text-right" scope="row">フィード種別</th>

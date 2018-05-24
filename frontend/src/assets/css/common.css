@@ -248,11 +248,15 @@ a:hover {
   color: #1dcd00;
 }
 
+.content .dashboard {
+  padding: 15px;
+}
+
 .content .setting {
   padding: 15px;
 }
 
-.content .star {
+.content .pins {
   padding: 15px;
 }
 

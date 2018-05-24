@@ -104,4 +104,22 @@
       f.feed_url = #{feedUrl}
   </select>
 
+  <select id="getRecommendFeeds" resultMap="map">
+    select
+      <include refid="columns"><property name="tableName" value="f" /></include>
+    from
+      feed f
+    where
+      not exists (select 1 from subscription s where s.user_id = #{userId} and s.feed_id = f.id)
+      and description is not null
+      and description != ''
+      and title != description
+      and status = 'NORMAL'
+      and published_at is not null
+      and published_at > now() - INTERVAL 60 DAY
+    order by
+      rand()
+    limit
+      #{size}
+  </select>
 </mapper>

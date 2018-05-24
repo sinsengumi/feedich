@@ -37,4 +37,8 @@ public class FeedService {
     public Feed findByFeedUrl(String feedUrl) {
         return feedRepository.findByFeedUrl(feedUrl);
     }
+
+    public List<Feed> getRecommendFeeds(int userId, int size) {
+        return feedRepository.getRecommendFeeds(userId, size);
+    }
 }

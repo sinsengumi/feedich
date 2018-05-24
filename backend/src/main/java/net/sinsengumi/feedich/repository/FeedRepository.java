@@ -20,4 +20,6 @@ public interface FeedRepository {
     List<Feed> findAll();
 
     Feed findByFeedUrl(String feedUrl);
+
+    List<Feed> getRecommendFeeds(@Param("userId") int userId, @Param("size") int size);
 }

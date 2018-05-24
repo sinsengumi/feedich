@@ -1,5 +1,5 @@
 <template>
-  <div class="star">
+  <div class="pins">
     <div class="card">
       <h5 class="card-header">ピン ({{ pins.length }})</h5>
       <div class="card-body">

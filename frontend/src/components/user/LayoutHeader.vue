@@ -2,7 +2,7 @@
   <header class="header fixed-top d-flex flex-row align-items-center">
     <div class="logo mr-auto">
       <a href="/#/dashboard" title="Feedich"><i class="fa fa-rss-square logo-icon"></i>Feedich</a>
-      <span class="description">Feedich is "simple" and "snappy" feed reader.</span>
+      <span class="description">Feedich is "Simple" and "Snappy" Feed Reader.</span>
     </div>
 
     <div class="notify-message-area">
