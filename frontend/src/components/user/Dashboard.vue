@@ -26,7 +26,7 @@
       <div class="row">
         <div class="col-3" v-for="(feed, index) in recommendFeeds" :key="'recommend_' + feed.id">
           <div class="card mb-4 box-shadow">
-            <img class="card-img-top" style="height: 225px; width: 100%; display: block;" src="http://image.profile.livedoor.jp/icon/line_hr_60.gif" />
+            <img class="card-img-top" style="height: 250px; width: 100%; display: block; object-fit: cover;" :src="feed.ogImage" />
             <div class="card-body">
               <p class="card-text">
                 <a :href="feed.url" class="text-body" target="_blank">

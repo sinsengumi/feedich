@@ -16,6 +16,7 @@ public class FeedResponse {
     private String icon;
     private String image;
     private String favicon;
+    private String ogImage;
     private FeedStatus status;
     private Date publishedAt;
     private Date createdAt;

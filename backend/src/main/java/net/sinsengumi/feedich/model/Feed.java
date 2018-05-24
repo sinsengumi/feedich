@@ -15,6 +15,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import net.sinsengumi.feedich.model.http.FeedResponse;
 import net.sinsengumi.feedich.util.HttpUtil;
+import net.sinsengumi.feedich.util.HttpUtil.HtmlMeta;
 
 @Slf4j
 @Data
@@ -29,6 +30,7 @@ public class Feed {
     private String icon;
     private String image;
     private String favicon;
+    private String ogImage;
     private FeedStatus status = FeedStatus.NORMAL;
     private Date publishedAt;
     private Date createdAt;
@@ -47,7 +49,10 @@ public class Feed {
         if (syndFeed.getImage() != null) {
             feed.setImage(StringUtils.trim(syndFeed.getImage().getUrl()));
         }
-        feed.setFavicon(HttpUtil.extractFavicon(feed.getUrl()));
+
+        HtmlMeta htmlMeta = HttpUtil.extractHtmlMeta(feed.getUrl());
+        feed.setFavicon(htmlMeta.getFavicon());
+        feed.setOgImage(htmlMeta.getOgImage());
         feed.setStatus(FeedStatus.NORMAL);
 
         if (syndFeed.getPublishedDate() == null) {
@@ -79,6 +84,7 @@ public class Feed {
         response.setIcon(icon);
         response.setImage(image);
         response.setFavicon(favicon);
+        response.setOgImage(ogImage);
         response.setStatus(status);
         response.setCreatedAt(createdAt);
         response.setUpdatedAt(updatedAt);

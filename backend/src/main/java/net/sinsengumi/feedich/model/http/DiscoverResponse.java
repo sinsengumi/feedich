@@ -4,6 +4,7 @@ import com.rometools.rome.feed.synd.SyndFeed;
 
 import lombok.Data;
 import net.sinsengumi.feedich.util.HttpUtil;
+import net.sinsengumi.feedich.util.HttpUtil.HtmlMeta;
 
 @Data
 public class DiscoverResponse {
@@ -30,7 +31,9 @@ public class DiscoverResponse {
         if (syndFeed.getImage() != null) {
             response.setImage(syndFeed.getImage().getUrl());
         }
-        response.setFavicon(HttpUtil.extractFavicon(response.getUrl()));
+
+        HtmlMeta htmlMeta = HttpUtil.extractHtmlMeta(response.getUrl());
+        response.setFavicon(htmlMeta.getFavicon());
         response.setSubscribed(subscribed);
         return response;
     }

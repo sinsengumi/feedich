@@ -41,11 +41,12 @@ public class FeedDiscoverer {
         }
 
         try {
-            Document document = Jsoup.parse(new URL(url), 2000);
+            URL urlObj = new URL(url);
+            Document document = Jsoup.parse(urlObj, 2000);
             Elements feedLinks = document.select("link[type~=rss|atom]");
             return feedLinks.stream().map(f -> {
                 try {
-                    String feedUrl = HttpUtil.resolveUrl(url, f.attr("href"));
+                    String feedUrl = HttpUtil.resolveUrl(urlObj, f.attr("href"));
                     return parseFeed(feedUrl);
                 } catch (Exception e) {
                     e.printStackTrace();
