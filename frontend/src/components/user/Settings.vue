@@ -251,7 +251,7 @@ export default {
     this.importPollingIntervalId = setInterval(() => {
       api.latestImport()
         .then((response) => {
-          this.latestImport = response.data
+          this.latestImport = response.data === '' ? null : response.data
         })
         .catch((error) => {
           this.errorImport = error.response.data.message
