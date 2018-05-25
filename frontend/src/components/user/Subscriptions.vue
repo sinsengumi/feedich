@@ -115,7 +115,7 @@ export default {
   computed: {
     ...mapState(['subscriptions']),
     maxPageNo () {
-      return Math.ceil( this.filteredSubscriptions.length / this.pageSize )
+      return Math.ceil(this.filteredSubscriptions.length / this.pageSize)
     },
     existsPrevPage () {
       return this.pageNo > 1
@@ -170,7 +170,7 @@ export default {
       return sorter.sort(filteredList, subscriptionSortKey)
     },
     pagingSubscriptions () {
-      return this.filteredSubscriptions.slice((this.pageNo-1)*this.pageSize, this.pageNo*this.pageSize)
+      return this.filteredSubscriptions.slice((this.pageNo - 1) * this.pageSize, this.pageNo * this.pageSize)
     }
   },
   methods: {

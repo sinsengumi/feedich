@@ -52,7 +52,7 @@
       <h4 class="alert-heading"><i class="fas fa-gift"></i> よろしければ寄付をお願いします</h4>
       <p class="mb-0">
         Feedich の開発は個人で行っています。サーバー代などの運営費を個人で払ったいるため、今後のサービス継続のためにお気持ちを頂ければ幸いです。<br />
-        <a href="https://www.amazon.co.jp/gp/product/B004N3APGO/" target="_blank">Amazon ギフト券で支援する</a>
+        <a href="https://www.amazon.co.jp/gp/product/B004N3APGO/" target="_blank">Amazon ギフト券で支援する</a>（メールアドレス: feedich.dev@gmail.com）
       </p>
     </div>
   </div>
