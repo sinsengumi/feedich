@@ -1,2 +1,3 @@
-# feedich
-Feedich is feed reader
+# Feedich
+
+[Deplicated] Repository is migrated [GitLab](https://gitlab.com/sinsengumi/feedich) private project.
